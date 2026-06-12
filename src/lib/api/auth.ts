@@ -71,12 +71,15 @@ export type AuthRegisterData = {
 	password: string;
 	gender: string;
 	birthdate: string;
+	city: string | null;
+	governorate: string | null;
+	address: string | null;
 };
 
 export async function register(
 	data: AuthRegisterData,
 ): Promise<ServerResponse<AuthSessionData>> {
-	return await request<AuthSessionData>(`${AUTH_ROUTE}/login`, {
+	return await request<AuthSessionData>(`${AUTH_ROUTE}/register`, {
 		method: "POST",
 		body: JSON.stringify(data),
 	});
@@ -106,9 +109,8 @@ export const loginAction = action(async (form: FormData) => {
 		identifier: form.get("identifier") as string,
 		password: form.get("password") as string,
 	};
-	// TODO: validation
+	// TODO: client-side validation
 	const response = await login(data);
-	console.log(response);
 	if (!response.ok) {
 		return response;
 	}
@@ -122,6 +124,42 @@ export const loginAction = action(async (form: FormData) => {
 	}));
 	return { ok: true, data: null } as ServerResponse<null>;
 }, "login");
+
+export const registerAction = action(async (form: FormData) => {
+	"use server";
+	const data: AuthRegisterData = {
+		name: `${form.get("first_name")} ${form.get("last_name")}`,
+		email: form.get("email") as string,
+		phone: form.get("phone") as string,
+		password: form.get("password") as string,
+		gender: form.get("gender") as string,
+		birthdate: new Date(form.get("birthdate") as string).toISOString(),
+		city: form.get("city") as string | null,
+		governorate: form.get("governorate") as string | null,
+		address: form.get("address") as string | null,
+	};
+	console.log(data);
+	if (!data.name || !data.email || !data.phone || !data.password) {
+		return { ok: false, error: "Please fill all fields" };
+	}
+	if (!data.email.includes("@")) {
+		return { ok: false, error: "Please enter a valid email" };
+	}
+	// TODO: client-side validation
+	const response = await register(data);
+	if (!response.ok) {
+		return response;
+	}
+	const auth = await useAuthSession();
+	await auth.update((data) => ({
+		...data,
+		token_type: response.data.token_type,
+		access_token: response.data.access_token,
+		refresh_token: response.data.refresh_token,
+		expires_at: response.data.expires_at,
+	}));
+	return { ok: true, data: null } as ServerResponse<null>;
+}, "register");
 
 export const logoutAction = action(async () => {
 	"use server";
