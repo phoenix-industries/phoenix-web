@@ -52,8 +52,9 @@ export function ProductCard(props: { product: Product }) {
 				<span class="badge">{props.product.condition}</span>
 			</div>
 			<div class="product-title">{props.product.name}</div>
-			<div class="product-user">
-				<UserIcon /> {props.product.user?.name}
+			<div class="product-user flex items-center">
+				<UserIcon />
+				<span class="text-lg">{props.product.user?.name}</span>
 			</div>
 			<div
 				class="product-footer"

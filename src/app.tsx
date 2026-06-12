@@ -4,7 +4,6 @@ import { FileRoutes } from "@solidjs/start/router";
 import { Suspense, type ParentProps } from "solid-js";
 import { Toaster } from "solid-sonner";
 import { AppContextProvider, useAppState } from "~/context";
-import { ScrollTop } from "~/components/utils/ScrollTop";
 import "~/lib/utils/datetime";
 import "./app.css";
 // import "@fontsource/inter";
@@ -21,7 +20,6 @@ function Root(props: ParentProps) {
 			/>
 			<main role="main">
 				<Suspense>{props.children}</Suspense>
-				<ScrollTop />
 			</main>
 		</>
 	);

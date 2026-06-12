@@ -4,11 +4,10 @@ import {
 	onCleanup,
 	Show,
 	type ParentProps,
-    createEffect,
 } from "solid-js";
 import { isServer } from "solid-js/web";
 import { getSessionQuery, logoutAction } from "~/lib/api/auth";
-import { A, createAsync, revalidate, useAction, useNavigate } from "@solidjs/router";
+import { A, createAsync, useAction } from "@solidjs/router";
 import { useAppState } from "~/context";
 import XIcon from "lucide-solid/icons/x";
 import SunIcon from "lucide-solid/icons/sun";
@@ -53,10 +52,6 @@ export function Sidebar(props: SidebarProps) {
 			setSidebarOpen(false);
 		}
 	}
-
-	createEffect(() => {
-		console.log(session());
-	});
 
 	async function handleLogout() {
 		const res = await logout();
