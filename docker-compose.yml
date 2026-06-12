@@ -1,0 +1,46 @@
+name: phoenix_web
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                - PORT=${APP_PORT}
+        restart: unless-stopped
+        container_name: phoenix_web_app
+        hostname: app
+        env_file: .env
+        environment:
+            - HOST=app
+            - PORT=${APP_PORT}
+        ports:
+            - ${APP_PORT}:${APP_PORT}
+        networks:
+            - phoenix_web_network
+        volumes:
+            - static_data:/app/data/static
+
+    nginx:
+        image: nginx:alpine
+        container_name: phoenix_web_nginx
+        restart: unless-stopped
+        depends_on:
+            - app
+        env_file: .env
+        ports:
+            - 80:80
+            - 443:443
+        networks:
+            - phoenix_web_network
+        volumes:
+            - static_data:/srv/static
+            - nginx_cache:/var/cache/nginx/static
+
+networks:
+    phoenix_web_network:
+        driver: bridge
+
+volumes:
+    static_data:
+    nginx_cache:

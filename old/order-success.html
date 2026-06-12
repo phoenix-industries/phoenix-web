@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Order Success · Phoenix</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    :root { --bg: #f9fafc; --surface: #ffffff; --text-primary: #1e1e2f; --text-secondary: #4a4a5e; --accent-1: #ff8a4c; --accent-2: #ff6b2b; --gradient: linear-gradient(135deg, #ff8a4c, #ff4d4d); --border: #eaeef2; --shadow: 0 20px 30px -10px rgba(0,0,0,0.05); --glow: rgba(255,110,64,0.4); --navbar-bg: rgba(255,255,255,0.8); --divider-color: #eaeef2; }
+    body.dark { --bg: #12121a; --surface: #1e1e2a; --text-primary: #f0f0fa; --text-secondary: #b0b0c0; --accent-1: #ff9f6e; --accent-2: #ff7b3f; --gradient: linear-gradient(135deg, #ff9f6e, #ff5e5e); --border: #333344; --shadow: 0 20px 30px -10px rgba(0,0,0,0.7); --glow: rgba(255,140,80,0.6); --navbar-bg: rgba(30,30,42,0.9); --divider-color: #333344; }
+    body { background: var(--bg); color: var(--text-primary); line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .card { background: var(--surface); border-radius: 40px; border: 1px solid var(--border); padding: 2rem; max-width: 550px; width: 90%; text-align: center; box-shadow: var(--shadow); }
+    .success-icon { font-size: 4rem; color: #2ecc71; margin-bottom: 1rem; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .order-id { background: var(--bg); border-radius: 30px; padding: 0.5rem 1rem; display: inline-block; margin: 1rem 0; font-size: 1.1rem; font-weight: 600; }
+    .order-details { text-align: left; margin: 1rem 0; padding: 1rem; background: var(--bg); border-radius: 20px; }
+    .order-details p { margin: 0.5rem 0; }
+    .btn-home { background: var(--gradient); color: white; border: none; padding: 0.8rem 2rem; border-radius: 60px; font-weight: 600; cursor: pointer; margin-top: 1rem; text-decoration: none; display: inline-block; }
+    .btn-home:hover { transform: scale(1.02); box-shadow: 0 4px 14px var(--glow); }
+    .loading { padding: 2rem; text-align: center; }
+    @media (max-width: 600px) { .card { padding: 1.5rem; } h1 { font-size: 1.5rem; } }
+  </style>
+</head>
+<body>
+  <div class="card" id="successCard">
+    <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+    <h1>Thank you for your order!</h1>
+    <p>Your order has been placed successfully.</p>
+    <div class="order-id" id="orderIdDisplay">Order ID: ----</div>
+    <div id="orderDetails" class="order-details" style="display: none;"></div>
+    <p>You will receive a confirmation email shortly.</p>
+    <a href="dashboard.html" class="btn-home">Go to Dashboard</a>
+  </div>
+
+  <script>
+    (function() {
+      // ---------- Helper: get token ----------
+      function getToken() { return localStorage.getItem('phoenix_token'); }
+      function authHeaders() {
+        const token = getToken();
+        return {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        };
+      }
+
+      // ---------- Check auth ----------
+    //   const token = getToken();
+    //   if (!token) {
+    //     window.location.href = 'sign.html';
+    //     return;
+    //   }
+
+      const API_BASE_URL = 'https://backend.com/api';  
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderId = urlParams.get('orderId');
+      const orderIdDisplay = document.getElementById('orderIdDisplay');
+      const orderDetailsDiv = document.getElementById('orderDetails');
+
+      if (orderId) {
+        orderIdDisplay.innerText = `Order ID: ${orderId}`;
+        
+        fetch(`${API_BASE_URL}/orders/${orderId}`, { headers: authHeaders() })
+          .then(res => res.ok ? res.json() : null)
+          .then(order => {
+            if (order) {
+              let detailsHtml = `<p><strong>Total:</strong> ${order.totalAmount} ${order.currency || 'EGP'}</p>
+                                 <p><strong>Delivery:</strong> ${order.deliveryMethod === 'shipping' ? 'Shipping' : 'Pickup'}</p>`;
+              if (order.deliveryMethod === 'shipping' && order.shippingAddress) {
+                detailsHtml += `<p><strong>Address:</strong> ${order.shippingAddress.street}, ${order.shippingAddress.city}</p>`;
+              }
+              orderDetailsDiv.innerHTML = detailsHtml;
+              orderDetailsDiv.style.display = 'block';
+            }
+          })
+          .catch(err => console.warn('Could not fetch order details', err));
+      } else {
+        orderIdDisplay.innerText = 'Order ID: (not provided)';
+      }
+    })();
+  </script>
+</body>
+</html>

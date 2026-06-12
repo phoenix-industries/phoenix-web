@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Phoenix · About Us</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    :root {
+      --bg: #f9fafc; --surface: #ffffff; --text-primary: #1e1e2f; --text-secondary: #4a4a5e;
+      --accent-1: #ff8a4c; --accent-2: #ff6b2b; --gradient: linear-gradient(135deg, #ff8a4c, #ff4d4d);
+      --border: #eaeef2; --shadow: 0 20px 30px -10px rgba(0,0,0,0.05); --glow: rgba(255,110,64,0.4);
+      --navbar-bg: rgba(255,255,255,0.8); --divider-color: #eaeef2;
+    }
+    body.dark {
+      --bg: #12121a; --surface: #1e1e2a; --text-primary: #f0f0fa; --text-secondary: #b0b0c0;
+      --accent-1: #ff9f6e; --accent-2: #ff7b3f; --gradient: linear-gradient(135deg, #ff9f6e, #ff5e5e);
+      --border: #333344; --shadow: 0 20px 30px -10px rgba(0,0,0,0.7); --glow: rgba(255,140,80,0.6);
+      --navbar-bg: rgba(30,30,42,0.9); --divider-color: #333344;
+    }
+    body { background-color: var(--bg); color: var(--text-primary); line-height: 1.5; transition: background 0.3s, color 0.2s; min-height: 100vh; display: flex; flex-direction: column; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; width: 100%; flex: 1; }
+
+    /* ===== NAVBAR بسيط (لوجو + دارك مود فقط) ===== */
+    nav {
+      position: sticky; top: 0; backdrop-filter: blur(12px); background: var(--navbar-bg);
+      border-bottom: 1px solid var(--border); z-index: 100; padding: 0.5rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo-area { display: flex; align-items: center; gap: 0.5rem; }
+    .logo-area img { height: 44px; width: auto; border-radius: 10px; }
+    .logo-text h2 { font-size: 1.4rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .logo-text span { font-size: 0.7rem; color: var(--text-secondary); display: block; }
+    .theme-toggle { background: none; border: none; color: var(--text-primary); font-size: 1.3rem; cursor: pointer; }
+
+    /* ===== محتوى الصفحة (تصميم ساحر بسيط) ===== */
+    .about-hero {
+      background: linear-gradient(135deg, rgba(255,140,76,0.08), rgba(255,77,77,0.05));
+      padding: 4rem 0; text-align: center; border-bottom: 1px solid var(--border);
+    }
+    .about-hero h1 { font-size: 3rem; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 1rem; }
+    .about-hero p { font-size: 1.2rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto; }
+
+    .mission-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 2rem; margin: 4rem 0; }
+    .mission-card { background: var(--surface); border-radius: 32px; padding: 2rem; text-align: center; border: 1px solid var(--border); transition: 0.3s; }
+    .mission-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); border-color: var(--accent-1); }
+    .mission-icon { font-size: 2.5rem; color: var(--accent-1); margin-bottom: 1rem; }
+
+    .story-section {
+      display: flex; gap: 3rem; align-items: center; margin: 4rem 0; flex-wrap: wrap;
+      background: var(--surface); border-radius: 48px; padding: 2.5rem; border: 1px solid var(--border);
+    }
+    .story-text { flex: 2; }
+    .story-text h2 { font-size: 2rem; margin-bottom: 1rem; }
+    .story-text p { color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.7; }
+    .story-logo-box { flex: 1; text-align: center; }
+    .magic-logo { width: 180px; border-radius: 32px; animation: floatGlow 2.5s infinite ease-in-out; }
+    @keyframes floatGlow { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
+
+    .howitworks { margin: 4rem 0; }
+    .flow-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 2rem; }
+    .flow-step { flex: 1; min-width: 240px; background: var(--surface); border-radius: 32px; padding: 2rem 1.5rem; text-align: center; border: 1px solid var(--border); }
+    .step-number { width: 48px; height: 48px; background: var(--gradient); color: white; border-radius: 60px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.3rem; margin: 0 auto 1rem; }
+
+    .gallery { margin: 4rem 0; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .gallery-item { border-radius: 24px; overflow: hidden; aspect-ratio: 1/1; background: var(--surface); border: 1px solid var(--border); }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+
+    .team-section { margin: 4rem 0; }
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 2rem; margin-top: 2rem; }
+    .team-card { background: var(--surface); border-radius: 28px; padding: 1.5rem; text-align: center; border: 1px solid var(--border); }
+    .team-avatar { width: 100px; height: 100px; background: var(--gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 2.5rem; font-weight: 600; color: white; }
+    .team-social { display: flex; justify-content: center; gap: 1rem; margin-top: 0.8rem; }
+    .team-social a { color: #0077B5; font-size: 1.4rem; }
+    .team-social a:hover { color: var(--accent-1); }
+
+    .simple-footer { margin-top: 3rem; padding: 1rem; text-align: center; border-top: 1px solid var(--divider-color); color: var(--text-secondary); font-size: 0.8rem; }
+
+    @media (max-width: 768px) {
+      .about-hero h1 { font-size: 2rem; }
+      .story-section { padding: 1.5rem; }
+      .magic-logo { width: 120px; }
+      .gallery-grid { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo-area">
+    <img src="assets/images/photo_2026-02-17_19-01-20.jpg" alt="Phoenix">
+    <div class="logo-text"><h2>Phoenix</h2><span>donate & trade</span></div>
+  </div>
+  <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+</nav>
+
+<main>
+  <div class="about-hero">
+    <div class="container">
+      <h1>Give your items a second chance</h1>
+      <p>We believe in rebirth, renewal, and community.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="mission-grid">
+      <div class="mission-card"><div class="mission-icon"><i class="fas fa-bullseye"></i></div><h3>Our Mission</h3><p>Reduce waste and give used items a new life — donate or trade smartly.</p></div>
+      <div class="mission-card"><div class="mission-icon"><i class="fas fa-eye"></i></div><h3>Our Vision</h3><p>Egypt’s leading circular economy platform for solidarity and exchange.</p></div>
+      <div class="mission-card"><div class="mission-icon"><i class="fas fa-heart"></i></div><h3>Our Values</h3><p>Trust, sustainability, community impact, innovation.</p></div>
+    </div>
+
+    <div class="story-section">
+      <div class="story-text">
+        <h2>The Phoenix Story</h2>
+        <p>The Phoenix is a legendary bird that symbolizes rebirth, transformation, and hope. It rises from its own ashes, starting a new life stronger than before.</p>
+        <p>We chose Phoenix because it reflects our core idea: items that seem old are given a second life through our marketplace. Instead of being wasted, they are reborn into something valuable for someone else.</p>
+        <p>Our donation system turns unused belongings into acts of kindness, creating positive impact in the community.</p>
+        <p><strong>Phoenix is a cycle of renewal — giving and reusing bring new beginnings.</strong></p>
+      </div>
+      <div class="story-logo-box">
+        <img src="assets/images/photo_2026-02-17_19-01-20.jpg" alt="Phoenix Logo" class="magic-logo">
+      </div>
+    </div>
+
+    <div class="howitworks">
+      <h2 style="text-align:center;">How It Works</h2>
+      <div class="flow-steps">
+        <div class="flow-step"><div class="step-number">1</div><i class="fas fa-upload" style="font-size:2rem; color:var(--accent-1);"></i><h3>Listing & Classification</h3><p>User uploads an item, chooses category: Donate or Exchange/Sell.</p></div>
+        <div class="flow-step"><div class="step-number">2</div><i class="fas fa-robot" style="font-size:2rem; color:var(--accent-1);"></i><h3>AI Matching & Communication</h3><p>AI matches items or allows browsing. Chat directly on the platform.</p></div>
+        <div class="flow-step"><div class="step-number">3</div><i class="fas fa-handshake" style="font-size:2rem; color:var(--accent-1);"></i><h3>Successful Rebirth</h3><p>Meet safely, complete the exchange — give the item a second life.</p></div>
+      </div>
+    </div>
+
+    <div class="gallery">
+      <h2 style="text-align:center;">Moments of Giving & Exchange</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item"><img src="assets/images/Donations01.jpg" alt="Donation" onerror="this.src='https://placehold.co/200x200?text=Donation'"></div>
+        <div class="gallery-item"><img src="assets/images/Donations02.jpg" alt="Donation" onerror="this.src='https://placehold.co/200x200?text=Donation'"></div>
+        <div class="gallery-item"><img src="assets/images/Donations03.jpg" alt="Donation" onerror="this.src='https://placehold.co/200x200?text=Donation'"></div>
+        <div class="gallery-item"><img src="assets/images/Donations04.jpg" alt="Donation" onerror="this.src='https://placehold.co/200x200?text=Donation'"></div>
+        <div class="gallery-item"><img src="assets/images/Donations05.jpg" alt="Donation" onerror="this.src='https://placehold.co/200x200?text=Donation'"></div>
+      </div>
+    </div>
+
+    <div class="team-section">
+      <h2 style="text-align:center;">Meet the Phoenix Team</h2>
+      <div class="team-grid">
+        <div class="team-card"><div class="team-avatar">L</div><h4>Lamiaa Elsheikh</h4><p>UI/UX & Frontend</p><div class="team-social"><a href="https://www.linkedin.com/in/lamiaa-elsheikh-272b3831a" target="_blank"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="team-card"><div class="team-avatar">A</div><h4>Abdallah Samir</h4><p>UI/UX & Frontend</p><div class="team-social"><a href="https://www.linkedin.com/in/abdallah-samir-022b8a271" target="_blank"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="team-card"><div class="team-avatar">H</div><h4>Hana El-Zeiny</h4><p>AI & ML Engineer</p><div class="team-social"><a href="https://www.linkedin.com/in/hana-el-zeiny-6974ab311" target="_blank"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="team-card"><div class="team-avatar">N</div><h4>Nada El Kolaly</h4><p>Backend Developer</p><div class="team-social"><a href="https://www.linkedin.com/in/nada-elkolaly-3075b424b" target="_blank"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="team-card"><div class="team-avatar">M</div><h4>Mohamed Bahaa</h4><p>Backend Developer</p><div class="team-social"><a href="https://www.linkedin.com/in/mohamed-bahaa-9684b726a" target="_blank"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="team-card"><div class="team-avatar">O</div><h4>Osama Mohamed Ali</h4><p>Backend Developer</p><div class="team-social"><a href="https://www.linkedin.com/in/osamamragab" target="_blank"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="team-card"><div class="team-avatar">M</div><h4>Marena Emad</h4><p>Flutter Developer</p><div class="team-social"><a href="https://www.linkedin.com/in/marena-emad-b9a542272" target="_blank"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="team-card"><div class="team-avatar">A</div><h4>Ahmed El-Hamaky</h4><p>Flutter Developer</p><div class="team-social"><a href="https://www.linkedin.com/in/ahmed-elhamaky-49440b312" target="_blank"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="team-card"><div class="team-avatar">Z</div><h4>Zyad Mohamed</h4><p>QA & Deployment</p><div class="team-social"><a href="https://www.linkedin.com/in/zyadmohamed" target="_blank"><i class="fab fa-linkedin"></i></a></div></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+ 
+
+<script>
+  (function() {
+    const themeToggle = document.getElementById('themeToggle');
+    function applyTheme(isDark) {
+      document.body.classList.toggle('dark', isDark);
+      const icon = themeToggle.querySelector('i');
+      icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+      localStorage.setItem('phoenix-theme', isDark ? 'dark' : 'light');
+    }
+    applyTheme(localStorage.getItem('phoenix-theme') === 'dark');
+    themeToggle.addEventListener('click', () => applyTheme(!document.body.classList.contains('dark')));
+  })();
+</script>
+</body>
+</html>

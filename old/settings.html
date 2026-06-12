@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Phoenix · Settings</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+     
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    :root { --bg: #f9fafc; --surface: #ffffff; --text-primary: #1e1e2f; --text-secondary: #4a4a5e; --accent-1: #ff8a4c; --accent-2: #ff6b2b; --gradient: linear-gradient(135deg, #ff8a4c, #ff4d4d); --border: #eaeef2; --shadow: 0 20px 30px -10px rgba(0,0,0,0.05); --glow: rgba(255,110,64,0.4); --navbar-bg: rgba(255,255,255,0.8); --divider-color: #eaeef2; --danger: #e74c3c; --success: #2ecc71; }
+    body.dark { --bg: #12121a; --surface: #1e1e2a; --text-primary: #f0f0fa; --text-secondary: #b0b0c0; --accent-1: #ff9f6e; --accent-2: #ff7b3f; --gradient: linear-gradient(135deg, #ff9f6e, #ff5e5e); --border: #333344; --shadow: 0 20px 30px -10px rgba(0,0,0,0.7); --glow: rgba(255,140,80,0.6); --navbar-bg: rgba(30,30,42,0.9); --divider-color: #333344; --danger: #ff6b6b; --success: #2ecc71; }
+    body { background: var(--bg); color: var(--text-primary); line-height: 1.5; transition: background 0.3s, color 0.2s; min-height: 100vh; display: flex; flex-direction: column; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; width: 100%; flex: 1; }
+    nav { position: sticky; top: 0; backdrop-filter: blur(12px); background: var(--navbar-bg); border-bottom: 1px solid var(--border); z-index: 100; padding: 0.5rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+    .logo-area { display: flex; align-items: center; gap: 0.3rem; }
+    .logo-area img { height: 40px; width: auto; border-radius: 8px; }
+    .logo-text h2 { font-size: 1.2rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .logo-text span { font-size: 0.7rem; color: var(--text-secondary); display: block; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { text-decoration: none; color: var(--text-primary); font-weight: 500; transition: 0.2s; }
+    .nav-links a:hover { color: var(--accent-1); }
+    .nav-right { display: flex; align-items: center; gap: 0.8rem; position: relative; }
+    .nav-icon { font-size: 1.2rem; color: var(--text-primary); cursor: pointer; transition: 0.2s; }
+    .nav-icon:hover { color: var(--accent-1); transform: scale(1.05); }
+    .theme-toggle { background: none; border: none; color: var(--text-primary); font-size: 1.2rem; cursor: pointer; }
+    .profile-badge { display: flex; align-items: center; justify-content: center; background: var(--surface); border-radius: 50%; width: 40px; height: 40px; border: 1px solid var(--border); cursor: pointer; text-decoration: none; color: var(--text-primary); font-weight: 600; }
+    .profile-badge i { font-size: 1.2rem; }
+    .profile-badge:hover { background: var(--accent-1); color: white; }
+    .logout-btn { background: transparent; border: 1px solid var(--accent-1); color: var(--accent-1); padding: 0.3rem 0.9rem; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+    .logout-btn:hover { background: var(--accent-1); color: white; box-shadow: 0 0 15px var(--glow); }
+    .hamburger { display: none; font-size: 1.5rem; cursor: pointer; color: var(--text-primary); margin-left: 0.5rem; }
+    .notification-wrapper, .message-wrapper { position: relative; display: inline-flex; align-items: center; }
+    .notification-dropdown, .message-dropdown { position: absolute; top: calc(100% + 12px); right: 0; width: 340px; max-width: 90vw; background: var(--surface); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid var(--border); z-index: 1001; display: none; flex-direction: column; overflow: hidden; }
+    .notification-dropdown.show, .message-dropdown.show { display: flex; }
+    .dropdown-header { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--surface); font-weight: 600; }
+    .notifications-list, .messages-list { padding: 1rem; text-align: center; color: var(--text-secondary); }
+    .dropdown-footer { padding: 0.8rem; text-align: center; border-top: 1px solid var(--border); background: var(--surface); }
+    .dropdown-footer a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; }
+    .dropdown-footer a:hover { color: var(--accent-1); text-decoration: underline; }
+    .sidebar { position: fixed; top: 0; left: -100%; width: 250px; height: 100vh; background: var(--surface); border-right: 1px solid var(--border); padding: 2rem 1rem; transition: left 0.3s; z-index: 200; }
+    .sidebar.open { left: 0; }
+    .sidebar .close-btn { text-align: right; margin-bottom: 2rem; font-size: 1.5rem; cursor: pointer; }
+    .sidebar ul { list-style: none; }
+    .sidebar li { margin-bottom: 1.2rem; }
+    .sidebar a, .sidebar button { text-decoration: none; color: var(--text-primary); font-weight: 500; font-size: 1.1rem; display: flex; align-items: center; gap: 0.8rem; background: none; border: none; width: 100%; cursor: pointer; }
+    .sidebar a:hover, .sidebar button:hover { color: var(--accent-1); }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 150; display: none; }
+    .overlay.active { display: block; }
+    .settings-layout { display: flex; gap: 2rem; margin: 2rem 0; }
+    .settings-sidebar { width: 260px; background: var(--surface); border-radius: 24px; padding: 1.5rem 0; border: 1px solid var(--border); box-shadow: var(--shadow); height: fit-content; }
+    .settings-nav-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; color: var(--text-secondary); cursor: pointer; transition: 0.2s; border-left: 3px solid transparent; }
+    .settings-nav-item.active { background: rgba(255,138,76,0.1); color: var(--accent-1); border-left-color: var(--accent-1); }
+    .settings-content { flex: 1; background: var(--surface); border-radius: 24px; padding: 2rem; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .section-title { font-size: 1.4rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: var(--accent-1); }
+    .settings-card { background: var(--bg); border-radius: 20px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid var(--border); }
+    .form-group { margin-bottom: 1.2rem; position: relative; }
+    .form-group label { display: block; margin-bottom: 0.3rem; font-weight: 500; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 30px; color: var(--text-primary); }
+    .form-group input:read-only { background: var(--bg); cursor: not-allowed; opacity: 0.8; }
+    .password-wrapper { position: relative; }
+    .password-wrapper input { padding-right: 2.8rem; }
+    .toggle-password { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); }
+    .strength-meter { margin-top: 0.5rem; height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .strength-bar { height: 100%; width: 0%; transition: width 0.3s; }
+    .strength-text { font-size: 0.7rem; margin-top: 0.3rem; }
+    .password-requirements { background: var(--surface); border-radius: 15px; padding: 0.8rem 1rem; margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-secondary); border: 1px solid var(--border); }
+    .password-requirements p { font-weight: 600; margin-bottom: 0.3rem; }
+    .password-requirements ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin-top: 0.3rem; }
+    .password-requirements li { display: flex; align-items: center; gap: 0.3rem; font-size: 0.7rem; }
+    .password-requirements li i { font-size: 0.6rem; color: var(--accent-1); }
+    .req-met { color: var(--success); }
+    .req-met i { color: var(--success) !important; }
+    .toggle-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; }
+    .toggle-item input[type="checkbox"] { accent-color: var(--accent-1); width: 18px; height: 18px; cursor: pointer; }
+    .btn { background: var(--gradient); color: white; border: none; padding: 0.7rem 1.8rem; border-radius: 40px; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--glow); }
+    .btn-outline { background: transparent; border: 2px solid var(--accent-1); color: var(--accent-1); padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-outline:hover { transform: translateY(-2px); background: var(--accent-1); color: white; box-shadow: 0 4px 12px var(--glow); }
+    .change-photo-btn { background: var(--gradient); color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 500; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .change-photo-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--glow); }
+    .danger-zone { border: 2px solid var(--danger) !important; background: var(--surface); position: relative; overflow: hidden; }
+    .danger-zone::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--danger); }
+    .danger-title { display: flex; align-items: center; gap: 0.5rem; color: var(--danger); font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(231,76,60,0.2); }
+    .danger-action { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+    .danger-action:last-child { border-bottom: none; }
+    .danger-action-info h4 { font-size: 1rem; margin-bottom: 0.2rem; }
+    .danger-action-info p { font-size: 0.8rem; color: var(--text-secondary); }
+    .danger-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .danger-btn:hover { background: var(--danger); color: white; box-shadow: 0 2px 8px rgba(231,76,60,0.3); }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 2000; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: visibility 0.2s, opacity 0.2s; }
+    .modal-overlay.active { visibility: visible; opacity: 1; }
+    .modal-box { background: var(--surface); border-radius: 32px; padding: 2rem; max-width: 450px; width: 90%; text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow); transform: scale(0.95); transition: transform 0.2s; }
+    .modal-overlay.active .modal-box { transform: scale(1); }
+    .modal-box h3 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent-1); }
+    .modal-box p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .modal-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .modal-btn { background: var(--gradient); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 60px; font-weight: 600; cursor: pointer; }
+    .modal-btn.outline { background: transparent; border: 2px solid var(--accent-1); color: var(--accent-1); }
+    .modal-btn.danger { background: transparent; border: 2px solid var(--danger); color: var(--danger); }
+    .cropper-modal .modal-box { max-width: 700px; width: 95%; }
+    .cropper-container { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .circle-cropper { position: relative; width: 280px; height: 280px; border-radius: 50%; overflow: hidden; border: 3px solid var(--accent-1); background: var(--bg); margin: 0 auto; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    .circle-cropper canvas { width: 100%; height: 100%; cursor: grab; }
+    .circle-cropper canvas:active { cursor: grabbing; }
+    .cropper-controls { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; width: 100%; }
+    .zoom-slider { width: 200px; accent-color: var(--accent-1); }
+    .chatbot { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; align-items: center; gap: 0px; }
+    .chat-circle { width: 56px; height: 56px; background: linear-gradient(145deg, #ff9f4a, #ff4d2e); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 15px rgba(255,80,40,0.8), 0 8px 20px rgba(0,0,0,0.2); animation: float-glow 2.2s infinite; position: relative; }
+    .chat-circle img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.6); }
+    .chat-circle::after { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; background: radial-gradient(circle, rgba(255,100,40,0.6), transparent 70%); animation: pulse-ring 1.8s infinite; pointer-events: none; }
+    @keyframes float-glow { 0% { transform: translateY(0px); box-shadow: 0 0 12px rgba(255,80,40,0.7); } 50% { transform: translateY(-6px); box-shadow: 0 0 28px rgba(255,100,50,1); } 100% { transform: translateY(0px); box-shadow: 0 0 12px rgba(255,80,40,0.7); } }
+    @keyframes pulse-ring { 0% { opacity: 0.6; transform: scale(1); } 70% { opacity: 0; transform: scale(1.3); } 100% { opacity: 0; transform: scale(1.3); } }
+    .chat-label { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); color: #ffaa66; font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: 30px; margin-top: 6px; cursor: pointer; border: 1px solid #ff8a4c; }
+    .chat-box { position: absolute; bottom: 80px; right: 0; width: 90vw; max-width: 450px; height: 500px; background: rgba(255,255,255,0.75); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(255,255,255,0.3); display: none; flex-direction: column; overflow: hidden; }
+    body.dark .chat-box { background: rgba(30,30,42,0.85); }
+    .chat-box.show { display: flex; }
+    .chat-header { padding: 1rem 1.2rem; background: rgba(0,0,0,0.05); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+    .chat-header h4 { font-weight: 700; color: var(--accent-1); }
+    .close-chat { background: none; border: none; font-size: 1.2rem; cursor: pointer; }
+    .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .chat-message { max-width: 85%; padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; background: var(--surface); color: var(--text-primary); align-self: flex-start; border: 1px solid var(--border); }
+    .chat-message.bot { background: var(--gradient); color: white; border: none; }
+    .chat-input-area { display: flex; padding: 10px; gap: 8px; border-top: 1px solid var(--border); }
+    .chat-input-area textarea { flex: 1; background: var(--surface); border: none; border-radius: 40px; padding: 8px 14px; resize: none; font-size: 0.8rem; }
+    .chat-input-area button { background: var(--gradient); border: none; border-radius: 40px; padding: 0 18px; color: white; font-weight: bold; cursor: pointer; }
+    .simple-footer { margin-top: 3rem; padding: 1.5rem; text-align: center; border-top: 1px solid var(--divider-color); color: var(--text-secondary); font-size: 0.9rem; }
+    .simple-footer a { color: var(--accent-1); text-decoration: none; font-weight: 500; }
+    .custom-select { position: relative; width: 100%; }
+    .custom-select-trigger { width: 100%; padding: 0.8rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 30px; color: var(--text-primary); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+    .custom-select-trigger:hover { border-color: var(--accent-1); }
+    .custom-select-trigger.open { border-color: var(--accent-1); box-shadow: 0 0 0 3px var(--glow); }
+    .custom-select-dropdown { position: absolute; top: calc(100% + 8px); left: 0; right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--shadow); z-index: 100; display: none; overflow: hidden; animation: fadeIn 0.2s ease; }
+    .custom-select-dropdown.show { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .custom-select-search { padding: 0.8rem; border-bottom: 1px solid var(--border); }
+    .custom-select-search input { width: 100%; padding: 0.6rem 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 30px; font-size: 0.85rem; outline: none; }
+    .custom-select-search input:focus { border-color: var(--accent-1); }
+    .custom-select-options { max-height: 240px; overflow-y: auto; }
+    .custom-select-option { padding: 0.7rem 1rem; cursor: pointer; transition: background 0.2s; }
+    .custom-select-option:hover { background: var(--bg); color: var(--accent-1); }
+    .custom-select-option.selected { background: rgba(255,138,76,0.1); color: var(--accent-1); font-weight: 500; }
+    @media (max-width: 768px) { .nav-links, .nav-right .theme-toggle, .nav-right .notification-wrapper, .nav-right .message-wrapper, .nav-right .logout-btn { display: none; } .hamburger { display: block; } .settings-layout { flex-direction: column; } .settings-sidebar { width: 100%; display: flex; overflow-x: auto; padding: 0.5rem; } .settings-nav-item { border-left: none; border-bottom: 3px solid transparent; white-space: nowrap; } .settings-nav-item.active { border-bottom-color: var(--accent-1); } .circle-cropper { width: 200px; height: 200px; } .danger-action { flex-direction: column; align-items: flex-start; gap: 0.8rem; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo-area"><img src="assets/images/photo_2026-02-17_19-01-20.jpg" alt="Phoenix"><div class="logo-text"><h2>Phoenix</h2><span>donate & trade</span></div></div>
+  <div class="nav-links"><a href="dashboard.html">Home</a><a href="market.html">Market</a><a href="donate.html">Donate</a><a href="sell.html">Sell</a></div>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+    <div class="notification-wrapper"><i class="fas fa-bell nav-icon" id="notificationBell"></i></div>
+    <div class="message-wrapper"><i class="fas fa-comment-dots nav-icon" id="messageIcon"></i></div>
+    <a href="profile.html" class="profile-badge" id="profileBadge"><i class="fas fa-user"></i></a>
+    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    <span class="hamburger" id="hamburger">☰</span>
+  </div>
+</nav>
+
+<div class="sidebar" id="sidebar"><div class="close-btn" id="closeSidebar">✕</div><ul><li><a href="dashboard.html">Home</a></li><li><a href="market.html">Market</a></li><li><a href="donate.html">Donate</a></li><li><a href="sell.html">Sell</a></li><li><a href="profile.html">Profile</a></li><li><a href="favourites.html">Favorites</a></li><li><a href="settings.html">Settings</a></li><li><button id="sidebarDarkMode"><i class="fas fa-moon"></i> Dark Mode</button></li><li><button id="sidebarLogout">Logout</button></li></ul></div>
+<div class="overlay" id="overlay"></div>
+
+<main class="container">
+  <div class="settings-layout">
+    <div class="settings-sidebar">
+      <div class="settings-nav-item active" data-section="profile"><i class="fas fa-user-circle"></i> Profile</div>
+      <div class="settings-nav-item" data-section="security"><i class="fas fa-shield-alt"></i> Security</div>
+      <div class="settings-nav-item" data-section="notifications"><i class="fas fa-bell"></i> Notifications</div>
+      <div class="settings-nav-item" data-section="account"><i class="fas fa-cog"></i> Account</div>
+    </div>
+    <div class="settings-content" id="settingsContent"></div>
+  </div>
+</main>
+
+<footer class="simple-footer">Copyright © 2026 Phoenix — <a href="about.html">About</a></footer>
+
+<div class="chatbot">
+  <div class="chat-circle" id="chatIcon"><img src="assets/images/photo_2026-02-17_19-01-20.jpg" alt="AI"></div>
+  <span class="chat-label" id="chatLabel">Ask AI</span>
+  <div class="chat-box" id="chatBox">
+    <div class="chat-header"><h4><i class="fas fa-feather-alt"></i> Phoenix AI</h4><button class="close-chat" id="closeChatBtn">✕</button></div>
+    <div class="chat-messages" id="chatMessages"><div class="chat-message bot">👋 Hi! How can I help?</div></div>
+    <div class="chat-input-area"><textarea id="chatInput" placeholder="Type..."></textarea><button id="sendChat">Send</button></div>
+  </div>
+</div>
+
+<!-- Modals -->
+<div id="passwordErrorModal" class="modal-overlay">
+  <div class="modal-box">
+    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: var(--danger); margin-bottom: 1rem;"></i>
+    <h3>Incorrect Password</h3>
+    <p>The current password is incorrect. Please try again.</p>
+    <div class="modal-actions">
+      <button class="modal-btn outline" id="cancelPasswordModal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="deleteModal" class="modal-overlay">
+  <div class="modal-box">
+    <i class="fas fa-trash-alt" style="font-size: 2rem; color: var(--danger); margin-bottom: 1rem;"></i>
+    <h3>Permanently Delete Account</h3>
+    <p>⚠️ WARNING: This action is permanent. All your data will be deleted. Continue?</p>
+    <div class="modal-actions">
+      <button class="modal-btn outline" id="cancelDelete">Cancel</button>
+      <button class="modal-btn danger" id="confirmDelete">Yes, Delete Permanently</button>
+    </div>
+  </div>
+</div>
+
+<div id="cropperModal" class="modal-overlay cropper-modal">
+  <div class="modal-box">
+    <h3>Adjust Profile Photo</h3>
+    <div class="cropper-container">
+      <div class="circle-cropper"><canvas id="cropperCanvas" width="280" height="280"></canvas></div>
+      <div class="cropper-controls">
+        <input type="range" id="zoomSlider" min="0.3" max="3" step="0.01" value="1" class="zoom-slider">
+        <button class="btn-outline" id="fitToCircleBtn">Fit to Circle</button>
+        <button class="btn-outline" id="resetCropperBtn">Reset</button>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn outline" id="cancelCropper">Cancel</button>
+        <button class="modal-btn" id="confirmCropper">Confirm Photo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ---------- API Configuration ----------
+  const API_BASE_URL = 'https:// backend.com/api';   
+
+  // ---------- Helper: get token and auth headers ----------
+  function getToken() { return localStorage.getItem('phoenix_token'); }
+  function authHeaders() {
+    const token = getToken();
+    return {
+      'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    };
+  }
+
+  // ---------- Check authentication ----------
+  // const token = getToken();
+  // if (!token) {
+  //   window.location.href = 'sign.html';
+  //   return;
+  // }
+
+  // ---------- Global user object ----------
+  let currentUser = null;
+
+  // ---------- Dark Mode ----------
+  const themeToggle = document.getElementById('themeToggle');
+  const sidebarDarkBtn = document.getElementById('sidebarDarkMode');
+  function applyTheme(isDark) {
+    document.body.classList.toggle('dark', isDark);
+    themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    if (sidebarDarkBtn) sidebarDarkBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i> Dark Mode' : '<i class="fas fa-moon"></i> Dark Mode';
+    localStorage.setItem('phoenix-theme', isDark ? 'dark' : 'light');
+  }
+  applyTheme(localStorage.getItem('phoenix-theme') === 'dark');
+  themeToggle.onclick = () => applyTheme(!document.body.classList.contains('dark'));
+  if (sidebarDarkBtn) sidebarDarkBtn.onclick = () => applyTheme(!document.body.classList.contains('dark'));
+
+  // ---------- Sidebar & Logout ----------
+  const hamburger = document.getElementById('hamburger');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('active'); }
+  function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
+  hamburger.onclick = openSidebar;
+  document.getElementById('closeSidebar').onclick = closeSidebar;
+  overlay.onclick = closeSidebar;
+  function logout() { if (confirm('Logout?')) { localStorage.clear(); window.location.href = 'index.html'; } }
+  document.getElementById('logoutBtn').onclick = logout;
+  document.getElementById('sidebarLogout').onclick = logout;
+
+  // Profile badge (just icon)
+  const badge = document.getElementById('profileBadge');
+  if (badge) badge.innerHTML = '<i class="fas fa-user"></i>';
+
+  // ---------- Dropdowns (notifications / messages) ----------
+  let activeDropdown = null;
+  const notifDD = document.createElement('div'); notifDD.className = 'notification-dropdown';
+  notifDD.innerHTML = `<div class="dropdown-header">Notifications</div><div class="notifications-list">🔔 No notifications yet</div><div class="dropdown-footer"><a href="notifications.html">View all</a></div>`;
+  document.body.appendChild(notifDD);
+  const msgDD = document.createElement('div'); msgDD.className = 'message-dropdown';
+  msgDD.innerHTML = `<div class="dropdown-header">Messages</div><div class="messages-list">💬 No messages yet</div><div class="dropdown-footer"><a href="chat.html">View all</a></div>`;
+  document.body.appendChild(msgDD);
+  function closeAllDD() { notifDD.classList.remove('show'); msgDD.classList.remove('show'); activeDropdown = null; }
+  function openDD(dd, icon) { closeAllDD(); const r = icon.getBoundingClientRect(); dd.style.top = (r.bottom + window.scrollY + 5) + 'px'; dd.style.right = (window.innerWidth - r.right - window.scrollX) + 'px'; dd.classList.add('show'); activeDropdown = dd; }
+  document.getElementById('notificationBell').onclick = e => { e.stopPropagation(); activeDropdown === notifDD ? closeAllDD() : openDD(notifDD, e.currentTarget); };
+  document.getElementById('messageIcon').onclick = e => { e.stopPropagation(); activeDropdown === msgDD ? closeAllDD() : openDD(msgDD, e.currentTarget); };
+  document.addEventListener('click', e => { if (!e.target.closest('.notification-wrapper') && !e.target.closest('.message-wrapper')) closeAllDD(); });
+
+  // ---------- Chatbot ----------
+  const chatBox = document.getElementById('chatBox');
+  const toggleChat = () => chatBox.classList.toggle('show');
+  document.getElementById('chatIcon').onclick = toggleChat;
+  document.getElementById('chatLabel').onclick = toggleChat;
+  document.getElementById('closeChatBtn').onclick = () => chatBox.classList.remove('show');
+  document.getElementById('sendChat').onclick = () => {
+    const msg = document.getElementById('chatInput').value.trim(); if (!msg) return;
+    const msgs = document.getElementById('chatMessages');
+    const u = document.createElement('div'); u.className = 'chat-message'; u.textContent = msg; msgs.appendChild(u);
+    document.getElementById('chatInput').value = '';
+    setTimeout(() => { const b = document.createElement('div'); b.className = 'chat-message bot'; b.textContent = 'Thanks! 🔥'; msgs.appendChild(b); msgs.scrollTop = msgs.scrollHeight; }, 500);
+  };
+
+  // ---------- Load user data from API ----------
+  async function loadUserData() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/me`, { headers: authHeaders() });
+      if (!res.ok) {
+        if (res.status === 401) { window.location.href = 'sign.html'; }
+        throw new Error('Failed to load user');
+      }
+      const user = await res.json();
+      currentUser = user;
+      // update local storage (optional)
+      localStorage.setItem('phoenix_user', JSON.stringify(user));
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      return user;
+    } catch (err) {
+      console.error(err);
+      document.getElementById('settingsContent').innerHTML = '<div style="text-align:center;padding:2rem;">Failed to load settings. Please try again later.</div>';
+      return null;
+    }
+  }
+
+  // ---------- Image Cropper (same as before) ----------
+  let cropperImage = null, cropperCanvas = null, cropperCtx = null;
+  let cropperZoom = 1, cropperPanX = 0, cropperPanY = 0;
+  let cropperIsDragging = false, cropperLastX = 0, cropperLastY = 0;
+
+  function initCropper(imageSrc) {
+    cropperCanvas = document.getElementById('cropperCanvas');
+    cropperCtx = cropperCanvas.getContext('2d');
+    const img = new Image();
+    img.onload = () => { cropperImage = img; cropperZoom = 1; cropperPanX = 0; cropperPanY = 0; document.getElementById('zoomSlider').value = 1; drawCropper(); };
+    img.src = imageSrc;
+  }
+  function drawCropper() {
+    if (!cropperImage || !cropperCtx) return;
+    const size = cropperCanvas.width;
+    cropperCtx.clearRect(0, 0, size, size);
+    cropperCtx.save();
+    cropperCtx.beginPath(); cropperCtx.arc(size/2, size/2, size/2, 0, Math.PI*2); cropperCtx.clip();
+    const scaledWidth = cropperImage.width * cropperZoom;
+    const scaledHeight = cropperImage.height * cropperZoom;
+    const x = cropperPanX + (size - scaledWidth)/2;
+    const y = cropperPanY + (size - scaledHeight)/2;
+    cropperCtx.drawImage(cropperImage, x, y, scaledWidth, scaledHeight);
+    cropperCtx.restore();
+    cropperCtx.beginPath(); cropperCtx.arc(size/2, size/2, size/2-1, 0, Math.PI*2);
+    cropperCtx.strokeStyle = 'var(--accent-1)'; cropperCtx.lineWidth = 3; cropperCtx.stroke();
+  }
+  function startDrag(e) { cropperIsDragging = true; const rect = cropperCanvas.getBoundingClientRect(); const scaleX = cropperCanvas.width/rect.width, scaleY = cropperCanvas.height/rect.height; const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; cropperLastX = (clientX - rect.left)*scaleX; cropperLastY = (clientY - rect.top)*scaleY; e.preventDefault(); }
+  function onDrag(e) { if(!cropperIsDragging) return; const rect = cropperCanvas.getBoundingClientRect(); const scaleX = cropperCanvas.width/rect.width, scaleY = cropperCanvas.height/rect.height; const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; const currentX = (clientX - rect.left)*scaleX; const currentY = (clientY - rect.top)*scaleY; cropperPanX += currentX - cropperLastX; cropperPanY += currentY - cropperLastY; cropperLastX = currentX; cropperLastY = currentY; drawCropper(); e.preventDefault(); }
+  function endDrag() { cropperIsDragging = false; }
+  function zoomCropper(value) { cropperZoom = parseFloat(value); drawCropper(); }
+  function resetCropper() { cropperZoom = 1; cropperPanX = 0; cropperPanY = 0; document.getElementById('zoomSlider').value = 1; drawCropper(); }
+  function fitToCircle() { if(!cropperImage) return; const size = cropperCanvas.width; const scaleX = size/cropperImage.width, scaleY = size/cropperImage.height; const fitScale = Math.min(scaleX, scaleY); cropperZoom = fitScale; cropperPanX = 0; cropperPanY = 0; document.getElementById('zoomSlider').value = fitScale; drawCropper(); }
+  function getCroppedImage() { const size = cropperCanvas.width; const offCanvas = document.createElement('canvas'); offCanvas.width = size; offCanvas.height = size; const offCtx = offCanvas.getContext('2d'); offCtx.beginPath(); offCtx.arc(size/2, size/2, size/2, 0, Math.PI*2); offCtx.clip(); offCtx.drawImage(cropperCanvas, 0, 0, size, size); return offCanvas.toDataURL('image/png'); }
+
+  // ---------- Egyptian Governorates ----------
+  const egyptGovernorates = [
+    "Alexandria", "Aswan", "Asyut", "Beheira", "Beni Suef", "Cairo", "Dakahlia", "Damietta",
+    "Faiyum", "Gharbia", "Giza", "Ismailia", "Kafr El Sheikh", "Luxor", "Matrouh", "Minya",
+    "Monufia", "New Valley", "North Sinai", "Port Said", "Qalyubia", "Qena", "Red Sea",
+    "Sharqia", "Sohag", "South Sinai", "Suez"
+  ];
+
+  function createSearchableGovernorateDropdown(currentValue, onSelect) {
+    const container = document.createElement('div'); container.className = 'custom-select';
+    const trigger = document.createElement('div'); trigger.className = 'custom-select-trigger';
+    trigger.innerHTML = `<span>${currentValue || 'Select Governorate'}</span><i class="fas fa-chevron-down"></i>`;
+    const dropdown = document.createElement('div'); dropdown.className = 'custom-select-dropdown';
+    const searchDiv = document.createElement('div'); searchDiv.className = 'custom-select-search';
+    const searchInput = document.createElement('input'); searchInput.type = 'text'; searchInput.placeholder = 'Search governorate...';
+    searchDiv.appendChild(searchInput);
+    const optionsDiv = document.createElement('div'); optionsDiv.className = 'custom-select-options';
+    dropdown.appendChild(searchDiv); dropdown.appendChild(optionsDiv);
+    container.appendChild(trigger); container.appendChild(dropdown);
+    function renderOptions(filter = '') {
+      const filtered = egyptGovernorates.filter(g => g.toLowerCase().includes(filter.toLowerCase()));
+      optionsDiv.innerHTML = '';
+      filtered.forEach(gov => {
+        const opt = document.createElement('div'); opt.className = 'custom-select-option';
+        if (gov === currentValue) opt.classList.add('selected');
+        opt.textContent = gov;
+        opt.addEventListener('click', (e) => { e.stopPropagation(); currentValue = gov; trigger.innerHTML = `<span>${gov}</span><i class="fas fa-chevron-down"></i>`; onSelect(gov); dropdown.classList.remove('show'); trigger.classList.remove('open'); });
+        optionsDiv.appendChild(opt);
+      });
+      if (filtered.length === 0) { const no = document.createElement('div'); no.className = 'custom-select-option'; no.textContent = 'No results found'; no.style.cursor = 'default'; optionsDiv.appendChild(no); }
+    }
+    trigger.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('show'); trigger.classList.toggle('open'); if (dropdown.classList.contains('show')) { searchInput.value = ''; renderOptions(); searchInput.focus(); } });
+    searchInput.addEventListener('input', (e) => renderOptions(e.target.value));
+    document.addEventListener('click', (e) => { if (!container.contains(e.target)) { dropdown.classList.remove('show'); trigger.classList.remove('open'); } });
+    renderOptions();
+    return container;
+  }
+
+  // ---------- Render sections ----------
+  const contentDiv = document.getElementById('settingsContent');
+  const navItems = document.querySelectorAll('.settings-nav-item');
+
+  async function renderSection(section) {
+    if (!currentUser) await loadUserData();
+    if (!currentUser) return;
+
+    if (section === 'profile') {
+      const fullDisplayName = `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() || (currentUser.email ? currentUser.email.split('@')[0] : 'User');
+      const avatarSrc = currentUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullDisplayName)}&background=ff8a4c&color=fff&size=120`;
+      contentDiv.innerHTML = `
+        <div class="section-title"><i class="fas fa-user-circle"></i> Edit Profile</div>
+        <div class="settings-card">
+          <div style="display:flex; align-items:center; gap:1.5rem; margin-bottom:1.5rem;">
+            <img src="${avatarSrc}" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--accent-1); object-fit:cover;" id="profilePreview">
+            <div><button class="change-photo-btn" id="changeAvatarBtn"><i class="fas fa-camera"></i> Change Photo</button><input type="file" id="avatarInput" accept="image/*" style="display:none"></div>
+          </div>
+          <div class="form-group"><label>First Name</label><input type="text" id="firstName" value="${escapeHtml(currentUser.firstName || '')}"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" id="lastName" value="${escapeHtml(currentUser.lastName || '')}"></div>
+          <div class="form-group"><label>Email</label><input type="email" id="emailInput" value="${currentUser.email || ''}" readonly></div>
+          <div class="form-group"><label>Phone Number</label><input type="tel" id="phoneInput" value="${currentUser.phone || ''}" readonly><div style="font-size:0.7rem; margin-top:0.3rem;"><i class="fas fa-info-circle"></i> If you need to change your phone number, please contact support.</div></div>
+          <div class="form-row" id="locationRow" style="display:flex; gap:1rem; flex-wrap:wrap;"></div>
+          <div class="form-group"><label>Bio</label><textarea id="bio" rows="2" style="width:100%; padding:0.8rem; border-radius:20px;">${escapeHtml(currentUser.bio || '')}</textarea></div>
+          <button class="btn" id="saveProfileBtn">Save Changes</button>
+          <div id="profileMessage"></div>
+        </div>
+      `;
+      const locationRow = document.getElementById('locationRow');
+      const govWrapper = document.createElement('div'); govWrapper.className = 'form-group'; govWrapper.style.flex = '1';
+      const govLabel = document.createElement('label'); govLabel.textContent = 'Governorate'; govWrapper.appendChild(govLabel);
+      const govContainer = createSearchableGovernorateDropdown(currentUser.governorate || '', (selected) => { currentUser.governorate = selected; });
+      govWrapper.appendChild(govContainer);
+      const cityWrapper = document.createElement('div'); cityWrapper.className = 'form-group'; cityWrapper.style.flex = '1';
+      const cityLabel = document.createElement('label'); cityLabel.textContent = 'City'; cityWrapper.appendChild(cityLabel);
+      const cityInput = document.createElement('input'); cityInput.type = 'text'; cityInput.id = 'cityInput'; cityInput.placeholder = 'Enter City Name'; cityInput.value = currentUser.city || '';
+      cityWrapper.appendChild(cityInput);
+      locationRow.appendChild(govWrapper); locationRow.appendChild(cityWrapper);
+
+      document.getElementById('changeAvatarBtn').onclick = () => document.getElementById('avatarInput').click();
+      document.getElementById('avatarInput').onchange = (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (ev) => { initCropper(ev.target.result); document.getElementById('cropperModal').classList.add('active'); };
+          reader.readAsDataURL(file);
+        }
+      };
+      document.getElementById('saveProfileBtn').onclick = async () => {
+        const updatedData = {
+          firstName: document.getElementById('firstName').value.trim(),
+          lastName: document.getElementById('lastName').value.trim(),
+          governorate: currentUser.governorate,
+          city: document.getElementById('cityInput').value.trim(),
+          bio: document.getElementById('bio').value.trim()
+        };
+        try {
+          const res = await fetch(`${API_BASE_URL}/user/profile`, {
+            method: 'PUT',
+            headers: authHeaders(),
+            body: JSON.stringify(updatedData)
+          });
+          if (!res.ok) throw new Error('Failed to update profile');
+          const updatedUser = await res.json();
+          currentUser = updatedUser;
+          localStorage.setItem('phoenix_user', JSON.stringify(updatedUser));
+          localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+          document.getElementById('profileMessage').innerHTML = '<div style="color:var(--success); margin-top:0.8rem;">Profile updated successfully!</div>';
+          setTimeout(() => document.getElementById('profileMessage').innerHTML = '', 3000);
+          // Update preview if avatar changed (optional)
+          const preview = document.getElementById('profilePreview');
+          if (preview && currentUser.avatar) preview.src = currentUser.avatar;
+        } catch (err) {
+          document.getElementById('profileMessage').innerHTML = `<div style="color:var(--danger); margin-top:0.8rem;">Error: ${err.message}</div>`;
+        }
+      };
+    }
+    else if (section === 'security') {
+      contentDiv.innerHTML = `
+        <div class="section-title"><i class="fas fa-shield-alt"></i> Security</div>
+        <div class="settings-card">
+          <h3>Change Password</h3>
+          <div class="form-group"><label>Current Password</label><div class="password-wrapper"><input type="password" id="currentPassword" placeholder="Enter current password"><span class="toggle-password" data-target="currentPassword"><i class="fas fa-eye-slash"></i></span></div></div>
+          <div class="form-group"><label>New Password</label><div class="password-wrapper"><input type="password" id="newPassword" placeholder="New password"><span class="toggle-password" data-target="newPassword"><i class="fas fa-eye-slash"></i></span></div>
+            <div class="strength-meter"><div class="strength-bar" id="strengthBar"></div></div><div class="strength-text" id="strengthText"></div>
+            <div class="password-requirements"><p>Your password must contain:</p><ul><li id="req-length"><i class="fas fa-circle"></i> At least 8 characters</li><li id="req-upper"><i class="fas fa-circle"></i> One uppercase letter</li><li id="req-lower"><i class="fas fa-circle"></i> One lowercase letter</li><li id="req-number"><i class="fas fa-circle"></i> One number</li><li id="req-special"><i class="fas fa-circle"></i> One special character (!@#$%^&*)</li></ul></div>
+          </div>
+          <div class="form-group"><label>Confirm Password</label><div class="password-wrapper"><input type="password" id="confirmPassword" placeholder="Confirm new password"><span class="toggle-password" data-target="confirmPassword"><i class="fas fa-eye-slash"></i></span></div></div>
+          <div id="securityError" class="error-message" style="color:var(--danger); margin-top:0.5rem;"></div>
+          <button class="btn" id="updatePasswordBtn">Update Password</button>
+        </div>
+      `;
+      document.querySelectorAll('.toggle-password').forEach(btn => {
+        btn.addEventListener('click', function() { const inp = document.getElementById(this.dataset.target); if (inp.type === 'password') { inp.type = 'text'; this.querySelector('i').classList.remove('fa-eye-slash'); this.querySelector('i').classList.add('fa-eye'); } else { inp.type = 'password'; this.querySelector('i').classList.remove('fa-eye'); this.querySelector('i').classList.add('fa-eye-slash'); } });
+      });
+      const newPwd = document.getElementById('newPassword');
+      const strengthBar = document.getElementById('strengthBar');
+      const strengthText = document.getElementById('strengthText');
+      const reqLength = document.getElementById('req-length'), reqUpper = document.getElementById('req-upper'), reqLower = document.getElementById('req-lower'), reqNumber = document.getElementById('req-number'), reqSpecial = document.getElementById('req-special');
+      function checkPasswordStrength(pwd) { const hasLength = pwd.length>=8, hasUpper=/[A-Z]/.test(pwd), hasLower=/[a-z]/.test(pwd), hasNumber=/[0-9]/.test(pwd), hasSpecial=/[!@#$%^&*]/.test(pwd); const criteriaCount = [hasLength,hasUpper,hasLower,hasNumber,hasSpecial].filter(Boolean).length; const percent = (criteriaCount/5)*100; let text='', color=''; if(criteriaCount<=2){text='Weak';color='#e74c3c';}else if(criteriaCount<=3){text='Medium';color='#f39c12';}else if(criteriaCount<=4){text='Good';color='#2ecc71';}else{text='Strong';color='#27ae60';} return {percent,text,color,valid:criteriaCount===5,hasLength,hasUpper,hasLower,hasNumber,hasSpecial}; }
+      function updateRequirement(el,isValid){ if(isValid){ el.classList.add('req-met'); el.querySelector('i').className='fas fa-check-circle'; }else{ el.classList.remove('req-met'); el.querySelector('i').className='fas fa-circle'; } }
+      newPwd.addEventListener('input', ()=>{
+        const {percent,text,color,hasLength,hasUpper,hasLower,hasNumber,hasSpecial} = checkPasswordStrength(newPwd.value);
+        strengthBar.style.width = percent+'%'; strengthBar.style.backgroundColor = color; strengthText.textContent = `Password strength: ${text}`; strengthText.style.color = color;
+        updateRequirement(reqLength,hasLength); updateRequirement(reqUpper,hasUpper); updateRequirement(reqLower,hasLower); updateRequirement(reqNumber,hasNumber); updateRequirement(reqSpecial,hasSpecial);
+      });
+      document.getElementById('updatePasswordBtn').onclick = async () => {
+        const current = document.getElementById('currentPassword').value;
+        const newPass = document.getElementById('newPassword').value;
+        const confirm = document.getElementById('confirmPassword').value;
+        const errorDiv = document.getElementById('securityError');
+        if (newPass !== confirm) { errorDiv.textContent = 'New password and confirmation do not match.'; return; }
+        const {valid} = checkPasswordStrength(newPass);
+        if (!valid) { errorDiv.textContent = 'Password does not meet the requirements.'; return; }
+        try {
+          const res = await fetch(`${API_BASE_URL}/user/password`, {
+            method: 'PUT',
+            headers: authHeaders(),
+            body: JSON.stringify({ currentPassword: current, newPassword: newPass })
+          });
+          if (!res.ok) {
+            const err = await res.json();
+            if (res.status === 401) { document.getElementById('passwordErrorModal').classList.add('active'); return; }
+            throw new Error(err.message || 'Failed to update password');
+          }
+          errorDiv.innerHTML = '<span style="color:var(--success);">Password updated successfully!</span>';
+          document.getElementById('currentPassword').value = ''; document.getElementById('newPassword').value = ''; document.getElementById('confirmPassword').value = '';
+          setTimeout(() => errorDiv.innerHTML = '', 3000);
+        } catch (err) {
+          errorDiv.innerHTML = `<span style="color:var(--danger);">${err.message}</span>`;
+        }
+      };
+    }
+    else if (section === 'notifications') {
+      const prefs = JSON.parse(localStorage.getItem('notificationPrefs')) || { chatSounds:true, systemNotif:true, emailUpdates:false, promos:false, donationAlerts:true };
+      contentDiv.innerHTML = `
+        <div class="section-title"><i class="fas fa-bell"></i> Notification Preferences</div>
+        <div class="settings-card">
+          <div class="toggle-item"><i class="fas fa-volume-up" style="color:var(--accent-1); width:30px;"></i><span>Chat Sounds</span><input type="checkbox" id="chatSounds" ${prefs.chatSounds ? 'checked' : ''}></div>
+          <div class="toggle-item"><i class="fas fa-globe" style="color:var(--accent-1); width:30px;"></i><span>System Notifications</span><input type="checkbox" id="systemNotif" ${prefs.systemNotif ? 'checked' : ''}></div>
+          <div class="toggle-item"><i class="fas fa-envelope" style="color:var(--accent-1); width:30px;"></i><span>Email Updates</span><input type="checkbox" id="emailUpdates" ${prefs.emailUpdates ? 'checked' : ''}></div>
+          <div class="toggle-item"><i class="fas fa-tag" style="color:var(--accent-1); width:30px;"></i><span>Promotions & Offers</span><input type="checkbox" id="promos" ${prefs.promos ? 'checked' : ''}></div>
+          <div class="toggle-item"><i class="fas fa-heart" style="color:var(--accent-1); width:30px;"></i><span>Donation Alerts</span><input type="checkbox" id="donationAlerts" ${prefs.donationAlerts ? 'checked' : ''}></div>
+          <button class="btn" id="saveNotifBtn">Save Preferences</button>
+          <div id="notifMessage"></div>
+        </div>
+      `;
+      document.getElementById('saveNotifBtn').onclick = () => {
+        const newPrefs = { chatSounds: document.getElementById('chatSounds').checked, systemNotif: document.getElementById('systemNotif').checked, emailUpdates: document.getElementById('emailUpdates').checked, promos: document.getElementById('promos').checked, donationAlerts: document.getElementById('donationAlerts').checked };
+        localStorage.setItem('notificationPrefs', JSON.stringify(newPrefs));
+        document.getElementById('notifMessage').innerHTML = '<div style="color:var(--success); margin-top:0.8rem;">Preferences saved!</div>';
+        setTimeout(() => document.getElementById('notifMessage').innerHTML = '', 2000);
+      };
+    }
+    else if (section === 'account') {
+      const lastLoginDate = currentUser.lastLogin ? new Date(currentUser.lastLogin).toLocaleString() : 'First login';
+      contentDiv.innerHTML = `
+        <div class="section-title"><i class="fas fa-cog"></i> Account Management</div>
+        <div class="settings-card">
+          <h3>Privacy Settings</h3>
+          <div class="toggle-item"><i class="fas fa-user-secret" style="color:var(--accent-1);"></i><span>Hide email from public</span><input type="checkbox" id="hideEmail" ${currentUser.hideEmail ? 'checked' : ''}></div>
+          <div class="toggle-item"><i class="fas fa-map-marker-alt" style="color:var(--accent-1);"></i><span>Hide location from listings</span><input type="checkbox" id="hideLocation" ${currentUser.hideLocation ? 'checked' : ''}></div>
+          <div class="toggle-item"><i class="fas fa-phone" style="color:var(--accent-1);"></i><span>Show phone number in profile</span><input type="checkbox" id="showPhoneToggle" ${currentUser.showPhoneInProfile !== false ? 'checked' : ''}></div>
+          <button class="btn" id="savePrivacyBtn">Save Privacy Settings</button>
+        </div>
+        <div class="settings-card"><h3>Last Time Login</h3><p><i class="fas fa-clock"></i> ${lastLoginDate}</p></div>
+        <div class="settings-card danger-zone">
+          <div class="danger-title"><i class="fas fa-exclamation-triangle"></i> Danger Zone</div>
+          <div class="danger-action"><div class="danger-action-info"><h4>Delete Account Permanently</h4><p>This action cannot be undone. All your data will be erased.</p></div><button class="danger-btn" id="deleteAccountBtn">Delete</button></div>
+        </div>
+        <div id="accountMessage"></div>
+      `;
+      document.getElementById('savePrivacyBtn').onclick = async () => {
+        const updatedPrivacy = {
+          hideEmail: document.getElementById('hideEmail').checked,
+          hideLocation: document.getElementById('hideLocation').checked,
+          showPhoneInProfile: document.getElementById('showPhoneToggle').checked
+        };
+        try {
+          const res = await fetch(`${API_BASE_URL}/user/privacy`, {
+            method: 'PUT',
+            headers: authHeaders(),
+            body: JSON.stringify(updatedPrivacy)
+          });
+          if (!res.ok) throw new Error('Failed to update privacy settings');
+          const updatedUser = await res.json();
+          currentUser = updatedUser;
+          localStorage.setItem('phoenix_user', JSON.stringify(updatedUser));
+          localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+          document.getElementById('accountMessage').innerHTML = '<div style="color:var(--success); margin-top:0.8rem;">Privacy settings saved!</div>';
+          setTimeout(() => document.getElementById('accountMessage').innerHTML = '', 2000);
+        } catch (err) {
+          document.getElementById('accountMessage').innerHTML = `<div style="color:var(--danger);">${err.message}</div>`;
+        }
+      };
+      document.getElementById('deleteAccountBtn').onclick = () => document.getElementById('deleteModal').classList.add('active');
+    }
+  }
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      renderSection(item.dataset.section);
+    });
+  });
+
+  // ---------- Modal Handlers ----------
+  document.getElementById('cancelPasswordModal').onclick = () => document.getElementById('passwordErrorModal').classList.remove('active');
+  document.getElementById('cancelDelete').onclick = () => document.getElementById('deleteModal').classList.remove('active');
+  document.getElementById('confirmDelete').onclick = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/user/account`, { method: 'DELETE', headers: authHeaders() });
+      if (!res.ok) throw new Error('Failed to delete account');
+      localStorage.clear();
+      window.location.href = 'index.html';
+    } catch (err) {
+      alert('Error deleting account: ' + err.message);
+      document.getElementById('deleteModal').classList.remove('active');
+    }
+  };
+  document.getElementById('cancelCropper').onclick = () => document.getElementById('cropperModal').classList.remove('active');
+  document.getElementById('confirmCropper').onclick = async () => {
+    if (cropperCanvas) {
+      const cropped = getCroppedImage();
+      try {
+        const res = await fetch(`${API_BASE_URL}/user/avatar`, {
+          method: 'PUT',
+          headers: authHeaders(),
+          body: JSON.stringify({ avatar: cropped })
+        });
+        if (!res.ok) throw new Error('Failed to update avatar');
+        const updatedUser = await res.json();
+        currentUser = updatedUser;
+        localStorage.setItem('phoenix_user', JSON.stringify(updatedUser));
+        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+        const preview = document.getElementById('profilePreview');
+        if (preview) preview.src = cropped;
+        document.getElementById('cropperModal').classList.remove('active');
+        // also update navbar badge
+        const badge = document.getElementById('profileBadge');
+        if (badge) badge.innerHTML = '<i class="fas fa-user"></i>';
+      } catch (err) {
+        alert('Error updating avatar: ' + err.message);
+      }
+    }
+  };
+  document.getElementById('resetCropperBtn').onclick = resetCropper;
+  document.getElementById('fitToCircleBtn').onclick = fitToCircle;
+  document.getElementById('zoomSlider').addEventListener('input', (e) => zoomCropper(e.target.value));
+  const canvasElem = document.getElementById('cropperCanvas');
+  if (canvasElem) {
+    canvasElem.addEventListener('mousedown', startDrag);
+    window.addEventListener('mousemove', onDrag);
+    window.addEventListener('mouseup', endDrag);
+    canvasElem.addEventListener('touchstart', startDrag);
+    window.addEventListener('touchmove', onDrag);
+    window.addEventListener('touchend', endDrag);
+  }
+
+  // ---------- Initialize ----------
+  loadUserData().then(() => {
+    renderSection('profile');
+  });
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+  }
+})();
+</script>
+</body>
+</html>

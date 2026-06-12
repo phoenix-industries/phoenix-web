@@ -1,0 +1,202 @@
+nav {
+	position: sticky;
+	top: 0;
+	backdrop-filter: blur(16px);
+	background: var(--navbar-bg);
+	border-bottom: 1px solid var(--border);
+	z-index: 100;
+	padding: 0.5rem 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.logo-area {
+	display: flex;
+	align-items: center;
+	gap: 0.3rem;
+}
+.logo-area img {
+	height: 40px;
+	width: auto;
+	border-radius: 12px;
+}
+.logo-text h2 {
+	font-size: 1.2rem;
+	font-weight: 800;
+	background: var(--gradient);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+}
+.logo-text span {
+	font-size: 0.7rem;
+	color: var(--text-secondary);
+	display: block;
+}
+.nav-links {
+	display: none;
+	gap: 1.5rem;
+}
+.nav-links a {
+	text-decoration: none;
+	color: var(--text-primary);
+	font-weight: 500;
+	transition: var(--transition);
+	position: relative;
+}
+.nav-links a::after {
+	content: "";
+	position: absolute;
+	bottom: -4px;
+	left: 0;
+	width: 0%;
+	height: 2px;
+	background: var(--gradient);
+	transition: width 0.2s;
+}
+.nav-links a:hover::after {
+	width: 100%;
+}
+.nav-links a:hover {
+	color: var(--accent-1);
+}
+.app-link {
+	font-weight: 700;
+	color: var(--accent-1);
+}
+.app-link-mobile {
+	font-weight: 700;
+	color: var(--accent-1);
+	font-size: 0.9rem;
+	margin-left: auto;
+	margin-right: 0.5rem;
+	text-decoration: none;
+}
+.nav-right {
+	display: flex;
+	align-items: center;
+	gap: 0.8rem;
+}
+.sign-in-btn {
+	background: transparent;
+	border: 1px solid var(--accent-1);
+	color: var(--accent-1);
+	padding: 0.5rem 1.2rem;
+	border-radius: 40px;
+	font-weight: 600;
+	font-size: 0.9rem;
+	cursor: pointer;
+	transition: var(--transition);
+	text-decoration: none;
+	display: inline-block;
+}
+.sign-in-btn:hover {
+	background: var(--accent-1);
+	color: white;
+	box-shadow: 0 0 15px var(--glow);
+}
+.theme-toggle {
+	background: none;
+	border: none;
+	color: var(--text-primary);
+	font-size: 1.2rem;
+	cursor: pointer;
+}
+.hamburger {
+	display: block;
+	font-size: 1.5rem;
+	cursor: pointer;
+	color: var(--text-primary);
+}
+.sidebar {
+	position: fixed;
+	top: 0;
+	left: -100%;
+	width: 280px;
+	height: 100vh;
+	background: var(--surface);
+	border-right: 1px solid var(--border);
+	padding: 2rem 1rem;
+	transition: left 0.3s ease;
+	z-index: 200;
+	overflow: scroll;
+	box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+}
+.sidebar.open {
+	left: 0;
+}
+.sidebar .close-btn {
+	text-align: right;
+	margin-bottom: 2rem;
+	font-size: 1.5rem;
+	cursor: pointer;
+}
+.sidebar ul {
+	list-style: none;
+}
+.sidebar li {
+	margin-bottom: 1.2rem;
+}
+.sidebar a,
+.sidebar button {
+	text-decoration: none;
+	color: var(--text-primary);
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: 0.8rem;
+	background: none;
+	border: none;
+	width: 100%;
+	text-align: left;
+	cursor: pointer;
+	transition: var(--transition);
+}
+.sidebar a:hover,
+.sidebar button:hover {
+	color: var(--accent-1);
+	transform: translateX(5px);
+}
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 150;
+	display: none;
+}
+.overlay.active {
+	display: block;
+}
+
+.logout-btn {
+	color: #e53e3e !important;
+	border-top: 1px solid var(--border);
+	margin-top: 1rem;
+	padding-top: 1rem;
+}
+
+@media (min-width: 1024px) {
+	.app-buttons {
+		flex-direction: row;
+		justify-content: center;
+	}
+	.nav-links {
+		display: flex;
+	}
+	.app-link-mobile {
+		display: none;
+	}
+	.hamburger {
+		display: none;
+	}
+}
+@media (max-width: 1024px) {
+	.app-link-mobile,
+	.theme-toggle,
+	.sign-in-btn {
+		display: none !important;
+	}
+}

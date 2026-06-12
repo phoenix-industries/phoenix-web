@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Phoenix · Checkout</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* نفس الستايلات السابقة */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    :root { --bg: #f9fafc; --surface: #ffffff; --text-primary: #1e1e2f; --text-secondary: #4a4a5e; --accent-1: #ff8a4c; --accent-2: #ff6b2b; --gradient: linear-gradient(135deg, #ff8a4c, #ff4d4d); --border: #eaeef2; --shadow: 0 20px 30px -10px rgba(0,0,0,0.05); --glow: rgba(255,110,64,0.4); --navbar-bg: rgba(255,255,255,0.8); --divider-color: #eaeef2; }
+    body.dark { --bg: #12121a; --surface: #1e1e2a; --text-primary: #f0f0fa; --text-secondary: #b0b0c0; --accent-1: #ff9f6e; --accent-2: #ff7b3f; --gradient: linear-gradient(135deg, #ff9f6e, #ff5e5e); --border: #333344; --shadow: 0 20px 30px -10px rgba(0,0,0,0.7); --glow: rgba(255,140,80,0.6); --navbar-bg: rgba(30,30,42,0.9); --divider-color: #333344; }
+    body { background: var(--bg); color: var(--text-primary); line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 1rem; width: 100%; flex: 1; }
+    nav { position: sticky; top: 0; backdrop-filter: blur(12px); background: var(--navbar-bg); border-bottom: 1px solid var(--border); z-index: 100; padding: 0.5rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+    .logo-area { display: flex; align-items: center; gap: 0.3rem; }
+    .logo-area img { height: 40px; width: auto; border-radius: 8px; }
+    .logo-text h2 { font-size: 1.2rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .logo-text span { font-size: 0.7rem; color: var(--text-secondary); display: block; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { text-decoration: none; color: var(--text-primary); font-weight: 500; transition: 0.2s; }
+    .nav-links a:hover { color: var(--accent-1); }
+    .nav-right { display: flex; align-items: center; gap: 0.8rem; position: relative; }
+    .nav-icon { font-size: 1.2rem; color: var(--text-primary); cursor: pointer; transition: 0.2s; }
+    .nav-icon:hover { color: var(--accent-1); }
+    .theme-toggle { background: none; border: none; color: var(--text-primary); font-size: 1.2rem; cursor: pointer; }
+    .profile-badge { display: flex; align-items: center; justify-content: center; background: var(--surface); border-radius: 50%; width: 40px; height: 40px; border: 1px solid var(--border); cursor: pointer; text-decoration: none; color: var(--text-primary); font-weight: 600; }
+    .profile-badge i { font-size: 1.2rem; }
+    .profile-badge:hover { background: var(--accent-1); color: white; }
+    .logout-btn { background: transparent; border: 1px solid var(--accent-1); color: var(--accent-1); padding: 0.3rem 0.9rem; border-radius: 40px; font-weight: 600; cursor: pointer; }
+    .logout-btn:hover { background: var(--accent-1); color: white; box-shadow: 0 0 15px var(--glow); }
+    .hamburger { display: none; font-size: 1.5rem; cursor: pointer; color: var(--text-primary); margin-left: 0.5rem; }
+    .sidebar { position: fixed; top: 0; left: -100%; width: 250px; height: 100vh; background: var(--surface); border-right: 1px solid var(--border); padding: 2rem 1rem; transition: left 0.3s; z-index: 200; }
+    .sidebar.open { left: 0; }
+    .sidebar .close-btn { text-align: right; margin-bottom: 2rem; font-size: 1.5rem; cursor: pointer; }
+    .sidebar ul { list-style: none; }
+    .sidebar li { margin-bottom: 1.2rem; }
+    .sidebar a, .sidebar button { text-decoration: none; color: var(--text-primary); font-weight: 500; font-size: 1.1rem; display: flex; align-items: center; gap: 0.8rem; background: none; border: none; width: 100%; cursor: pointer; }
+    .sidebar a:hover, .sidebar button:hover { color: var(--accent-1); }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 150; display: none; }
+    .overlay.active { display: block; }
+    .notification-wrapper, .message-wrapper { position: relative; display: inline-flex; align-items: center; }
+    .notification-dropdown, .message-dropdown { position: absolute; top: calc(100% + 8px); right: 0; width: 340px; background: var(--surface); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid var(--border); z-index: 1001; display: none; flex-direction: column; overflow: hidden; }
+    .notification-dropdown.show, .message-dropdown.show { display: flex; }
+    .dropdown-header { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); font-weight: 600; }
+    .notifications-list, .messages-list { padding: 1rem; text-align: center; color: var(--text-secondary); }
+    .dropdown-footer { padding: 0.8rem; text-align: center; border-top: 1px solid var(--border); }
+    .dropdown-footer a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; }
+    .checkout-grid { display: grid; grid-template-columns: 1fr 380px; gap: 2rem; margin: 2rem 0; }
+    .payment-section, .summary-section { background: var(--surface); border-radius: 24px; border: 1px solid var(--border); padding: 1.8rem; box-shadow: var(--shadow); }
+    .section-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .product-summary-item { display: flex; gap: 1rem; align-items: center; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .product-summary-img { width: 70px; height: 70px; border-radius: 12px; overflow: hidden; background: var(--bg); border: 1px solid var(--border); }
+    .product-summary-img img { width: 100%; height: 100%; object-fit: cover; }
+    .product-summary-details h4 { font-size: 1rem; font-weight: 600; }
+    .product-summary-details p { color: var(--text-secondary); font-size: 0.9rem; }
+    .price-row { display: flex; justify-content: space-between; margin-bottom: 0.8rem; color: var(--text-secondary); }
+    .total-row { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.2rem; margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--border); color: var(--accent-2); }
+    .delivery-options { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+    .delivery-option { flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.8rem; border: 2px solid var(--border); border-radius: 40px; cursor: pointer; background: var(--bg); transition: 0.2s; }
+    .delivery-option.selected { border-color: var(--accent-1); background: rgba(255,138,76,0.08); }
+    .delivery-option i { font-size: 1.2rem; color: var(--accent-1); }
+    .shipping-fields { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: none; }
+    .shipping-fields.show { display: block; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.3rem; font-weight: 500; font-size: 0.9rem; color: var(--accent-1); }
+    .form-group input { width: 100%; padding: 0.7rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 40px; color: var(--text-primary); }
+    .btn-block { background: var(--gradient); color: white; border: none; width: 100%; padding: 1rem; border-radius: 60px; font-weight: 700; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 14px var(--glow); margin-top: 1rem; transition: 0.2s; }
+    .btn-block:hover:not(:disabled) { transform: scale(1.01); }
+    .btn-block:disabled { opacity: 0.6; cursor: not-allowed; }
+    .chatbot { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; align-items: center; gap: 0px; }
+    .chat-circle { width: 56px; height: 56px; background: linear-gradient(145deg, #ff9f4a, #ff4d2e); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 15px rgba(255,80,40,0.8), 0 8px 20px rgba(0,0,0,0.2); animation: float-glow 2.2s infinite; position: relative; }
+    .chat-circle img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.6); }
+    .chat-circle::after { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; background: radial-gradient(circle, rgba(255,100,40,0.6), transparent 70%); animation: pulse-ring 1.8s infinite; pointer-events: none; }
+    @keyframes float-glow { 0% { transform: translateY(0px); box-shadow: 0 0 12px rgba(255,80,40,0.7); } 50% { transform: translateY(-6px); box-shadow: 0 0 28px rgba(255,100,50,1); } 100% { transform: translateY(0px); box-shadow: 0 0 12px rgba(255,80,40,0.7); } }
+    @keyframes pulse-ring { 0% { opacity: 0.6; transform: scale(1); } 70% { opacity: 0; transform: scale(1.3); } 100% { opacity: 0; transform: scale(1.3); } }
+    .chat-label { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); color: #ffaa66; font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: 30px; margin-top: 6px; cursor: pointer; border: 1px solid #ff8a4c; }
+    .chat-box { position: absolute; bottom: 80px; right: 0; width: 90vw; max-width: 450px; height: 500px; background: rgba(255,255,255,0.75); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(255,255,255,0.3); display: none; flex-direction: column; overflow: hidden; }
+    body.dark .chat-box { background: rgba(30,30,42,0.85); }
+    .chat-box.show { display: flex; }
+    .chat-header { padding: 1rem 1.2rem; background: rgba(0,0,0,0.05); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+    .chat-header h4 { font-weight: 700; color: var(--accent-1); }
+    .close-chat { background: none; border: none; font-size: 1.2rem; cursor: pointer; }
+    .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .chat-message { max-width: 85%; padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; background: var(--surface); color: var(--text-primary); align-self: flex-start; border: 1px solid var(--border); }
+    .chat-message.bot { background: var(--gradient); color: white; border: none; }
+    .chat-input-area { display: flex; padding: 10px; gap: 8px; border-top: 1px solid var(--border); }
+    .chat-input-area textarea { flex: 1; background: var(--surface); border: none; border-radius: 40px; padding: 8px 14px; resize: none; font-size: 0.8rem; }
+    .chat-input-area button { background: var(--gradient); border: none; border-radius: 40px; padding: 0 18px; color: white; font-weight: bold; cursor: pointer; }
+    .simple-footer { margin-top: 2rem; padding: 1.5rem 1rem; text-align: center; border-top: 1px solid var(--divider-color); color: var(--text-secondary); font-size: 0.9rem; }
+    .simple-footer a { color: var(--accent-1); text-decoration: none; font-weight: 500; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); backdrop-filter: blur(12px); border-top: 1px solid var(--border); display: none; justify-content: space-around; align-items: center; padding: 0.6rem 0.8rem; z-index: 90; }
+    .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; color: var(--text-secondary); text-decoration: none; font-size: 0.7rem; transition: 0.2s; }
+    .bottom-nav-item i { font-size: 1.3rem; }
+    .bottom-nav-item.active, .bottom-nav-item:hover { color: var(--accent-1); }
+    @media (max-width: 900px) { .checkout-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .nav-links, .nav-right .theme-toggle, .nav-right .notification-wrapper, .nav-right .message-wrapper, .nav-right .profile-badge, .nav-right .logout-btn { display: none; } .hamburger { display: block; } .delivery-options { flex-direction: column; } .bottom-nav { display: flex; } .chatbot { bottom: 80px; } }
+    @media (min-width: 769px) { .bottom-nav { display: none; } .hamburger { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo-area"><img src="assets/images/photo_2026-02-17_19-01-20.jpg" alt="Phoenix"><div class="logo-text"><h2>Phoenix</h2><span>donate & trade</span></div></div>
+  <div class="nav-links"><a href="dashboard.html">Home</a><a href="market.html">Market</a><a href="donate.html">Donate</a><a href="sell.html">Sell</a></div>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+    <div class="notification-wrapper"><i class="fas fa-bell nav-icon" id="notificationBell"></i></div>
+    <div class="message-wrapper"><i class="fas fa-comment-dots nav-icon" id="messageIcon"></i></div>
+    <a href="profile.html" class="profile-badge" id="profileBadge"><i class="fas fa-user"></i></a>
+    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    <span class="hamburger" id="hamburger">☰</span>
+  </div>
+</nav>
+
+<div class="sidebar" id="sidebar">
+  <div class="close-btn" id="closeSidebar">✕</div>
+  <ul>
+    <li><a href="dashboard.html">Home</a></li>
+    <li><a href="market.html">Market</a></li>
+    <li><a href="donate.html">Donate</a></li>
+    <li><a href="sell.html">Sell</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="favourites.html">Favorites</a></li>
+    <li><a href="settings.html">Settings</a></li>
+    <li><button id="sidebarDarkMode"><i class="fas fa-moon"></i> Dark Mode</button></li>
+    <li><button id="sidebarLogout">Logout</button></li>
+  </ul>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<main class="container">
+  <div class="checkout-grid">
+    <div class="payment-section">
+      <div class="section-title"><i class="fas fa-truck"></i> Delivery Method</div>
+      <div class="delivery-options">
+        <div class="delivery-option" data-method="shipping">
+          <i class="fas fa-truck"></i> <span>Ship to address</span>
+        </div>
+        <div class="delivery-option" data-method="pickup">
+          <i class="fas fa-store"></i> <span>Pick up from seller</span>
+        </div>
+      </div>
+      <div class="shipping-fields" id="shippingFields">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="fullName" placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+          <label>Street Address *</label>
+          <input type="text" id="street" placeholder="Street, building, apartment">
+        </div>
+        <div class="form-group">
+          <label>City *</label>
+          <input type="text" id="city" placeholder="City">
+        </div>
+        <div class="form-group">
+          <label>Phone Number *</label>
+          <input type="tel" id="phone" placeholder="Your phone number">
+        </div>
+      </div>
+      <button class="btn-block" id="confirmOrderBtn">Confirm Order</button>
+    </div>
+    <div class="summary-section">
+      <div class="section-title"><i class="fas fa-shopping-bag"></i> Order Summary</div>
+      <div id="orderSummaryContent">Loading...</div>
+    </div>
+  </div>
+</main>
+
+<footer class="simple-footer">Copyright © 2026 Phoenix — <a href="about.html">About</a> · <a href="#">Privacy</a> · <a href="#">Terms</a></footer>
+
+<div class="chatbot">
+  <div class="chat-circle" id="chatIcon"><img src="assets/images/photo_2026-02-17_19-01-20.jpg" alt="Phoenix AI"></div>
+  <span class="chat-label" id="chatLabel">Ask AI</span>
+  <div class="chat-box" id="chatBox">
+    <div class="chat-header"><h4><i class="fas fa-feather-alt"></i> Phoenix AI Assistant</h4><button class="close-chat" id="closeChatBtn">✕</button></div>
+    <div class="chat-messages" id="chatMessages"><div class="chat-message bot">👋 Hi! I'm Phoenix AI. How can I help you today?</div></div>
+    <div class="chat-input-area"><textarea id="chatInput" placeholder="Type your message..." rows="1"></textarea><button id="sendChat">Send</button></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ---------- API Configuration ----------
+  const API_BASE_URL = 'https://your-backend.com/api';  // ⬅️ استبدل بالرابط الحقيقي
+
+  // ---------- Helper: get token and auth headers ----------
+  function getToken() { return localStorage.getItem('phoenix_token'); }
+  function authHeaders() {
+    const token = getToken();
+    return {
+      'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    };
+  }
+
+  // ---------- Check authentication ----------
+  // const token = getToken();
+  // if (!token) {
+  //   window.location.href = 'sign.html';
+  //   return;
+  // }
+
+  // ---------- Global variables ----------
+  let product = null;
+  let shippingCost = 50;    
+
+  // ---------- Dark Mode & Sidebar (كما هو معتاد) ----------
+  const themeToggle = document.getElementById('themeToggle');
+  const sidebarDarkBtn = document.getElementById('sidebarDarkMode');
+  function applyTheme(isDark) {
+    document.body.classList.toggle('dark', isDark);
+    themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    if (sidebarDarkBtn) sidebarDarkBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i> Dark Mode' : '<i class="fas fa-moon"></i> Dark Mode';
+    localStorage.setItem('phoenix-theme', isDark ? 'dark' : 'light');
+  }
+  applyTheme(localStorage.getItem('phoenix-theme') === 'dark');
+  themeToggle.onclick = () => applyTheme(!document.body.classList.contains('dark'));
+  if (sidebarDarkBtn) sidebarDarkBtn.onclick = () => applyTheme(!document.body.classList.contains('dark'));
+
+  const hamburger = document.getElementById('hamburger'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('overlay');
+  hamburger.onclick = () => { sidebar.classList.add('open'); overlay.classList.add('active'); };
+  document.getElementById('closeSidebar').onclick = () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); };
+  overlay.onclick = () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); };
+  const logout = () => { if(confirm('Logout?')) { localStorage.clear(); window.location.href='index.html'; } };
+  document.getElementById('logoutBtn').onclick = logout;
+  document.getElementById('sidebarLogout').onclick = logout;
+
+  const badge = document.getElementById('profileBadge');
+  if (badge) badge.innerHTML = '<i class="fas fa-user"></i>';
+
+  // ---------- Notifications & Messages dropdowns ----------
+  let activeDropdown = null;
+  const notifDD = document.createElement('div'); notifDD.className = 'notification-dropdown';
+  notifDD.innerHTML = `<div class="dropdown-header">Notifications</div><div class="notifications-list">🔔 No notifications now</div><div class="dropdown-footer"><a href="notifications.html">View all</a></div>`;
+  document.body.appendChild(notifDD);
+  const msgDD = document.createElement('div'); msgDD.className = 'message-dropdown';
+  msgDD.innerHTML = `<div class="dropdown-header">Messages</div><div class="messages-list">💬 No messages yet</div><div class="dropdown-footer"><a href="chat.html">View all</a></div>`;
+  document.body.appendChild(msgDD);
+  function closeAllDD() { notifDD.classList.remove('show'); msgDD.classList.remove('show'); activeDropdown = null; }
+  function openDD(dd, icon) { closeAllDD(); const rect = icon.getBoundingClientRect(); dd.style.top = (rect.bottom + window.scrollY + 5) + 'px'; dd.style.right = (window.innerWidth - rect.right - window.scrollX) + 'px'; dd.classList.add('show'); activeDropdown = dd; }
+  document.getElementById('notificationBell').onclick = e => { e.stopPropagation(); activeDropdown === notifDD ? closeAllDD() : openDD(notifDD, e.currentTarget); };
+  document.getElementById('messageIcon').onclick = e => { e.stopPropagation(); activeDropdown === msgDD ? closeAllDD() : openDD(msgDD, e.currentTarget); };
+  document.addEventListener('click', e => { if (!e.target.closest('.notification-wrapper') && !e.target.closest('.message-wrapper')) closeAllDD(); });
+
+  // ---------- Chatbot ----------
+  const chatIcon = document.getElementById('chatIcon'), chatBox = document.getElementById('chatBox'), chatLabel = document.getElementById('chatLabel'), closeChat = document.getElementById('closeChatBtn'), sendBtn = document.getElementById('sendChat'), chatInput = document.getElementById('chatInput'), chatMessages = document.getElementById('chatMessages');
+  const toggleChat = () => chatBox.classList.toggle('show');
+  chatIcon.onclick = toggleChat; chatLabel.onclick = toggleChat; closeChat.onclick = () => chatBox.classList.remove('show');
+  const addMsg = (txt, isUser = false) => { const d = document.createElement('div'); d.className = 'chat-message' + (isUser ? '' : ' bot'); d.textContent = txt; chatMessages.appendChild(d); chatMessages.scrollTop = chatMessages.scrollHeight; };
+  sendBtn.onclick = () => { const m = chatInput.value.trim(); if(!m) return; addMsg(m, true); chatInput.value = ''; setTimeout(() => addMsg('Thanks! Phoenix AI will assist you shortly. 🔥'), 600); };
+  chatInput.onkeypress = e => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendBtn.click(); } };
+  document.onclick = e => { if(!chatBox.contains(e.target) && !chatIcon.contains(e.target) && !chatLabel.contains(e.target)) chatBox.classList.remove('show'); };
+
+  // ---------- Load product from API ----------
+  async function loadProduct() {
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get('id');
+    if (!productId) {
+      document.getElementById('orderSummaryContent').innerHTML = '<div style="color:red;">Product ID missing.</div>';
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE_URL}/products/${productId}`, { headers: authHeaders() });
+      if (!res.ok) {
+        if (res.status === 401) window.location.href = 'sign.html';
+        throw new Error('Failed to load product');
+      }
+      product = await res.json();
+      renderOrderSummary();
+    } catch (err) {
+      console.error(err);
+      document.getElementById('orderSummaryContent').innerHTML = '<div style="color:red;">Failed to load product details.</div>';
+    }
+  }
+
+  function renderOrderSummary() {
+    const total = product.price + (selectedMethod === 'shipping' ? shippingCost : 0);
+    document.getElementById('orderSummaryContent').innerHTML = `
+      <div class="product-summary-item">
+        <div class="product-summary-img">
+          <img src="${product.image || product.images?.[0] || 'https://via.placeholder.com/70'}" alt="${escapeHtml(product.title)}" onerror="this.src='https://via.placeholder.com/70'">
+        </div>
+        <div class="product-summary-details">
+          <h4>${escapeHtml(product.title)}</h4>
+          <p>Qty: 1</p>
+        </div>
+        <div style="margin-left: auto; font-weight:600;">${product.price} ${product.currency || 'EGP'}</div>
+      </div>
+      <div class="price-row"><span>Subtotal</span><span>${product.price} ${product.currency || 'EGP'}</span></div>
+      <div class="price-row"><span>Shipping</span><span id="shippingCostDisplay">${selectedMethod === 'shipping' ? shippingCost : 0} ${product.currency || 'EGP'}</span></div>
+      <div class="total-row"><span>Total</span><span id="totalDisplay">${total} ${product.currency || 'EGP'}</span></div>
+    `;
+  }
+
+  // ---------- Delivery Method Toggle ----------
+  let selectedMethod = 'shipping';
+  const shippingFields = document.getElementById('shippingFields');
+  const deliveryOptions = document.querySelectorAll('.delivery-option');
+  deliveryOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+      deliveryOptions.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedMethod = opt.dataset.method;
+      if (selectedMethod === 'shipping') {
+        shippingFields.classList.add('show');
+      } else {
+        shippingFields.classList.remove('show');
+      }
+      if (product) renderOrderSummary();
+    });
+  });
+  document.querySelector('.delivery-option[data-method="shipping"]').classList.add('selected');
+  shippingFields.classList.add('show');
+
+  // ---------- Confirm Order: send to backend ----------
+  const confirmBtn = document.getElementById('confirmOrderBtn');
+  const ORDERS_API = `${API_BASE_URL}/orders`;
+
+  confirmBtn.addEventListener('click', async () => {
+    if (!product) {
+      alert('Product data not loaded yet. Please try again.');
+      return;
+    }
+
+    let shippingAddress = null;
+    if (selectedMethod === 'shipping') {
+      const fullName = document.getElementById('fullName').value.trim();
+      const street = document.getElementById('street').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      if (!fullName || !street || !city || !phone) {
+        alert('Please fill all shipping fields.');
+        return;
+      }
+      shippingAddress = { fullName, street, city, phone };
+    }
+
+    const orderData = {
+      products: [{ id: product.id, quantity: 1 }],
+      deliveryMethod: selectedMethod,
+      shippingAddress: shippingAddress,
+      totalAmount: product.price + (selectedMethod === 'shipping' ? shippingCost : 0)
+    };
+
+    confirmBtn.disabled = true;
+    confirmBtn.innerText = 'Processing...';
+
+    try {
+      const response = await fetch(ORDERS_API, {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify(orderData)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Order failed');
+      alert(`✅ Order confirmed! Order ID: ${data.orderId}`);
+      window.location.href = `order-success.html?orderId=${data.orderId}`;
+    } catch (err) {
+      console.error(err);
+      alert(`❌ Order failed: ${err.message}`);
+    } finally {
+      confirmBtn.disabled = false;
+      confirmBtn.innerText = 'Confirm Order';
+    }
+  });
+
+  // ---------- Helper ----------
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+  }
+
+  // ---------- Initialize ----------
+  loadProduct();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Phoenix · Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* كل الستايلات كما هي - لم تتغير */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    :root { --bg: #f9fafc; --surface: #ffffff; --text-primary: #1e1e2f; --text-secondary: #4a4a5e; --accent-1: #ff8a4c; --accent-2: #ff6b2b; --gradient: linear-gradient(135deg, #ff8a4c, #ff4d4d); --border: #eaeef2; --shadow: 0 20px 30px -10px rgba(0,0,0,0.05); --glow: rgba(255,110,64,0.4); --navbar-bg: rgba(255,255,255,0.8); --footer-bg: #1e1e2f; --footer-text: #f0f0fa; --special-gradient: linear-gradient(145deg, #000000, #ff6b2b, #ff8a4c, #ff4d4d); --divider-color: #eaeef2; }
+    body.dark { --bg: #12121a; --surface: #1e1e2a; --text-primary: #f0f0fa; --text-secondary: #b0b0c0; --accent-1: #ff9f6e; --accent-2: #ff7b3f; --gradient: linear-gradient(135deg, #ff9f6e, #ff5e5e); --border: #333344; --shadow: 0 20px 30px -10px rgba(0,0,0,0.7); --glow: rgba(255,140,80,0.6); --navbar-bg: rgba(30,30,42,0.9); --footer-bg: #0b0b12; --footer-text: #ddddff; --special-gradient: linear-gradient(145deg, #111111, #ff7b3f, #ff9f6e, #ff5e5e); --divider-color: #333344; }
+    body { background-color: var(--bg); color: var(--text-primary); line-height: 1.5; transition: background-color 0.3s, color 0.2s; overflow-x: hidden; min-height: 100vh; }
+    body::before { content: ''; position: fixed; top:0; left:0; width:100%; height:100%; background-image: radial-gradient(circle at 10% 30%, rgba(255,140,64,0.03) 0%, transparent 25%), radial-gradient(circle at 90% 70%, rgba(255,100,100,0.03) 0%, transparent 30%); pointer-events: none; z-index: -1; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+    nav { position: sticky; top:0; backdrop-filter: blur(12px); background: var(--navbar-bg); border-bottom: 1px solid var(--border); z-index:100; padding:0.5rem 1rem; display:flex; align-items:center; justify-content:space-between; }
+    .logo-area { display:flex; align-items:center; gap:0.3rem; }
+    .logo-area img { height:40px; width:auto; border-radius:8px; }
+    .logo-text h2 { font-size:1.2rem; font-weight:700; background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent; line-height:1.1; }
+    .logo-text span { font-size:0.7rem; color:var(--text-secondary); display:block; }
+    .nav-links { display:flex; gap:1.5rem; }
+    .nav-links a { text-decoration:none; color:var(--text-primary); font-weight:500; font-size:1rem; transition:0.2s; }
+    .nav-links a:hover { color:var(--accent-1); }
+    .nav-right { display:flex; align-items:center; gap:0.8rem; }
+    .nav-icon { font-size:1.2rem; color:var(--text-primary); cursor:pointer; transition:0.2s; }
+    .nav-icon:hover { color:var(--accent-1); transform:scale(1.05); }
+    .theme-toggle { background:none; border:none; color:var(--text-primary); font-size:1.2rem; cursor:pointer; }
+    .profile-badge { display:flex; align-items:center; justify-content:center; background:var(--surface); border-radius:50%; width:40px; height:40px; border:1px solid var(--border); cursor:pointer; text-decoration:none; color:var(--text-primary); }
+    .profile-badge i { font-size:1.2rem; }
+    .profile-badge:hover { background:var(--accent-1); color:white; }
+    .logout-btn { background:transparent; border:1px solid var(--accent-1); color:var(--accent-1); padding:0.3rem 0.9rem; border-radius:40px; font-weight:600; font-size:0.9rem; cursor:pointer; transition:0.2s; text-decoration:none; display:inline-block; white-space:nowrap; }
+    .logout-btn:hover { background:var(--accent-1); color:white; box-shadow:0 0 15px var(--glow); }
+    .hamburger { display:none; font-size:1.5rem; cursor:pointer; color:var(--text-primary); margin-left:0.5rem; }
+    .sidebar { position:fixed; top:0; left:-100%; width:250px; height:100vh; background:var(--surface); border-right:1px solid var(--border); padding:2rem 1rem; transition:left 0.3s; z-index:200; }
+    .sidebar.open { left:0; }
+    .sidebar .close-btn { text-align:right; margin-bottom:2rem; font-size:1.5rem; cursor:pointer; }
+    .sidebar ul { list-style:none; }
+    .sidebar li { margin-bottom:1.2rem; }
+    .sidebar a, .sidebar button { text-decoration:none; color:var(--text-primary); font-weight:500; font-size:1.1rem; display:flex; align-items:center; gap:0.8rem; background:none; border:none; width:100%; text-align:left; cursor:pointer; }
+    .sidebar a:hover, .sidebar button:hover { color:var(--accent-1); }
+    .overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:150; display:none; }
+    .overlay.active { display:block; }
+    .hero { padding:2rem 0 1rem; text-align:center; }
+    .hero h1 { font-size:2.5rem; font-weight:700; margin-bottom:0.5rem; background:var(--special-gradient); -webkit-background-clip:text; background-clip:text; color:transparent; display:inline-block; }
+    .hero p { font-size:1rem; color:var(--text-secondary); }
+    .stats-grid { display:flex; justify-content:center; gap:1rem; padding:1.5rem 0; flex-wrap:wrap; }
+    .stat-item { text-align:center; background:var(--surface); border-radius:20px; padding:1rem; min-width:130px; border:1px solid var(--border); box-shadow:var(--shadow); }
+    .stat-number { font-size:1.8rem; font-weight:700; background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .stat-label { font-size:0.8rem; color:var(--text-secondary); font-weight:500; }
+    .stat-note { font-size:0.7rem; color:var(--accent-1); margin-top:0.2rem; }
+    .section-title { font-size:1.6rem; margin:2rem 0 1rem; font-weight:600; }
+    .section-title span { background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .product-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; margin:1rem 0; }
+    .product-card { background:var(--surface); border-radius:20px; padding:1rem; border:1px solid var(--border); transition:0.2s; cursor:pointer; }
+    .product-card:hover { transform:translateY(-4px); border-color:var(--accent-1); }
+    .product-img { width:100%; height:140px; border-radius:14px; margin-bottom:0.8rem; overflow:hidden; background-color:#f0f0f0; display:flex; align-items:center; justify-content:center; }
+    .product-img img { width:100%; height:100%; object-fit:cover; }
+    .product-title { font-size:1rem; font-weight:600; }
+    .product-user { font-size:0.75rem; color:var(--text-secondary); margin:0.3rem 0; display:flex; justify-content:space-between; }
+    .product-footer { display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem; }
+    .product-value { font-weight:700; color:var(--accent-2); font-size:1rem; }
+    .trade-btn { background:var(--gradient); border:none; color:white; padding:0.4rem 1rem; border-radius:40px; font-size:0.8rem; font-weight:600; cursor:pointer; box-shadow:0 2px 8px var(--glow); text-decoration:none; display:inline-block; }
+    .trade-btn:hover { transform:scale(1.05); }
+    .empty-state { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2rem; background: var(--surface); border-radius: 24px; border: 1px dashed var(--border); text-align: center; gap: 0.8rem; }
+    .empty-state i { font-size: 3rem; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .empty-state h3 { font-size: 1.2rem; font-weight: 600; color: var(--text-primary); }
+    .empty-state p { font-size: 0.9rem; color: var(--text-secondary); max-width: 300px; }
+    .empty-state a { display: inline-block; margin-top: 0.5rem; background: var(--gradient); color: white; padding: 0.6rem 1.5rem; border-radius: 40px; font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: 0.2s; box-shadow: 0 4px 14px var(--glow); }
+    .empty-state a:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--glow); }
+    .simple-footer { margin-top:3rem; padding:1rem; text-align:center; border-top:1px solid var(--divider-color); color:var(--text-secondary); font-size:0.8rem; }
+    .simple-footer a { color:var(--accent-1); text-decoration:none; }
+    .notification-wrapper, .message-wrapper { position:relative; display:inline-flex; align-items:center; }
+    .notification-dropdown, .message-dropdown { position:absolute; top:calc(100% + 8px); right:0; width:360px; max-width:90vw; background:var(--surface); border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.15); border:1px solid var(--border); z-index:1001; display:none; flex-direction:column; overflow:hidden; }
+    .notification-dropdown.show, .message-dropdown.show { display:flex; }
+    .dropdown-header { display:flex; justify-content:space-between; align-items:center; padding:1rem 1.2rem; border-bottom:1px solid var(--border); }
+    .dropdown-header h3 { font-size:1.1rem; font-weight:600; }
+    .notifications-list, .messages-list { max-height:320px; overflow-y:auto; padding:1rem; text-align:center; color:var(--text-secondary); }
+    .dropdown-footer { padding:0.8rem; text-align:center; border-top:1px solid var(--border); }
+    .dropdown-footer a { color:var(--text-secondary); text-decoration:none; font-size:0.85rem; font-weight:500; }
+    .dropdown-footer a:hover { color:var(--accent-1); }
+    .chatbot { position:fixed; bottom:20px; right:20px; z-index:999; display:flex; flex-direction:column; align-items:center; gap:0px; }
+    .chat-circle { width:56px; height:56px; background:linear-gradient(145deg, #ff9f4a, #ff4d2e); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 0 15px rgba(255,80,40,0.8), 0 8px 20px rgba(0,0,0,0.2); animation:float-glow 2.2s infinite; position:relative; }
+    .chat-circle img { width:46px; height:46px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.6); }
+    .chat-circle::after { content:''; position:absolute; top:-4px; left:-4px; right:-4px; bottom:-4px; border-radius:50%; background:radial-gradient(circle, rgba(255,100,40,0.6), transparent 70%); animation:pulse-ring 1.8s infinite; pointer-events:none; }
+    @keyframes float-glow { 0% { transform:translateY(0px); box-shadow:0 0 12px rgba(255,80,40,0.7); } 50% { transform:translateY(-6px); box-shadow:0 0 28px rgba(255,100,50,1); } 100% { transform:translateY(0px); box-shadow:0 0 12px rgba(255,80,40,0.7); } }
+    @keyframes pulse-ring { 0% { opacity:0.6; transform:scale(1); } 70% { opacity:0; transform:scale(1.3); } 100% { opacity:0; transform:scale(1.3); } }
+    .chat-label { background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); color:#ffaa66; font-size:0.65rem; font-weight:600; padding:3px 8px; border-radius:30px; margin-top:6px; cursor:pointer; border:1px solid #ff8a4c; }
+    .chat-box { position:absolute; bottom:80px; right:0; width:90vw; max-width:450px; height:500px; background:rgba(255,255,255,0.75); backdrop-filter:blur(16px); border-radius:28px; border:1px solid rgba(255,255,255,0.3); display:none; flex-direction:column; overflow:hidden; }
+    body.dark .chat-box { background:rgba(30,30,42,0.85); }
+    .chat-box.show { display:flex; }
+    .chat-header { padding:1rem 1.2rem; background:rgba(0,0,0,0.05); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; }
+    .chat-header h4 { font-weight:700; color:var(--accent-1); }
+    .close-chat { background:none; border:none; font-size:1.2rem; cursor:pointer; }
+    .chat-messages { flex:1; padding:1rem; overflow-y:auto; display:flex; flex-direction:column; gap:10px; }
+    .chat-message { max-width:85%; padding:8px 14px; border-radius:20px; font-size:0.85rem; background:var(--surface); color:var(--text-primary); align-self:flex-start; border:1px solid var(--border); }
+    .chat-message.bot { background:var(--gradient); color:white; border:none; }
+    .chat-input-area { display:flex; padding:10px; gap:8px; border-top:1px solid var(--border); }
+    .chat-input-area textarea { flex:1; background:var(--surface); border:none; border-radius:40px; padding:8px 14px; resize:none; font-size:0.8rem; }
+    .chat-input-area button { background:var(--gradient); border:none; border-radius:40px; padding:0 18px; color:white; font-weight:bold; cursor:pointer; }
+    .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--surface); backdrop-filter:blur(12px); border-top:1px solid var(--border); display:none; justify-content:space-around; align-items:center; padding:0.6rem 0.8rem; z-index:90; }
+    .bottom-nav-item { display:flex; flex-direction:column; align-items:center; gap:0.2rem; color:var(--text-secondary); text-decoration:none; font-size:0.7rem; transition:0.2s; }
+    .bottom-nav-item i { font-size:1.3rem; }
+    .bottom-nav-item.active, .bottom-nav-item:hover { color:var(--accent-1); }
+    @media (max-width: 768px) { .nav-links, .nav-right .theme-toggle, .nav-right .notification-wrapper, .nav-right .message-wrapper, .nav-right .profile-badge, .nav-right .logout-btn { display:none; } .hamburger { display:block; } .stats-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; padding:1rem; } .stat-item { min-width:auto; } .product-grid { grid-template-columns:repeat(2,1fr); gap:1rem; } .product-img { height:120px; } body { padding-bottom:70px; } .bottom-nav { display:flex; } .chatbot { bottom:80px; } .notification-dropdown, .message-dropdown { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); right:auto; bottom:auto; width:90vw; max-height:70vh; } }
+    @media (min-width: 769px) { .hamburger { display:none; } .bottom-nav { display:none; } }
+  </style>
+</head>
+<body>
+<nav>
+  <div class="logo-area"><img src="assets/images/photo_2026-02-17_19-01-20.jpg" alt="Phoenix"><div class="logo-text"><h2>Phoenix</h2><span>donate & trade</span></div></div>
+  <div class="nav-links"><a href="dashboard.html">Home</a><a href="market.html">Market</a><a href="donate.html">Donate</a><a href="sell.html">Sell</a></div>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+    <div class="notification-wrapper"><i class="fas fa-bell nav-icon" id="notificationBell"></i></div>
+    <div class="message-wrapper"><i class="fas fa-comment-dots nav-icon" id="messageIcon"></i></div>
+    <a href="profile.html" class="profile-badge"><i class="fas fa-user"></i></a>
+    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    <span class="hamburger" id="hamburger">☰</span>
+  </div>
+</nav>
+<div class="sidebar" id="sidebar"><div class="close-btn" id="closeSidebar">✕</div><ul><li><a href="#">Home</a></li><li><a href="market.html">Market</a></li><li><a href="donate.html">Donate</a></li><li><a href="sell.html">Sell</a></li><li><a href="profile.html">Profile</a></li><li><a href="#" id="logoutSidebar">Logout</a></li><li><button id="sidebarDarkMode"><i class="fas fa-moon"></i> Dark Mode</button></li></ul></div>
+<div class="overlay" id="overlay"></div>
+
+<main class="container">
+  <div class="hero">
+    <h1 id="welcomeMsg">Welcome back!</h1>
+    <p>Discover items donated or sold by the community near you.</p>
+  </div>
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-item"><span class="stat-number" id="statActiveListings">0</span><div class="stat-label">Active Listings</div><div class="stat-note">—</div></div>
+    <div class="stat-item"><span class="stat-number" id="statTrades">0</span><div class="stat-label">Successful Trades</div><div class="stat-note">⭐ 0.0</div></div>
+    <div class="stat-item"><span class="stat-number" id="statRating">0.0</span><div class="stat-label">Average Rating</div><div class="stat-note">from 0 reviews</div></div>
+    <div class="stat-item"><span class="stat-number" id="statResponse">N/A</span><div class="stat-label">Response Time</div><div class="stat-note">—</div></div>
+  </div>
+  <h2 class="section-title">Recommended <span>for you</span></h2>
+  <div id="recommended-container" class="product-grid"></div>
+</main>
+
+<div class="simple-footer">Copyright © 2026 Phoenix - <a href="about.html">about</a></div>
+<div class="bottom-nav">
+  <a href="#" class="bottom-nav-item active"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="profile.html" class="bottom-nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+  <a href="#" class="bottom-nav-item" id="mobileMessagesBtn"><i class="fas fa-comment-dots"></i><span>Messages</span></a>
+  <a href="#" class="bottom-nav-item" id="mobileAlertsBtn"><i class="fas fa-bell"></i><span>Alerts</span></a>
+</div>
+
+<div class="chatbot">
+  <div class="chat-circle" id="chatIcon"><img src="assets/images/photo_2026-02-17_19-01-20.jpg" alt="Phoenix AI"></div>
+  <span class="chat-label" id="chatLabel">Ask AI</span>
+  <div class="chat-box" id="chatBox">
+    <div class="chat-header"><h4><i class="fas fa-feather-alt"></i> Phoenix Personal AI Assistant</h4><button class="close-chat" id="closeChatBtn">✕</button></div>
+    <div class="chat-messages" id="chatMessages"><div class="chat-message bot">👋 Hi! I'm Phoenix AI. How can I help you today?</div></div>
+    <div class="chat-input-area"><textarea id="chatInput" placeholder="Type your message..." rows="1"></textarea><button id="sendChat">Send</button></div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    'use strict';
+
+    // ---------- API Configuration   ----------
+    const API_BASE_URL = 'https://your-backend.com/api';    
+
+    // Helper: get token
+    function getToken() {
+      return localStorage.getItem('phoenix_token');
+    }
+
+    // Helper: auth headers
+    function authHeaders() {
+      const token = getToken();
+      return {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      };
+    }
+
+    // ---------- Check authentication ----------
+    // const token = getToken();
+    // if (!token) {
+    //   window.location.href = 'sign.html';
+    //   return;
+    // }
+
+    // ---------- Global variables ----------
+    let currentUser = null;
+
+    // ---------- Dark Mode ----------
+    const themeToggle = document.getElementById('themeToggle');
+    const sidebarDarkBtn = document.getElementById('sidebarDarkMode');
+    function setTheme(isDark) {
+      document.body.classList.toggle('dark', isDark);
+      themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      if (sidebarDarkBtn) sidebarDarkBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i> Dark Mode' : '<i class="fas fa-moon"></i> Dark Mode';
+      localStorage.setItem('phoenix-theme', isDark ? 'dark' : 'light');
+    }
+    setTheme(localStorage.getItem('phoenix-theme') === 'dark');
+    themeToggle.addEventListener('click', () => setTheme(!document.body.classList.contains('dark')));
+    if (sidebarDarkBtn) sidebarDarkBtn.addEventListener('click', () => setTheme(!document.body.classList.contains('dark')));
+
+    // ---------- Sidebar & Logout ----------
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('active'); }
+    function closeSidebarFunc() { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
+    hamburger.addEventListener('click', openSidebar);
+    document.getElementById('closeSidebar').addEventListener('click', closeSidebarFunc);
+    overlay.addEventListener('click', closeSidebarFunc);
+
+    function logout() {
+      if (confirm('Logout?')) {
+        localStorage.removeItem('phoenix_token');
+        localStorage.removeItem('phoenix_user');
+        localStorage.removeItem('currentUser');
+        window.location.href = 'index.html';
+      }
+    }
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('logoutSidebar').addEventListener('click', (e) => { e.preventDefault(); logout(); });
+
+    // ---------- Fetch user data & stats ----------
+    async function fetchUserData() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/auth/me`, {
+          headers: authHeaders()
+        });
+        if (!response.ok) {
+          if (response.status === 401) {
+            localStorage.removeItem('phoenix_token');
+            window.location.href = 'sign.html';
+          }
+          throw new Error('Failed to fetch user data');
+        }
+        const user = await response.json();
+        currentUser = user;
+        // Store user data in localStorage for quick access (optional)
+        localStorage.setItem('phoenix_user', JSON.stringify(user));
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        return user;
+      } catch (err) {
+        console.error('Error fetching user:', err);
+        return null;
+      }
+    }
+
+    async function fetchStats() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/user/stats`, {
+          headers: authHeaders()
+        });
+        if (!response.ok) throw new Error('Failed to fetch stats');
+        const stats = await response.json();
+        // stats = { activeListings, successfulTrades, averageRating, responseTime }
+        document.getElementById('statActiveListings').innerText = stats.activeListings || 0;
+        document.getElementById('statTrades').innerText = stats.successfulTrades || 0;
+        document.getElementById('statRating').innerText = (stats.averageRating || 0).toFixed(1);
+        document.getElementById('statResponse').innerText = stats.responseTime || 'N/A';
+      } catch (err) {
+        console.error('Error fetching stats:', err);
+      }
+    }
+
+    async function fetchRecommendedProducts() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/products/recommended`, {
+          headers: authHeaders()
+        });
+        if (!response.ok) throw new Error('Failed to fetch recommended products');
+        const products = await response.json();
+        renderProducts(products);
+      } catch (err) {
+        console.error('Error fetching recommended products:', err);
+        renderProducts([]);
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function renderProducts(products) {
+      const container = document.getElementById('recommended-container');
+      if (!products.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h3>No products yet</h3>
+            <p>Be the first to list something! Donate or sell items to the community.</p>
+            <a href="sell.html">+ Add a Listing</a>
+          </div>`;
+        return;
+      }
+      container.innerHTML = products.map(p => {
+        const priceDisplay = p.price === 0 ? 'Free' : `${p.price} EGP`;
+        const conditionIcon = p.condition === 'New' ? '✨' : (p.condition === 'Like New' ? '🟢' : '🔄');
+        return `<div class="product-card" data-id="${p.id}">
+          <div class="product-img"><img src="${escapeHtml(p.image_url || p.image || 'assets/images/placeholder.png')}" alt="${escapeHtml(p.title)}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\' style=\\'font-size:2rem;color:var(--accent-1);\\'></i>'"></div>
+          <div class="product-title">${escapeHtml(p.title)}</div>
+          <div class="product-user"><span>${conditionIcon} ${escapeHtml(p.condition)}</span><span>📍 ${escapeHtml(p.city || 'Unknown')}</span></div>
+          <div class="product-footer">
+            <span class="product-value">${priceDisplay}</span>
+            <button class="trade-btn" data-id="${p.id}">View</button>
+          </div>
+        </div>`;
+      }).join('');
+
+      document.querySelectorAll('.trade-btn').forEach(btn => {
+        btn.addEventListener('click', e => { e.stopPropagation(); window.location.href = `product.html?id=${btn.dataset.id}`; });
+      });
+      document.querySelectorAll('.product-card').forEach(card => {
+        card.addEventListener('click', () => { window.location.href = `product.html?id=${card.dataset.id}`; });
+      });
+    }
+
+    // ---------- Update welcome message ----------
+    function updateWelcomeMessage(user) {
+      const welcomeEl = document.getElementById('welcomeMsg');
+      if (welcomeEl && user) {
+        const firstName = user.firstName || user.first_name || '';
+        const displayFirst = firstName || (user.email ? user.email.split('@')[0] : '');
+        welcomeEl.textContent = `Welcome back, ${displayFirst}!`;
+      }
+    }
+
+    // ---------- Dropdowns (same as before) ----------
+    let activeDropdown = null;
+    const notificationDropdown = document.createElement('div');
+    notificationDropdown.className = 'notification-dropdown';
+    notificationDropdown.innerHTML = `<div class="dropdown-header"><h3>Notifications</h3></div><div class="notifications-list" style="padding:1rem; text-align:center; color:var(--text-secondary);">🔔 No notifications now</div><div class="dropdown-footer"><a href="notifications.html">View all</a></div>`;
+    document.body.appendChild(notificationDropdown);
+
+    const messageDropdown = document.createElement('div');
+    messageDropdown.className = 'message-dropdown';
+    messageDropdown.innerHTML = `<div class="dropdown-header"><h3>Messages</h3></div><div class="messages-list" style="padding:1rem; text-align:center; color:var(--text-secondary);">💬 No messages yet</div><div class="dropdown-footer"><a href="chat.html">View all</a></div>`;
+    document.body.appendChild(messageDropdown);
+
+    function closeAllDropdowns() { notificationDropdown.classList.remove('show'); messageDropdown.classList.remove('show'); activeDropdown = null; }
+    function openDropdown(type, iconEl) {
+      closeAllDropdowns();
+      const dd = type === 'notification' ? notificationDropdown : messageDropdown;
+      if (window.innerWidth <= 768) {
+        dd.style.position = 'fixed'; dd.style.top = '50%'; dd.style.left = '50%'; dd.style.right = 'auto'; dd.style.bottom = 'auto'; dd.style.transform = 'translate(-50%, -50%)'; dd.style.width = '90vw'; dd.style.maxHeight = '70vh';
+      } else {
+        const rect = iconEl.getBoundingClientRect();
+        dd.style.position = 'absolute'; dd.style.top = (rect.bottom + window.scrollY + 5) + 'px'; dd.style.right = (window.innerWidth - rect.right - window.scrollX) + 'px'; dd.style.transform = '';
+      }
+      dd.classList.add('show');
+      activeDropdown = type;
+    }
+    document.getElementById('notificationBell').addEventListener('click', e => { e.stopPropagation(); activeDropdown === 'notification' ? closeAllDropdowns() : openDropdown('notification', e.currentTarget); });
+    document.getElementById('messageIcon').addEventListener('click', e => { e.stopPropagation(); activeDropdown === 'message' ? closeAllDropdowns() : openDropdown('message', e.currentTarget); });
+    document.getElementById('mobileMessagesBtn')?.addEventListener('click', e => { e.preventDefault(); activeDropdown === 'message' ? closeAllDropdowns() : openDropdown('message', e.currentTarget); });
+    document.getElementById('mobileAlertsBtn')?.addEventListener('click', e => { e.preventDefault(); activeDropdown === 'notification' ? closeAllDropdowns() : openDropdown('notification', e.currentTarget); });
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.notification-wrapper') && !e.target.closest('.notification-dropdown') && !e.target.closest('.message-wrapper') && !e.target.closest('.message-dropdown') && !e.target.closest('#mobileMessagesBtn') && !e.target.closest('#mobileAlertsBtn')) closeAllDropdowns();
+    });
+    window.addEventListener('scroll', closeAllDropdowns);
+    window.addEventListener('resize', closeAllDropdowns);
+
+    // ---------- Chatbot ----------
+    (function() {
+      const chatIcon = document.getElementById('chatIcon'), chatLabel = document.getElementById('chatLabel'), chatBox = document.getElementById('chatBox'), chatMessages = document.getElementById('chatMessages'), chatInput = document.getElementById('chatInput'), sendBtn = document.getElementById('sendChat'), closeChatBtn = document.getElementById('closeChatBtn');
+      function toggleChat() { chatBox.classList.toggle('show'); }
+      chatIcon.addEventListener('click', toggleChat);
+      if (chatLabel) chatLabel.addEventListener('click', toggleChat);
+      if (closeChatBtn) closeChatBtn.addEventListener('click', () => chatBox.classList.remove('show'));
+      function addMessage(text, isUser = false) {
+        const div = document.createElement('div');
+        div.className = 'chat-message' + (isUser ? '' : ' bot');
+        div.textContent = text;
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+      sendBtn.addEventListener('click', () => { const msg = chatInput.value.trim(); if(!msg) return; addMessage(msg, true); chatInput.value = ''; setTimeout(() => addMessage('Thanks! Phoenix AI will assist you shortly. 🔥'), 500); });
+      chatInput.addEventListener('keypress', e => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendBtn.click(); } });
+      document.addEventListener('click', e => { if(!chatBox.contains(e.target) && !chatIcon.contains(e.target) && (!chatLabel || !chatLabel.contains(e.target))) chatBox.classList.remove('show'); });
+    })();
+
+    // ---------- Initialize Page ----------
+    async function init() {
+      // 1. Fetch user data
+      const user = await fetchUserData();
+      if (!user) return;
+      updateWelcomeMessage(user);
+
+      // 2. Fetch stats
+      await fetchStats();
+
+      // 3. Fetch recommended products
+      await fetchRecommendedProducts();
+    }
+
+    init();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Phoenix · Product Details</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+     
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    :root { --bg: #f9fafc; --surface: #ffffff; --text-primary: #1e1e2f; --text-secondary: #4a4a5e; --accent-1: #ff8a4c; --accent-2: #ff6b2b; --gradient: linear-gradient(135deg, #ff8a4c, #ff4d4d); --border: #eaeef2; --shadow: 0 20px 30px -10px rgba(0,0,0,0.05); --glow: rgba(255,110,64,0.4); --navbar-bg: rgba(255,255,255,0.8); --divider-color: #eaeef2; }
+    body.dark { --bg: #12121a; --surface: #1e1e2a; --text-primary: #f0f0fa; --text-secondary: #b0b0c0; --accent-1: #ff9f6e; --accent-2: #ff7b3f; --gradient: linear-gradient(135deg, #ff9f6e, #ff5e5e); --border: #333344; --shadow: 0 20px 30px -10px rgba(0,0,0,0.7); --glow: rgba(255,140,80,0.6); --navbar-bg: rgba(30,30,42,0.9); --divider-color: #333344; }
+    body { background: var(--bg); color: var(--text-primary); line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; width: 100%; flex: 1; }
+    nav { position: sticky; top: 0; backdrop-filter: blur(12px); background: var(--navbar-bg); border-bottom: 1px solid var(--border); z-index: 100; padding: 0.5rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+    .logo-area { display: flex; align-items: center; gap: 0.3rem; }
+    .logo-area img { height: 40px; width: auto; border-radius: 8px; }
+    .logo-text h2 { font-size: 1.2rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .logo-text span { font-size: 0.7rem; color: var(--text-secondary); display: block; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { text-decoration: none; color: var(--text-primary); font-weight: 500; transition: 0.2s; }
+    .nav-links a:hover { color: var(--accent-1); }
+    .nav-right { display: flex; align-items: center; gap: 0.8rem; position: relative; }
+    .nav-icon { font-size: 1.2rem; color: var(--text-primary); cursor: pointer; }
+    .nav-icon:hover { color: var(--accent-1); transform: scale(1.05); }
+    .theme-toggle { background: none; border: none; color: var(--text-primary); font-size: 1.2rem; cursor: pointer; }
+    .profile-badge { display: flex; align-items: center; justify-content: center; background: var(--surface); border-radius: 50%; width: 40px; height: 40px; border: 1px solid var(--border); cursor: pointer; text-decoration: none; color: var(--text-primary); font-weight: 600; }
+    .profile-badge i { font-size: 1.2rem; }
+    .profile-badge:hover { background: var(--accent-1); color: white; }
+    .logout-btn { background: transparent; border: 1px solid var(--accent-1); color: var(--accent-1); padding: 0.3rem 0.9rem; border-radius: 40px; font-weight: 600; cursor: pointer; }
+    .logout-btn:hover { background: var(--accent-1); color: white; box-shadow: 0 0 15px var(--glow); }
+    .hamburger { display: none; font-size: 1.5rem; cursor: pointer; margin-left: 0.5rem; }
+    .notification-wrapper, .message-wrapper { position: relative; display: inline-flex; align-items: center; }
+    .notification-dropdown, .message-dropdown { position: absolute; top: calc(100% + 8px); right: 0; width: 340px; background: var(--surface); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid var(--border); z-index: 1001; display: none; flex-direction: column; overflow: hidden; }
+    .notification-dropdown.show, .message-dropdown.show { display: flex; }
+    .dropdown-header { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); font-weight: 600; }
+    .notifications-list, .messages-list { padding: 1rem; text-align: center; color: var(--text-secondary); }
+    .dropdown-footer { padding: 0.8rem; text-align: center; border-top: 1px solid var(--border); }
+    .dropdown-footer a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; }
+    .sidebar { position: fixed; top: 0; left: -100%; width: 250px; height: 100vh; background: var(--surface); border-right: 1px solid var(--border); padding: 2rem 1rem; transition: left 0.3s; z-index: 200; }
+    .sidebar.open { left: 0; }
+    .sidebar .close-btn { text-align: right; margin-bottom: 2rem; font-size: 1.5rem; cursor: pointer; }
+    .sidebar ul { list-style: none; }
+    .sidebar li { margin-bottom: 1.2rem; }
+    .sidebar a, .sidebar button { text-decoration: none; color: var(--text-primary); font-weight: 500; font-size: 1.1rem; display: flex; align-items: center; gap: 0.8rem; background: none; border: none; width: 100%; cursor: pointer; }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 150; display: none; }
+    .overlay.active { display: block; }
+    .back-link { display: inline-block; margin: 1rem 0; color: var(--accent-1); text-decoration: none; font-weight: 500; }
+    .back-link:hover { text-decoration: underline; }
+    .product-container { background: var(--surface); border-radius: 30px; border: 1px solid var(--border); padding: 2rem; display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .product-gallery { flex: 1 1 40%; min-width: 280px; }
+    .main-image { width: 100%; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); background: var(--bg); aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; }
+    .main-image img { width: 100%; height: 100%; object-fit: contain; }
+    .thumbnail-container { display: flex; gap: 0.8rem; margin-top: 1rem; flex-wrap: wrap; }
+    .thumbnail { width: 70px; height: 70px; border-radius: 12px; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: 0.2s; background: var(--bg); }
+    .thumbnail:hover { border-color: var(--accent-1); transform: scale(1.05); }
+    .thumbnail.active { border-color: var(--accent-1); box-shadow: 0 0 0 2px var(--glow); }
+    .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+    .product-info { flex: 1 1 50%; display: flex; flex-direction: column; gap: 1rem; }
+    .product-info h1 { font-size: 2rem; font-weight: 700; }
+    .badge { background: var(--bg); border: 1px solid var(--border); border-radius: 40px; padding: 0.3rem 1rem; font-size: 0.85rem; display: inline-block; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+    .condition-badge { background: var(--accent-1); color: white; border-radius: 40px; padding: 0.3rem 1rem; font-size: 0.85rem; font-weight: 600; display: inline-block; margin-bottom: 0.5rem; }
+    .price-location { display: flex; justify-content: space-between; align-items: baseline; margin: 0.5rem 0; flex-wrap: wrap; gap: 0.5rem; }
+    .price { font-size: 2rem; font-weight: 700; color: var(--accent-2); }
+    .location { color: var(--text-secondary); font-size: 0.9rem; }
+    .description-section { border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 0.5rem; }
+    .seller-section { background: var(--bg); border-radius: 24px; padding: 1rem 1.5rem; margin-top: 1rem; display: flex; align-items: center; gap: 1rem; }
+    .seller-avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--accent-1); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.6rem; overflow: hidden; }
+    .seller-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .seller-info { flex: 1; }
+    .seller-name { font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .rating { color: #f1c40f; font-size: 0.8rem; }
+    .badge-rating { background: #f1c40f; color: black; border-radius: 20px; padding: 0.1rem 0.5rem; font-size: 0.7rem; font-weight: 600; margin-left: 0.5rem; }
+    .action-buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0; align-items: center; }
+    .btn-primary, .btn-outline, .icon-btn { background: var(--gradient); color: white; border: none; padding: 0.8rem 2rem; border-radius: 60px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: 0.2s; }
+    .btn-primary:hover, .btn-outline:hover { transform: scale(1.02); box-shadow: 0 6px 18px var(--glow); }
+    .btn-outline { background: transparent; border: 2px solid var(--accent-1); color: var(--accent-1); }
+    .icon-btn { background: transparent; border: 1px solid var(--border); color: var(--text-primary); width: auto; }
+    .icon-btn:hover { background: var(--bg); border-color: var(--accent-1); }
+    .share-dropdown { position: relative; display: inline-block; }
+    .share-menu { position: absolute; bottom: 120%; right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 0.5rem; display: none; flex-direction: column; gap: 0.5rem; min-width: 180px; z-index: 100; }
+    .share-menu.show { display: flex; }
+    .share-menu button { background: none; border: none; padding: 0.5rem 1rem; text-align: left; cursor: pointer; border-radius: 12px; display: flex; align-items: center; gap: 0.5rem; width: 100%; transition: 0.2s; }
+    .share-menu button:hover { background: var(--bg); color: var(--accent-1); }
+    .favourite-btn { background: transparent; border: 1px solid var(--border); color: var(--text-primary); width: auto; }
+    .favourite-btn.liked { background: #e74c3c; color: white; border-color: #e74c3c; }
+    .favourite-btn.liked i { color: white; }
+    .simple-footer { margin-top: 3rem; padding: 1rem; text-align: center; border-top: 1px solid var(--divider-color); color: var(--text-secondary); font-size: 0.8rem; }
+    .simple-footer a { color: var(--accent-1); text-decoration: none; }
+    .chatbot { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; align-items: center; gap: 0px; }
+    .chat-circle { width: 56px; height: 56px; background: linear-gradient(145deg, #ff9f4a, #ff4d2e); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 15px rgba(255,80,40,0.8), 0 8px 20px rgba(0,0,0,0.2); animation: float-glow 2.2s infinite; position: relative; }
+    .chat-circle img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.6); }
+    .chat-circle::after { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; background: radial-gradient(circle, rgba(255,100,40,0.6), transparent 70%); animation: pulse-ring 1.8s infinite; pointer-events: none; }
+    @keyframes float-glow { 0% { transform: translateY(0px); box-shadow: 0 0 12px rgba(255,80,40,0.7); } 50% { transform: translateY(-6px); box-shadow: 0 0 28px rgba(255,100,50,1); } 100% { transform: translateY(0px); box-shadow: 0 0 12px rgba(255,80,40,0.7); } }
+    @keyframes pulse-ring { 0% { opacity: 0.6; transform: scale(1); } 70% { opacity: 0; transform: scale(1.3); } 100% { opacity: 0; transform: scale(1.3); } }
+    .chat-label { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); color: #ffaa66; font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: 30px; margin-top: 6px; cursor: pointer; border: 1px solid #ff8a4c; }
+    .chat-box { position: absolute; bottom: 80px; right: 0; width: 90vw; max-width: 450px; height: 500px; background: rgba(255,255,255,0.75); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(255,255,255,0.3); display: none; flex-direction: column; overflow: hidden; }
+    body.dark .chat-box { background: rgba(30,30,42,0.85); }
+    .chat-box.show { display: flex; }
+    .chat-header { padding: 1rem 1.2rem; background: rgba(0,0,0,0.05); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+    .chat-header h4 { font-weight: 700; color: var(--accent-1); }
+    .close-chat { background: none; border: none; font-size: 1.2rem; cursor: pointer; }
+    .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .chat-message { max-width: 85%; padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; background: var(--surface); color: var(--text-primary); align-self: flex-start; border: 1px solid var(--border); }
+    .chat-message.bot { background: var(--gradient); color: white; border: none; }
+    .chat-input-area { display: flex; padding: 10px; gap: 8px; border-top: 1px solid var(--border); }
+    .chat-input-area textarea { flex: 1; background: var(--surface); border: none; border-radius: 40px; padding: 8px 14px; resize: none; font-size: 0.8rem; }
+    .chat-input-area button { background: var(--gradient); border: none; border-radius: 40px; padding: 0 18px; color: white; font-weight: bold; cursor: pointer; }
+    @media (max-width: 768px) { .nav-links, .nav-right .theme-toggle, .nav-right .notification-wrapper, .nav-right .message-wrapper, .nav-right .logout-btn { display: none; } .hamburger { display: block; } .product-container { flex-direction: column; padding: 1.2rem; } .action-buttons { justify-content: center; } }
+    @media (min-width: 769px) { .hamburger { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo-area"><img src="assets/images/photo_2026-02-17_19-01-20.jpg" alt="Phoenix"><div class="logo-text"><h2>Phoenix</h2><span>donate & trade</span></div></div>
+  <div class="nav-links"><a href="dashboard.html">Home</a><a href="market.html">Market</a><a href="donate.html">Donate</a><a href="sell.html">Sell</a></div>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+    <div class="notification-wrapper"><i class="fas fa-bell nav-icon" id="notificationBell"></i></div>
+    <div class="message-wrapper"><i class="fas fa-comment-dots nav-icon" id="messageIcon"></i></div>
+    <a href="profile.html" class="profile-badge" id="profileBadge"><i class="fas fa-user"></i></a>
+    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    <span class="hamburger" id="hamburger">☰</span>
+  </div>
+</nav>
+
+<div class="sidebar" id="sidebar"><div class="close-btn" id="closeSidebar">✕</div><ul><li><a href="dashboard.html">Home</a></li><li><a href="market.html">Market</a></li><li><a href="donate.html">Donate</a></li><li><a href="sell.html">Sell</a></li><li><a href="profile.html">Profile</a></li><li><a href="favourites.html">Favorites</a></li><li><a href="settings.html">Settings</a></li><li><button id="sidebarDarkMode"><i class="fas fa-moon"></i> Dark Mode</button></li><li><button id="sidebarLogout">Logout</button></li></ul></div>
+<div class="overlay" id="overlay"></div>
+
+<main class="container">
+  <a href="market.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Market</a>
+  <div id="productContainer"><div style="text-align:center;padding:3rem;">Loading product...</div></div>
+</main>
+
+<footer class="simple-footer">Copyright © 2026 Phoenix — <a href="about.html">About</a></footer>
+
+<div class="chatbot">
+  <div class="chat-circle" id="chatIcon"><img src="assets/images/photo_2026-02-17_19-01-20.jpg" alt="Phoenix AI"></div>
+  <span class="chat-label" id="chatLabel">Ask AI</span>
+  <div class="chat-box" id="chatBox">
+    <div class="chat-header"><h4><i class="fas fa-feather-alt"></i> Phoenix AI</h4><button class="close-chat" id="closeChatBtn">✕</button></div>
+    <div class="chat-messages" id="chatMessages"><div class="chat-message bot">Hi! How can I help?</div></div>
+    <div class="chat-input-area"><textarea id="chatInput" placeholder="Type..."></textarea><button id="sendChat">Send</button></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ---------- API Configuration ----------
+  const API_BASE_URL = 'https://backend.com/api';     
+
+  // ---------- Helper: get token and auth headers ----------
+  function getToken() { return localStorage.getItem('phoenix_token'); }
+  function authHeaders() {
+    const token = getToken();
+    return {
+      'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    };
+  }
+
+  // ---------- Check authentication ----------
+  // const token = getToken();
+  // if (!token) {
+  //   window.location.href = 'sign.html';
+  //   return;
+  // }
+
+  // ---------- Favourites API ----------
+  async function isFavourite(productId) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/favorites/${productId}`, { headers: authHeaders() });
+      return res.ok;
+    } catch { return false; }
+  }
+  async function toggleFavourite(productId) {
+    const currently = await isFavourite(productId);
+    if (currently) {
+      const res = await fetch(`${API_BASE_URL}/favorites/${productId}`, { method: 'DELETE', headers: authHeaders() });
+      return !res.ok;
+    } else {
+      const res = await fetch(`${API_BASE_URL}/favorites`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ productId }) });
+      return res.ok;
+    }
+  }
+
+  // ---------- Dark Mode ----------
+  const themeToggle = document.getElementById('themeToggle');
+  const sidebarDarkBtn = document.getElementById('sidebarDarkMode');
+  function setTheme(isDark) {
+    document.body.classList.toggle('dark', isDark);
+    themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    if (sidebarDarkBtn) sidebarDarkBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i> Dark Mode' : '<i class="fas fa-moon"></i> Dark Mode';
+    localStorage.setItem('phoenix-theme', isDark ? 'dark' : 'light');
+  }
+  setTheme(localStorage.getItem('phoenix-theme') === 'dark');
+  themeToggle.addEventListener('click', () => setTheme(!document.body.classList.contains('dark')));
+  if (sidebarDarkBtn) sidebarDarkBtn.addEventListener('click', () => setTheme(!document.body.classList.contains('dark')));
+
+  // ---------- Sidebar & Logout ----------
+  const hamburger = document.getElementById('hamburger'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('overlay');
+  hamburger.onclick = () => { sidebar.classList.add('open'); overlay.classList.add('active'); };
+  document.getElementById('closeSidebar').onclick = () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); };
+  overlay.onclick = () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); };
+  const logout = () => { if(confirm('Logout?')) { localStorage.clear(); window.location.href='index.html'; } };
+  document.getElementById('logoutBtn').onclick = logout;
+  document.getElementById('sidebarLogout').onclick = logout;
+
+  // Profile badge  
+  const badge = document.getElementById('profileBadge');
+  if (badge) badge.innerHTML = '<i class="fas fa-user"></i>';
+
+  // ---------- Notifications & Messages Dropdowns ----------
+  let activeDropdown = null;
+  const notifDD = document.createElement('div'); notifDD.className = 'notification-dropdown';
+  notifDD.innerHTML = `<div class="dropdown-header">Notifications</div><div class="notifications-list">No notifications now</div><div class="dropdown-footer"><a href="notifications.html">View all</a></div>`;
+  document.body.appendChild(notifDD);
+  const msgDD = document.createElement('div'); msgDD.className = 'message-dropdown';
+  msgDD.innerHTML = `<div class="dropdown-header">Messages</div><div class="messages-list">No messages yet</div><div class="dropdown-footer"><a href="chat.html">View all</a></div>`;
+  document.body.appendChild(msgDD);
+  function closeAllDD() { notifDD.classList.remove('show'); msgDD.classList.remove('show'); activeDropdown = null; }
+  function openDD(dd, icon) { closeAllDD(); const rect = icon.getBoundingClientRect(); dd.style.top = (rect.bottom + window.scrollY + 5) + 'px'; dd.style.right = (window.innerWidth - rect.right - window.scrollX) + 'px'; dd.classList.add('show'); activeDropdown = dd; }
+  document.getElementById('notificationBell').addEventListener('click', e => { e.stopPropagation(); activeDropdown === notifDD ? closeAllDD() : openDD(notifDD, e.currentTarget); });
+  document.getElementById('messageIcon').addEventListener('click', e => { e.stopPropagation(); activeDropdown === msgDD ? closeAllDD() : openDD(msgDD, e.currentTarget); });
+  document.addEventListener('click', e => { if (!e.target.closest('.notification-wrapper') && !e.target.closest('.notification-dropdown') && !e.target.closest('.message-wrapper') && !e.target.closest('.message-dropdown')) closeAllDD(); });
+
+  // ---------- Chatbot ----------
+  const chatIcon = document.getElementById('chatIcon'), chatBox = document.getElementById('chatBox'), chatLabel = document.getElementById('chatLabel'), closeChat = document.getElementById('closeChatBtn'), sendBtn = document.getElementById('sendChat'), chatInput = document.getElementById('chatInput'), chatMessages = document.getElementById('chatMessages');
+  const toggleChat = () => chatBox.classList.toggle('show');
+  chatIcon.onclick = toggleChat; chatLabel.onclick = toggleChat; closeChat.onclick = () => chatBox.classList.remove('show');
+  sendBtn.onclick = () => { let m = chatInput.value.trim(); if(!m) return; let div = document.createElement('div'); div.className = 'chat-message'; div.textContent = m; chatMessages.appendChild(div); chatInput.value = ''; setTimeout(() => { let bot = document.createElement('div'); bot.className = 'chat-message bot'; bot.textContent = 'Thanks! I will help you shortly.'; chatMessages.appendChild(bot); }, 500); };
+
+  // ---------- Load Product from API ----------
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = urlParams.get('id');
+  const container = document.getElementById('productContainer');
+
+  if (!productId) {
+    container.innerHTML = '<div style="text-align:center;padding:3rem;"><h2>Product ID missing</h2><a href="market.html">Return to Market</a></div>';
+  } else {
+    fetchProductData();
+  }
+
+  async function fetchProductData() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/products/${productId}`, { headers: authHeaders() });
+      if (!response.ok) {
+        if (response.status === 401) { window.location.href = 'sign.html'; return; }
+        throw new Error('Product not found');
+      }
+      const product = await response.json();
+      renderProductPage(product);
+    } catch (err) {
+      console.error(err);
+      container.innerHTML = '<div style="text-align:center;padding:3rem;"><h2>Product not found</h2><a href="market.html">Return to Market</a></div>';
+    }
+  }
+
+  async function renderProductPage(product) {
+    const isFree = product.price === 0;
+    const priceText = isFree ? 'Free' : `${product.price} ${product.currency || 'EGP'}`;
+    const actionText = isFree ? 'Request Item' : 'Buy Now';
+    
+    const images = product.images && product.images.length ? product.images : (product.image ? [product.image] : []);
+    const locationText = product.city || 'Unknown location';
+    const catName = product.category || 'General';
+    const condition = product.condition || 'Good';
+    const sellerName = product.seller?.name || product.seller_name || 'Phoenix User';
+    const sellerAvatar = product.seller?.avatar || product.seller_avatar || '';
+    const sellerTrades = product.seller?.totalTrades || product.seller_trades || 0;
+    const sellerRating = product.seller?.rating || product.seller_rating || 0;
+    const sellerId = product.seller?.id || product.seller_id || '';
+
+    let thumbnailsHtml = '';
+    images.forEach((img, index) => {
+      thumbnailsHtml += `
+        <div class="thumbnail ${index === 0 ? 'active' : ''}" data-img-index="${index}">
+          <img src="${img}" alt="Thumbnail ${index + 1}">
+        </div>
+      `;
+    });
+
+    const isFav = await isFavourite(product.id);
+
+    const productHtml = `
+      <div class="product-container">
+        <div class="product-gallery">
+          <div class="main-image" id="mainImage">
+            ${images[0] ? `<img src="${images[0]}" alt="${product.title}">` : '<i class="fas fa-image" style="font-size:4rem;color:var(--text-secondary);opacity:0.5;"></i>'}
+          </div>
+          ${images.length > 1 ? `<div class="thumbnail-container" id="thumbnailContainer">${thumbnailsHtml}</div>` : ''}
+        </div>
+        <div class="product-info">
+          <h1>${escapeHtml(product.title)}</h1>
+          <div>
+            <span class="condition-badge">${escapeHtml(condition)}</span>
+            <span class="badge">${escapeHtml(catName)}</span>
+          </div>
+          <div class="price-location">
+            <span class="price">${priceText}</span>
+            <span class="location"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(locationText)}</span>
+          </div>
+          <div class="description-section">
+            <h3>Description</h3>
+            <p>${escapeHtml(product.description || 'No description provided.')}</p>
+          </div>
+          <div class="seller-section">
+            <div class="seller-avatar">
+              ${sellerAvatar ? `<img src="${sellerAvatar}" alt="${sellerName}">` : `<i class="fas fa-user-circle"></i>`}
+            </div>
+            <div class="seller-info">
+              <div class="seller-name">
+                ${escapeHtml(sellerName)}
+                <span class="rating"><i class="fas fa-star"></i> ${sellerRating.toFixed(1)}</span>
+                <span class="badge-rating">${sellerTrades} trades</span>
+              </div>
+              <div style="font-size:0.8rem; color:var(--text-secondary);">Member since ...</div>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <button class="btn-primary" id="mainActionBtn">
+              <i class="fas fa-${isFree ? 'hand-holding-heart' : 'shopping-cart'}"></i> ${actionText}
+            </button>
+            <button class="btn-outline" id="chatSellerBtn">
+              <i class="fas fa-comment"></i> Chat
+            </button>
+            <button class="icon-btn favourite-btn ${isFav ? 'liked' : ''}" id="favouriteBtn">
+              <i class="fas fa-heart"></i> Favourite
+            </button>
+            <div class="share-dropdown">
+              <button class="icon-btn" id="shareBtn"><i class="fas fa-share-alt"></i> Share</button>
+              <div class="share-menu" id="shareMenu">
+                <button id="copyLinkBtn"><i class="fas fa-link"></i> Copy link</button>
+                <button id="facebookShareBtn"><i class="fab fa-facebook"></i> Facebook</button>
+                <button id="twitterShareBtn"><i class="fab fa-twitter"></i> Twitter</button>
+                <button id="whatsappShareBtn"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = productHtml;
+
+    // Thumbnails
+    if (images.length > 1) {
+      const thumbnails = document.querySelectorAll('.thumbnail');
+      const mainImageDiv = document.getElementById('mainImage');
+      thumbnails.forEach(thumb => {
+        thumb.addEventListener('click', function() {
+          const index = parseInt(this.dataset.imgIndex);
+          const imgSrc = images[index];
+          mainImageDiv.innerHTML = `<img src="${imgSrc}" alt="${product.title}">`;
+          thumbnails.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    }
+
+    // Main Action Button
+    document.getElementById('mainActionBtn').addEventListener('click', () => {
+      if (isFree) {
+        window.location.href = `request_confirmation.html?id=${product.id}&seller_id=${encodeURIComponent(sellerId)}`;
+      } else {
+        window.location.href = `checkout.html?id=${product.id}`;
+      }
+    });
+
+    // Chat Button
+    document.getElementById('chatSellerBtn').addEventListener('click', () => {
+      if (sellerId) {
+        window.location.href = `chat.html?seller_id=${encodeURIComponent(sellerId)}&product_id=${product.id}&product_title=${encodeURIComponent(product.title)}`;
+      } else {
+        alert('Chat functionality will be added soon.');
+      }
+    });
+
+    // Favourite Button
+    const favBtn = document.getElementById('favouriteBtn');
+    if (favBtn) {
+      favBtn.addEventListener('click', async () => {
+        const nowFav = await toggleFavourite(product.id);
+        if (nowFav) {
+          favBtn.classList.add('liked');
+        } else {
+          favBtn.classList.remove('liked');
+        }
+      });
+    }
+
+    // Share functionality
+    const shareBtn = document.getElementById('shareBtn');
+    const shareMenu = document.getElementById('shareMenu');
+    shareBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      shareMenu.classList.toggle('show');
+    });
+    document.addEventListener('click', (e) => {
+      if (shareMenu && !shareMenu.contains(e.target) && !shareBtn.contains(e.target)) {
+        shareMenu.classList.remove('show');
+      }
+    });
+    const currentUrl = window.location.href;
+    const encodedUrl = encodeURIComponent(currentUrl);
+    const encodedTitle = encodeURIComponent(product.title);
+    document.getElementById('copyLinkBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText(currentUrl);
+      alert('Link copied to clipboard!');
+      shareMenu.classList.remove('show');
+    });
+    document.getElementById('facebookShareBtn').addEventListener('click', () => {
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, '_blank');
+      shareMenu.classList.remove('show');
+    });
+    document.getElementById('twitterShareBtn').addEventListener('click', () => {
+      window.open(`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`, '_blank');
+      shareMenu.classList.remove('show');
+    });
+    document.getElementById('whatsappShareBtn').addEventListener('click', () => {
+      window.open(`https://wa.me/?text=${encodedTitle}%20${encodedUrl}`, '_blank');
+      shareMenu.classList.remove('show');
+    });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+})();
+</script>
+</body>
+</html>

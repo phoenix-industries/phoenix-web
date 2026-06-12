@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Phoenix · Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+        
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    :root { --bg: #f9fafc; --surface: #ffffff; --text-primary: #1e1e2f; --text-secondary: #4a4a5e; --accent-1: #ff8a4c; --accent-2: #ff6b2b; --gradient: linear-gradient(135deg, #ff8a4c, #ff4d4d); --border: #eaeef2; --shadow: 0 20px 30px -10px rgba(0,0,0,0.05); --glow: rgba(255,110,64,0.4); --navbar-bg: rgba(255,255,255,0.8); --divider-color: #eaeef2; }
+    body.dark { --bg: #12121a; --surface: #1e1e2a; --text-primary: #f0f0fa; --text-secondary: #b0b0c0; --accent-1: #ff9f6e; --accent-2: #ff7b3f; --gradient: linear-gradient(135deg, #ff9f6e, #ff5e5e); --border: #333344; --shadow: 0 20px 30px -10px rgba(0,0,0,0.7); --glow: rgba(255,140,80,0.6); --navbar-bg: rgba(30,30,42,0.9); --divider-color: #333344; }
+    body { background: var(--bg); color: var(--text-primary); line-height: 1.5; transition: background 0.3s, color 0.2s; min-height: 100vh; display: flex; flex-direction: column; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; width: 100%; flex: 1; }
+    nav { position: sticky; top: 0; backdrop-filter: blur(12px); background: var(--navbar-bg); border-bottom: 1px solid var(--border); z-index: 100; padding: 0.5rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+    .logo-area { display: flex; align-items: center; gap: 0.3rem; }
+    .logo-area img { height: 40px; width: auto; border-radius: 8px; }
+    .logo-text h2 { font-size: 1.2rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .logo-text span { font-size: 0.7rem; color: var(--text-secondary); display: block; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { text-decoration: none; color: var(--text-primary); font-weight: 500; transition: 0.2s; }
+    .nav-links a:hover { color: var(--accent-1); }
+    .nav-right { display: flex; align-items: center; gap: 0.8rem; position: relative; }
+    .nav-icon { font-size: 1.2rem; color: var(--text-primary); cursor: pointer; transition: 0.2s; }
+    .nav-icon:hover { color: var(--accent-1); }
+    .theme-toggle { background: none; border: none; color: var(--text-primary); font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; }
+    .profile-badge { display: flex; align-items: center; justify-content: center; background: var(--surface); border-radius: 50%; width: 40px; height: 40px; border: 2px solid var(--accent-1); cursor: pointer; text-decoration: none; color: var(--text-primary); font-weight: 700; font-size: 1rem; transition: 0.2s; overflow: hidden; }
+    .profile-badge:hover { background: var(--accent-1); color: white; }
+    .profile-badge img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .logout-btn { background: transparent; border: 1px solid var(--accent-1); color: var(--accent-1); padding: 0.3rem 0.9rem; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .logout-btn:hover { background: var(--accent-1); color: white; box-shadow: 0 0 15px var(--glow); }
+    .hamburger { display: none; font-size: 1.5rem; cursor: pointer; color: var(--text-primary); margin-left: 0.5rem; }
+    .notification-wrapper, .message-wrapper { position: relative; display: inline-flex; align-items: center; }
+    .notification-dropdown, .message-dropdown { position: absolute; top: calc(100% + 8px); right: 0; width: 320px; max-width: 90vw; background: var(--surface); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.12); border: 1px solid var(--border); z-index: 1001; display: none; flex-direction: column; overflow: hidden; }
+    .notification-dropdown.show, .message-dropdown.show { display: flex; }
+    .dropdown-header { padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); font-weight: 600; }
+    .notifications-list, .messages-list { padding: 1rem; text-align: center; color: var(--text-secondary); font-size: 0.9rem; }
+    .dropdown-footer { padding: 0.6rem; text-align: center; border-top: 1px solid var(--border); }
+    .dropdown-footer a { color: var(--accent-1); text-decoration: none; font-size: 0.8rem; }
+    .sidebar { position: fixed; top: 0; left: -100%; width: 250px; height: 100vh; background: var(--surface); border-right: 1px solid var(--border); padding: 2rem 1rem; transition: left 0.3s; z-index: 200; }
+    .sidebar.open { left: 0; }
+    .sidebar .close-btn { text-align: right; margin-bottom: 2rem; font-size: 1.5rem; cursor: pointer; }
+    .sidebar ul { list-style: none; }
+    .sidebar li { margin-bottom: 1.2rem; }
+    .sidebar a, .sidebar button { text-decoration: none; color: var(--text-primary); font-weight: 500; font-size: 1.1rem; display: flex; align-items: center; gap: 0.8rem; background: none; border: none; width: 100%; cursor: pointer; }
+    .sidebar a:hover, .sidebar button:hover { color: var(--accent-1); }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 150; display: none; }
+    .overlay.active { display: block; }
+    .profile-header { display: flex; align-items: center; gap: 1.5rem; margin: 2rem 0; flex-wrap: wrap; background: var(--surface); border-radius: 40px; padding: 1.8rem 2rem; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .avatar-section { position: relative; flex-shrink: 0; }
+    .profile-avatar { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--accent-1); overflow: hidden; }
+    .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-info h1 { font-size: 2rem; font-weight: 700; }
+    .username { color: var(--text-secondary); margin: 0.3rem 0; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; font-size: 0.95rem; }
+    .contact-info { margin-top: 0.8rem; padding-top: 0.5rem; border-top: 1px solid var(--border); }
+    .info-item { display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); margin: 0.4rem 0; font-size: 0.9rem; }
+    .info-item i { width: 20px; color: var(--accent-1); font-size: 0.85rem; }
+    .profile-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
+    .edit-profile-btn { background: var(--gradient); color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 500; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: inline-flex; align-items: center; gap: 0.4rem; }
+    .edit-profile-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--glow); }
+    .incomplete-banner { background: rgba(255,138,76,0.08); border: 1px solid rgba(255,138,76,0.3); border-radius: 12px; padding: 0.6rem 1rem; margin-top: 0.8rem; font-size: 0.82rem; color: var(--accent-2); display: flex; align-items: center; gap: 0.5rem; }
+    .stats-row { display: flex; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+    .stat-card { background: var(--surface); border-radius: 24px; padding: 1.2rem 1.5rem; flex: 1 1 160px; text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .stat-value { font-size: 2rem; font-weight: 700; color: var(--accent-2); }
+    .stat-label { color: var(--text-secondary); font-size: 0.8rem; }
+    .listings-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .listings-header h2 { font-size: 1.8rem; font-weight: 600; }
+    .tabs-container { display: flex; gap: 0.2rem; border-bottom: 2px solid var(--border); }
+    .tab-btn { background: none; border: none; padding: 0.6rem 1.5rem; font-size: 1rem; font-weight: 500; color: var(--text-secondary); cursor: pointer; position: relative; transition: 0.2s; }
+    .tab-btn.active { color: var(--accent-1); font-weight: 600; }
+    .tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: var(--accent-1); border-radius: 2px 2px 0 0; }
+    .tab-btn:hover { color: var(--accent-1); }
+    .add-item-btn { background: var(--gradient); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 40px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+    .product-card { background: var(--surface); border-radius: 20px; padding: 1rem; border: 1px solid var(--border); transition: 0.2s; cursor: pointer; display: flex; flex-direction: column; }
+    .product-card:hover { transform: translateY(-4px); border-color: var(--accent-1); box-shadow: var(--shadow); }
+    .product-img { width: 100%; height: 150px; border-radius: 14px; overflow: hidden; background: var(--bg); display: flex; align-items: center; justify-content: center; margin-bottom: 0.8rem; }
+    .product-img img { width: 100%; height: 100%; object-fit: cover; }
+    .product-title { font-weight: 600; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .product-city { font-size: 0.7rem; color: var(--text-secondary); margin: 0 0 0.3rem; }
+    .product-price { color: var(--accent-2); font-weight: 700; font-size: 1.1rem; margin-top: auto; margin-bottom: 0.5rem; }
+    .product-actions { display: flex; gap: 0.5rem; margin-top: 0.4rem; }
+    .action-icon { background: transparent; border: 1px solid var(--border); border-radius: 30px; padding: 0.3rem 0.7rem; font-size: 0.7rem; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 0.3rem; color: var(--text-secondary); }
+    .action-icon:hover { background: var(--accent-1); color: white; border-color: var(--accent-1); }
+    .delete-icon:hover { background: #e74c3c; border-color: #e74c3c; }
+    .empty-state { text-align: center; padding: 3rem 2rem; background: var(--surface); border-radius: 30px; border: 1px dashed var(--border); cursor: pointer; transition: 0.2s; }
+    .empty-state:hover { border-color: var(--accent-1); }
+    .empty-state i { font-size: 3.5rem; color: var(--accent-1); margin-bottom: 1rem; opacity: 0.7; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); backdrop-filter: blur(12px); border-top: 1px solid var(--border); display: none; justify-content: space-around; padding: 0.6rem; z-index: 90; }
+    .bottom-nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; font-size: 0.7rem; }
+    .bottom-nav-item i { font-size: 1.3rem; margin-bottom: 2px; }
+    .bottom-nav-item.active { color: var(--accent-1); }
+    .chatbot { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; align-items: center; }
+    .chat-circle { width: 56px; height: 56px; background: linear-gradient(145deg, #ff9f4a, #ff4d2e); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 15px rgba(255,80,40,0.8), 0 8px 20px rgba(0,0,0,0.2); animation: float-glow 2.2s infinite; position: relative; }
+    .chat-circle img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.6); }
+    .chat-circle::after { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; background: radial-gradient(circle, rgba(255,100,40,0.6), transparent 70%); animation: pulse-ring 1.8s infinite; pointer-events: none; }
+    @keyframes float-glow { 0%,100% { transform: translateY(0); box-shadow: 0 0 12px rgba(255,80,40,0.7); } 50% { transform: translateY(-6px); box-shadow: 0 0 28px rgba(255,100,50,1); } }
+    @keyframes pulse-ring { 0% { opacity:0.6; transform:scale(1); } 70%,100% { opacity:0; transform:scale(1.3); } }
+    .chat-label { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); color: #ffaa66; font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: 30px; margin-top: 6px; cursor: pointer; border: 1px solid #ff8a4c; }
+    .chat-box { position: absolute; bottom: 80px; right: 0; width: 90vw; max-width: 450px; height: 500px; background: rgba(255,255,255,0.75); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(255,255,255,0.3); display: none; flex-direction: column; overflow: hidden; }
+    body.dark .chat-box { background: rgba(30,30,42,0.85); }
+    .chat-box.show { display: flex; }
+    .chat-header { padding: 1rem 1.2rem; background: rgba(0,0,0,0.05); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+    .chat-header h4 { font-weight: 700; color: var(--accent-1); }
+    .close-chat { background: none; border: none; font-size: 1.2rem; cursor: pointer; }
+    .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .chat-message { max-width: 85%; padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; background: var(--surface); color: var(--text-primary); align-self: flex-start; border: 1px solid var(--border); }
+    .chat-message.bot { background: var(--gradient); color: white; border: none; }
+    .chat-input-area { display: flex; padding: 10px; gap: 8px; border-top: 1px solid var(--border); }
+    .chat-input-area textarea { flex: 1; background: var(--surface); border: none; border-radius: 40px; padding: 8px 14px; resize: none; font-size: 0.8rem; color: var(--text-primary); }
+    .chat-input-area button { background: var(--gradient); border: none; border-radius: 40px; padding: 0 18px; color: white; font-weight: bold; cursor: pointer; }
+    .simple-footer { margin-top: 3rem; padding: 1.5rem; text-align: center; border-top: 1px solid var(--divider-color); color: var(--text-secondary); font-size: 0.9rem; }
+    .simple-footer a { color: var(--accent-1); text-decoration: none; font-weight: 500; }
+    @media (max-width: 768px) { .nav-links, .nav-right .theme-toggle, .nav-right .notification-wrapper, .nav-right .message-wrapper, .nav-right .profile-badge, .nav-right .logout-btn { display: none; } .hamburger { display: block; } .bottom-nav { display: flex; } body { padding-bottom: 70px; } .chatbot { bottom: 80px; } .profile-header { flex-direction: column; text-align: center; padding: 1.2rem; } .profile-avatar { width: 90px; height: 90px; margin: 0 auto; } .profile-actions { justify-content: center; } .product-grid { grid-template-columns: repeat(2, 1fr); } .listings-header { flex-direction: column; align-items: flex-start; } .tabs-container { overflow-x: auto; width: 100%; } }
+    @media (max-width: 480px) { .product-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo-area"><img src="assets/images/photo_2026-02-17_19-01-20.jpg" alt="Phoenix"><div class="logo-text"><h2>Phoenix</h2><span>donate & trade</span></div></div>
+  <div class="nav-links"><a href="dashboard.html">Home</a><a href="market.html">Market</a><a href="donate.html">Donate</a><a href="sell.html">Sell</a></div>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+    <div class="notification-wrapper"><i class="fas fa-bell nav-icon" id="notificationBell"></i></div>
+    <div class="message-wrapper"><i class="fas fa-comment-dots nav-icon" id="messageIcon"></i></div>
+    <a href="profile.html" class="profile-badge" id="profileBadge"><i class="fas fa-user"></i></a>
+    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    <span class="hamburger" id="hamburger">☰</span>
+  </div>
+</nav>
+
+<div class="sidebar" id="sidebar"><div class="close-btn" id="closeSidebar">✕</div><ul><li><a href="dashboard.html">Home</a></li><li><a href="market.html">Market</a></li><li><a href="donate.html">Donate</a></li><li><a href="sell.html">Sell</a></li><li><a href="profile.html">Profile</a></li><li><a href="favourites.html">Favorites</a></li><li><a href="settings.html">Settings</a></li><li><button id="sidebarDarkMode"><i class="fas fa-moon"></i> Dark Mode</button></li><li><button id="sidebarLogout">Logout</button></li></ul></div>
+<div class="overlay" id="overlay"></div>
+
+<main class="container" id="mainContent"></main>
+
+<div class="bottom-nav"><a href="dashboard.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Home</span></a><a href="favourites.html" class="bottom-nav-item"><i class="fas fa-heart"></i><span>Favorites</span></a><a href="chat.html" class="bottom-nav-item"><i class="fas fa-comment-dots"></i><span>Messages</span></a><a href="settings.html" class="bottom-nav-item"><i class="fas fa-cog"></i><span>Settings</span></a></div>
+
+<div class="chatbot"><div class="chat-circle" id="chatIcon"><img src="assets/images/photo_2026-02-17_19-01-20.jpg" alt="AI"></div><span class="chat-label" id="chatLabel">Ask AI</span><div class="chat-box" id="chatBox"><div class="chat-header"><h4><i class="fas fa-feather-alt"></i> Phoenix AI</h4><button class="close-chat" id="closeChatBtn">✕</button></div><div class="chat-messages" id="chatMessages"><div class="chat-message bot">👋 Hi! How can I help?</div></div><div class="chat-input-area"><textarea id="chatInput" placeholder="Type..."></textarea><button id="sendChat">Send</button></div></div></div>
+
+<footer class="simple-footer">Copyright © 2026 Phoenix — <a href="about.html">About</a></footer>
+
+<script>
+(function() {
+  'use strict';
+
+  // ---------- API Configuration ----------
+  const API_BASE_URL = 'https:// backend.com/api';   
+
+  // ---------- Helper: get token and auth headers ----------
+  function getToken() { return localStorage.getItem('phoenix_token'); }
+  function authHeaders() {
+    const token = getToken();
+    return {
+      'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    };
+  }
+
+  // ---------- Check authentication ----------
+  // const token = getToken();
+  // if (!token) {
+  //   window.location.href = 'sign.html';
+  //   return;
+  // }
+
+  // ---------- Global Variables ----------
+  let currentUser = null;
+  let userProducts = [];     // قائمة بمنتجات المستخدم (للبيع أو التبرع)
+  let favoritesList = [];    // قائمة معرفات المنتجات المفضلة
+  let currentTab = 'sells';  // 'sells', 'donations', 'favorites'
+
+  // ---------- Functions to fetch data from API ----------
+  async function fetchUserProfile() {
+    const res = await fetch(`${API_BASE_URL}/auth/me`, { headers: authHeaders() });
+    if (!res.ok) {
+      if (res.status === 401) { window.location.href = 'sign.html'; }
+      throw new Error('Failed to fetch user profile');
+    }
+    const user = await res.json();
+    currentUser = user;
+    // تخزين محلي للاستخدام السريع (اختياري)
+    localStorage.setItem('phoenix_user', JSON.stringify(user));
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    return user;
+  }
+
+  async function fetchUserStats() {
+    const res = await fetch(`${API_BASE_URL}/user/stats`, { headers: authHeaders() });
+    if (!res.ok) throw new Error('Failed to fetch stats');
+    return await res.json(); // { activeListings, successfulTrades, averageRating, responseTime }
+  }
+
+  async function fetchUserProducts() {
+    const res = await fetch(`${API_BASE_URL}/user/products`, { headers: authHeaders() });
+    if (!res.ok) throw new Error('Failed to fetch user products');
+    const products = await res.json();
+    userProducts = products;
+    return products;
+  }
+
+  async function fetchFavorites() {
+    const res = await fetch(`${API_BASE_URL}/favorites`, { headers: authHeaders() });
+    if (!res.ok) throw new Error('Failed to fetch favorites');
+    const favs = await res.json(); // expecting [{ id, productId, ... }] or array of product ids
+    favoritesList = favs.map(f => f.productId || f.id || f);
+    return favoritesList;
+  }
+
+  async function deleteProduct(productId) {
+    const res = await fetch(`${API_BASE_URL}/products/${productId}`, { method: 'DELETE', headers: authHeaders() });
+    if (!res.ok) throw new Error('Failed to delete product');
+    return true;
+  }
+
+  // ---------- Render Profile UI ----------
+  async function renderProfileUI() {
+    try {
+      //   كل البيانات
+      const user = await fetchUserProfile();
+      const stats = await fetchUserStats();
+      const products = await fetchUserProducts();
+      await fetchFavorites(); 
+
+      const fullDisplayName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || (user.email ? user.email.split('@')[0] : 'User');
+      const avatarSrc = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullDisplayName)}&background=ff8a4c&color=fff&size=120`;
+
+      const isComplete = user.governorate && user.city;
+      const hasBio = user.bio && user.bio.trim() !== '';
+
+      const locationHtml = isComplete ? `<div class="username"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(user.governorate)} · ${escapeHtml(user.city)}</div>` : '';
+      const bioHtml = hasBio ? `<div class="info-item"><i class="fas fa-quote-left"></i> ${escapeHtml(user.bio)}</div>` : '';
+      const phoneHtml = (user.showPhoneInProfile && user.phone) ? `<div class="info-item"><i class="fas fa-phone-alt"></i> ${escapeHtml(user.phone)}</div>` : '';
+      const emailHtml = `<div class="info-item"><i class="fas fa-envelope"></i> ${escapeHtml(user.email)}</div>`;
+
+      const banners = [];
+      if (!isComplete) banners.push(`<div class="incomplete-banner"><i class="fas fa-exclamation-triangle"></i> Please add your governorate &amp; city in Settings.</div>`);
+      if (!hasBio) banners.push(`<div class="incomplete-banner"><i class="fas fa-info-circle"></i> Add a bio to tell others about yourself.</div>`);
+
+      const activeCount = stats.activeListings || 0;
+      const soldCount = stats.successfulTrades || 0;
+      const rating = (stats.averageRating || 0).toFixed(1);
+      const responseTime = stats.responseTime || 'N/A';
+
+      document.getElementById('mainContent').innerHTML = `
+        <div class="profile-header">
+          <div class="avatar-section">
+            <div class="profile-avatar"><img src="${avatarSrc}" alt="Avatar"></div>
+          </div>
+          <div class="profile-info">
+            <h1>${escapeHtml(fullDisplayName)}</h1>
+            ${locationHtml}
+            ${bioHtml}
+            <div class="contact-info">${phoneHtml}${emailHtml}</div>
+            <div class="profile-actions">
+              <button class="edit-profile-btn" id="editProfileBtn"><i class="fas fa-pen"></i> Edit Profile</button>
+            </div>
+            ${banners.join('')}
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-value">${activeCount}</div><div class="stat-label">Active Listings</div></div>
+          <div class="stat-card"><div class="stat-value">${soldCount}</div><div class="stat-label">Successful Trades</div></div>
+          <div class="stat-card"><div class="stat-value">${rating}</div><div class="stat-label">Average Rating</div></div>
+          <div class="stat-card"><div class="stat-value">${responseTime}</div><div class="stat-label">Response Time</div></div>
+        </div>
+
+        <div class="listings-header">
+          <h2>My Listings</h2>
+          <div class="tabs-container">
+            <button class="tab-btn ${currentTab === 'sells' ? 'active' : ''}" data-tab="sells">Sells</button>
+            <button class="tab-btn ${currentTab === 'donations' ? 'active' : ''}" data-tab="donations">Donations</button>
+            <button class="tab-btn ${currentTab === 'favorites' ? 'active' : ''}" data-tab="favorites">Favorites</button>
+          </div>
+          <a href="sell.html" class="add-item-btn"><i class="fas fa-plus"></i> Add New</a>
+        </div>
+        <div id="listingsContainer"></div>
+      `;
+
+      document.getElementById('editProfileBtn').onclick = () => { window.location.href = 'settings.html'; };
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          currentTab = e.target.dataset.tab;
+          renderProfileUI(); // إعادة تحميل الصفحة   الجديد
+        });
+      });
+
+      // عرض القوائم حسب التبويب
+      renderListings();
+      updateNavBadge();
+    } catch (err) {
+      console.error('Error rendering profile:', err);
+      document.getElementById('mainContent').innerHTML = '<div style="text-align:center;padding:3rem;">Failed to load profile. Please try again later.</div>';
+    }
+  }
+
+  function renderListings() {
+    const container = document.getElementById('listingsContainer');
+    let items = [];
+    if (currentTab === 'sells') {
+      items = userProducts.filter(p => p.type === 'sale');
+    } else if (currentTab === 'donations') {
+      items = userProducts.filter(p => p.type === 'donation' || p.type === 'free');
+    } else if (currentTab === 'favorites') {
+      // المفضلة: نجلب المنتجات من userProducts التي معرفها موجود في favoritesList
+      items = userProducts.filter(p => favoritesList.includes(String(p.id)));
+    }
+
+    if (!items.length) {
+      const msgs = { sells: 'No items for sale yet.', donations: 'No donations yet.', favorites: 'No favorites yet.' };
+      container.innerHTML = `<div class="empty-state" id="emptyState"><i class="fas fa-box-open"></i><h3>${msgs[currentTab]}</h3><p style="color:var(--text-secondary);margin-top:0.5rem;">Click to add your first product</p></div>`;
+      const emptyDiv = document.getElementById('emptyState');
+      if (emptyDiv) emptyDiv.onclick = () => { window.location.href = 'sell.html'; };
+      return;
+    }
+
+    container.innerHTML = `<div class="product-grid">${[...items].reverse().map(p => `
+      <div class="product-card" data-id="${p.id}">
+        <div class="product-img">${p.image ? `<img src="${p.image}">` : `<i class="fas fa-box fa-2x" style="color:var(--accent-1)"></i>`}</div>
+        <div class="product-title">${escapeHtml(p.title)}</div>
+        <div class="product-city"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(p.city || 'Unknown')}</div>
+        <div class="product-price">${p.price === 0 ? 'Free' : p.price + ' EGP'}</div>
+        <div class="product-actions">
+          <button class="action-icon edit-icon" data-id="${p.id}" data-type="${p.type}"><i class="fas fa-edit"></i> Edit</button>
+          <button class="action-icon delete-icon" data-id="${p.id}"><i class="fas fa-trash-alt"></i> Delete</button>
+        </div>
+      </div>`).join('')}</div>`;
+
+    // Edit button
+    document.querySelectorAll('.edit-icon').forEach(btn => {
+      btn.onclick = async (e) => {
+        e.stopPropagation();
+        const prodId = btn.dataset.id;
+        const prodType = btn.dataset.type;
+        if (prodType === 'sale') {
+          window.location.href = `sell.html?id=${prodId}`;
+        } else {
+          window.location.href = `donate.html?id=${prodId}`;
+        }
+      };
+    });
+
+    // Delete button
+    document.querySelectorAll('.delete-icon').forEach(btn => {
+      btn.onclick = async (e) => {
+        e.stopPropagation();
+        if (confirm('Delete this item permanently?')) {
+          try {
+            await deleteProduct(btn.dataset.id);
+            // إعادة تحميل القوائم بعد الحذف
+            await fetchUserProducts();
+            await fetchFavorites();
+            renderListings(); // إعادة عرض القائمة الحالية
+          } catch (err) {
+            alert('Failed to delete product: ' + err.message);
+          }
+        }
+      };
+    });
+
+    // View product on card click
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.onclick = () => { window.location.href = `product.html?id=${card.dataset.id}`; };
+    });
+  }
+
+  function updateNavBadge() {
+    const badge = document.getElementById('profileBadge');
+    if (!badge) return;
+    if (currentUser && currentUser.avatar) {
+      badge.innerHTML = `<img src="${currentUser.avatar}" alt="avatar">`;
+    } else {
+      badge.innerHTML = '<i class="fas fa-user"></i>';
+    }
+  }
+
+  // ---------- Dark Mode ----------
+  const themeToggle = document.getElementById('themeToggle');
+  const sidebarDarkBtn = document.getElementById('sidebarDarkMode');
+  function applyTheme(isDark) {
+    document.body.classList.toggle('dark', isDark);
+    themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    if (sidebarDarkBtn) sidebarDarkBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i> Dark Mode' : '<i class="fas fa-moon"></i> Dark Mode';
+    localStorage.setItem('phoenix-theme', isDark ? 'dark' : 'light');
+  }
+  applyTheme(localStorage.getItem('phoenix-theme') === 'dark');
+  themeToggle.onclick = () => applyTheme(!document.body.classList.contains('dark'));
+  if (sidebarDarkBtn) sidebarDarkBtn.onclick = () => applyTheme(!document.body.classList.contains('dark'));
+
+  // ---------- Sidebar & Logout ----------
+  const hamburger = document.getElementById('hamburger');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('active'); }
+  function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
+  hamburger.onclick = openSidebar;
+  document.getElementById('closeSidebar').onclick = closeSidebar;
+  overlay.onclick = closeSidebar;
+  function logout() { if (confirm('Logout?')) { localStorage.clear(); window.location.href = 'index.html'; } }
+  document.getElementById('logoutBtn').onclick = logout;
+  document.getElementById('sidebarLogout').onclick = logout;
+
+  // ---------- Dropdowns (notifications / messages) ----------
+  let activeDropdown = null;
+  const notifDD = document.createElement('div'); notifDD.className = 'notification-dropdown';
+  notifDD.innerHTML = `<div class="dropdown-header">Notifications</div><div class="notifications-list">🔔 No notifications yet</div><div class="dropdown-footer"><a href="notifications.html">View all</a></div>`;
+  document.body.appendChild(notifDD);
+  const msgDD = document.createElement('div'); msgDD.className = 'message-dropdown';
+  msgDD.innerHTML = `<div class="dropdown-header">Messages</div><div class="messages-list">💬 No messages yet</div><div class="dropdown-footer"><a href="chat.html">View all</a></div>`;
+  document.body.appendChild(msgDD);
+  function closeAllDD() { notifDD.classList.remove('show'); msgDD.classList.remove('show'); activeDropdown = null; }
+  function openDD(dd, icon) { closeAllDD(); const r = icon.getBoundingClientRect(); dd.style.top = (r.bottom + window.scrollY + 5) + 'px'; dd.style.right = (window.innerWidth - r.right - window.scrollX) + 'px'; dd.classList.add('show'); activeDropdown = dd; }
+  document.getElementById('notificationBell').onclick = e => { e.stopPropagation(); activeDropdown === notifDD ? closeAllDD() : openDD(notifDD, e.currentTarget); };
+  document.getElementById('messageIcon').onclick = e => { e.stopPropagation(); activeDropdown === msgDD ? closeAllDD() : openDD(msgDD, e.currentTarget); };
+  document.addEventListener('click', e => { if (!e.target.closest('.notification-wrapper') && !e.target.closest('.message-wrapper')) closeAllDD(); });
+
+  // ---------- Chatbot ----------
+  const chatBox = document.getElementById('chatBox');
+  const toggleChat = () => chatBox.classList.toggle('show');
+  document.getElementById('chatIcon').onclick = toggleChat;
+  document.getElementById('chatLabel').onclick = toggleChat;
+  document.getElementById('closeChatBtn').onclick = () => chatBox.classList.remove('show');
+  document.getElementById('sendChat').onclick = () => {
+    const msg = document.getElementById('chatInput').value.trim(); if (!msg) return;
+    const msgs = document.getElementById('chatMessages');
+    const u = document.createElement('div'); u.className = 'chat-message'; u.textContent = msg; msgs.appendChild(u);
+    document.getElementById('chatInput').value = '';
+    setTimeout(() => { const b = document.createElement('div'); b.className = 'chat-message bot'; b.textContent = 'Thanks! 🔥'; msgs.appendChild(b); msgs.scrollTop = msgs.scrollHeight; }, 500);
+  };
+
+  // ---------- Initialize ----------
+  renderProfileUI();
+
+  // إعادة التحميل عند العودة للصفحة  
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      renderProfileUI();
+    }
+  });
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+  }
+})();
+</script>
+</body>
+</html>
