@@ -1,7 +1,8 @@
 import { createSignal, Show } from "solid-js";
+import * as money from "~/lib/utils/money";
 import type { Product } from "~/lib/api/products";
-import UserIcon from "lucide-solid/icons/user";
 import PackageIcon from "lucide-solid/icons/package";
+import CircleUserRoundIcon from "lucide-solid/icons/circle-user-round";
 import "./ProductCard.css";
 
 export type PostCardImageProps = {
@@ -37,8 +38,8 @@ export function ProductCardImage(props: PostCardImageProps) {
 	);
 }
 
+
 export function ProductCard(props: { product: Product }) {
-	console.log(props.product);
 	return (
 		<div class="product-card" data-id={props.product.id}>
 			<div class="product-img">
@@ -48,13 +49,13 @@ export function ProductCard(props: { product: Product }) {
 				/>
 			</div>
 			<div class="product-badges">
-				<span class="badge">{props.product.category}</span>
+				<span class="badge">{props.product.category.name}</span>
 				<span class="badge">{props.product.condition}</span>
 			</div>
 			<div class="product-title">{props.product.name}</div>
-			<div class="product-user flex items-center">
-				<UserIcon />
-				<span class="text-lg">{props.product.user?.name}</span>
+			<div class="product-user flex items-center mt-3">
+				<CircleUserRoundIcon class="stroke-primary me-2" />
+				<span>{props.product.user?.name}</span>
 			</div>
 			<div
 				class="product-footer"
@@ -63,9 +64,9 @@ export function ProductCard(props: { product: Product }) {
 				<span style="font-weight:800;color:var(--accent-2);">
 					{props.product.price === 0
 						? "Free"
-						: "$" + props.product.price}
+						: money.format(props.product.price)}
 				</span>
-				<button class="trade-btn" data-id="${p.id}">
+				<button class="trade-btn">
 					{props.product.type === "sale" ? "Buy Now" : "Get Item"}
 				</button>
 			</div>
