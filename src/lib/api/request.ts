@@ -12,7 +12,7 @@ export type ServerResponse<T> =
 	  };
 
 export type RequestOptions = RequestInit & {
-	query?: Record<string, string>;
+	params?: Record<string, string>;
 };
 
 export async function request<T>(
@@ -20,10 +20,10 @@ export async function request<T>(
 	options?: RequestOptions,
 ): Promise<ServerResponse<T>> {
 	"use server";
-	const { query, ...init } = options ?? {};
+	const { params, ...init } = options ?? {};
 	const url = new URL(route, env.vars.SERVER_URL);
-	if (query) {
-		url.search = new URLSearchParams(query).toString();
+	if (params) {
+		url.search = new URLSearchParams(params).toString();
 	}
 	const auth = await useAuthSession();
 	const res = await fetch(url, {

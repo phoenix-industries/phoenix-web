@@ -138,7 +138,6 @@ export const registerAction = action(async (form: FormData) => {
 		governorate: form.get("governorate") as string | null,
 		address: form.get("address") as string | null,
 	};
-	console.log(data);
 	if (!data.name || !data.email || !data.phone || !data.password) {
 		return { ok: false, error: "Please fill all fields" };
 	}

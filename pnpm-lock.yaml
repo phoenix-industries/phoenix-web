@@ -20,6 +20,9 @@ importers:
       '@solid-primitives/i18n':
         specifier: ^2.2.1
         version: 2.2.1(solid-js@1.9.13)
+      '@solid-primitives/scheduled':
+        specifier: ^1.5.3
+        version: 1.5.3(solid-js@1.9.13)
       '@solid-primitives/storage':
         specifier: ^4.3.4
         version: 4.3.4(solid-js@1.9.13)
@@ -1082,6 +1085,11 @@ packages:
 
   '@solid-primitives/i18n@2.2.1':
     resolution: {integrity: sha512-TnTnE2Ku11MGYZ1JzhJ8pYscwg1fr9MteoYxPwsfxWfh9Jp5K7RRJncJn9BhOHvNLwROjqOHZ46PT7sPHqbcXw==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/scheduled@1.5.3':
+    resolution: {integrity: sha512-oNwLE6E6lxJAWrc8QXuwM0k2oU1BnANnkChwMw82aK1j3+mWGJkG1IFe5gCwbV+afYmjI76t9JJV3md/8tLw+g==}
     peerDependencies:
       solid-js: ^1.6.12
 
@@ -3832,6 +3840,10 @@ snapshots:
   '@sindresorhus/merge-streams@4.0.0': {}
 
   '@solid-primitives/i18n@2.2.1(solid-js@1.9.13)':
+    dependencies:
+      solid-js: 1.9.13
+
+  '@solid-primitives/scheduled@1.5.3(solid-js@1.9.13)':
     dependencies:
       solid-js: 1.9.13
 
