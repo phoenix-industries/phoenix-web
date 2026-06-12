@@ -1,10 +1,5 @@
 nav {
-	position: sticky;
-	top: 0;
-	backdrop-filter: blur(16px);
-	background: var(--navbar-bg);
 	border-bottom: 1px solid var(--border);
-	z-index: 100;
 	padding: 0.5rem 1rem;
 	display: flex;
 	align-items: center;
@@ -114,7 +109,6 @@ nav {
 	left: -100%;
 	width: 280px;
 	height: 100vh;
-	background: var(--surface);
 	border-right: 1px solid var(--border);
 	padding: 2rem 1rem;
 	transition: left 0.3s ease;

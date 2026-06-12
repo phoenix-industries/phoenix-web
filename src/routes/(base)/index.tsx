@@ -96,11 +96,11 @@ function SearchBar() {
 
 function MarketSection(props: { products: Product[] }) {
 	return (
-		<section id="market">
+		<section>
 			<h2 class="section-title">
 				Featured <span>products</span>
 			</h2>
-			<div class="product-grid" id="productGrid">
+			<div class="product-grid">
 				<For each={props.products}>
 					{(p) => <ProductCard product={p} />}
 				</For>
@@ -176,7 +176,7 @@ function FeaturesSection() {
 					</linearGradient>
 				</defs>
 			</svg>
-			<section class="dual-section" id="donate">
+			<section class="dual-section">
 				<div class="dual-card">
 					<HandHeartIcon
 						size="48"
@@ -260,7 +260,9 @@ function FeaturesSection() {
 			</section>
 
 			<section class="app-download">
-				<h2 class="text-2xl font-bold">Take Phoenix with you anywhere</h2>
+				<h2 class="text-2xl font-bold">
+					Take Phoenix with you anywhere
+				</h2>
 				<p>Fast & Easy · Real-time Chat · Location-based</p>
 				<div class="app-buttons">
 					<a href="#" class="store-btn flex items-center gap-3">

@@ -5,11 +5,11 @@ import { ScrollTop } from "~/components/utils/ScrollTop";
 
 export default function BaseLayout(props: ParentProps) {
 	return (
-		<>
+		<div class="min-h-screen flex flex-col">
 			<Sidebar openable={true} showLinks={true} showLogin={true} />
-			<ScrollTop />
-			{props.children}
+			<div class="flex-1 h-full overflow-auto">{props.children}</div>
 			<Footer class="mt-auto" />
-		</>
+			<ScrollTop />
+		</div>
 	);
 }
