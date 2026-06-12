@@ -14,8 +14,11 @@ function Root(props: ParentProps) {
 	return (
 		<>
 			<Title>{ctx.t("global.title")}</Title>
-			{/*theme={ctx.isDark ? "dark" : "light"}*/}
-			<Toaster richColors expand={false} theme="light" />
+			<Toaster
+				richColors
+				expand={false}
+				theme={ctx.isDark ? "dark" : "light"}
+			/>
 			<main role="main">
 				<Suspense>{props.children}</Suspense>
 				<ScrollTop />

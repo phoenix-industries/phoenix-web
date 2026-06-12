@@ -1,5 +1,5 @@
 import * as env from "~/lib/utils/env";
-import { refresh, useAuthSession } from "./auth";
+import { AUTH_ROUTE, refresh, useAuthSession } from "./auth";
 
 export type ServerResponse<T> =
 	| {
@@ -11,9 +11,13 @@ export type ServerResponse<T> =
 			error: string;
 	  };
 
+export type RequestOptions = RequestInit & {
+	query?: Record<string, string>;
+};
+
 export async function request<T>(
 	route: string,
-	options?: RequestInit & { query?: Record<string, string> },
+	options?: RequestOptions,
 ): Promise<ServerResponse<T>> {
 	"use server";
 	const { query, ...init } = options ?? {};
@@ -31,14 +35,18 @@ export async function request<T>(
 		},
 	});
 	switch (res.status) {
-		case 401: {
-			const data = await refresh();
-			if (!data.ok) {
-				return { ok: false, error: data.error };
+		case 401:
+			{
+				if (!route.startsWith(AUTH_ROUTE)) {
+					const data = await refresh();
+					if (!data.ok) {
+						return { ok: false, error: data.error };
+					}
+					await auth.update(data.data);
+					return request<T>(route, init);
+				}
 			}
-			await auth.update(data.data);
-			return request<T>(route, init);
-		}
+			break;
 		case 204:
 			return { ok: true, data: null as T };
 	}

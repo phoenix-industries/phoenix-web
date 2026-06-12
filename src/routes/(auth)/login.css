@@ -1,0 +1,183 @@
+.signin-container {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+}
+.signin-card {
+	max-width: 480px;
+	width: 100%;
+	background: var(--card-bg);
+	border-radius: 20px;
+	border: 1px solid var(--border-light);
+	padding: 2rem;
+	transition: transform 0.2s;
+}
+.signin-card:hover {
+	transform: translateY(-4px);
+}
+.form-side h3 {
+	font-size: 2rem;
+	font-weight: 700;
+	background: var(--gradient);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	margin-bottom: 0.5rem;
+}
+.subhead {
+	color: var(--text-secondary);
+	margin-bottom: 1.8rem;
+	font-size: 0.95rem;
+}
+.input-group {
+	margin-bottom: 1rem;
+}
+.input-group label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: 600;
+	color: var(--text-secondary);
+}
+.input-field {
+	width: 100%;
+	padding: 0.9rem 1.2rem;
+	background: var(--input-bg);
+	border: 1px solid var(--border-light);
+	border-radius: 15px;
+	font-size: 1rem;
+	color: var(--text-primary);
+	transition: 0.2s;
+}
+.input-field:focus {
+	outline: none;
+	border-color: var(--accent-1);
+	box-shadow: 0 0 0 3px var(--glow);
+}
+.input-wrapper {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+.input-wrapper .input-field {
+	padding-right: 3rem;
+}
+.password-toggle {
+	position: absolute;
+	right: 1.2rem;
+	background: none;
+	border: none;
+	color: var(--text-secondary);
+	cursor: pointer;
+	font-size: 1.2rem;
+}
+.row-options {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0.5rem 0 1rem;
+	font-size: 0.95rem;
+}
+.remember {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--text-secondary);
+	cursor: pointer;
+}
+.remember input {
+	accent-color: var(--accent-1);
+}
+.forgot a {
+	color: var(--accent-1);
+	text-decoration: none;
+	font-weight: 500;
+}
+.forgot a:hover {
+	text-decoration: underline;
+}
+.error-message {
+	background: var(--error-bg);
+	color: var(--error);
+	font-size: 0.9rem;
+	padding: 0.8rem;
+	border-radius: 15px;
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	opacity: 0;
+	transform: translateY(-8px);
+	transition: 0.2s;
+	border: 1px solid var(--error);
+}
+.error-message.show {
+	margin: 0 0 1rem;
+	opacity: 1;
+	transform: translateY(0);
+}
+.btn-signin {
+	width: 100%;
+	background: var(--gradient);
+	color: white;
+	border: none;
+	padding: 0.9rem;
+	border-radius: 15px;
+	font-weight: 700;
+	font-size: 1rem;
+	cursor: pointer;
+	box-shadow: 0 4px 12px var(--glow);
+	transition: 0.2s;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
+}
+.btn-signin:hover:not(:disabled) {
+	transform: scale(1.02);
+	box-shadow: 0 8px 20px var(--glow);
+}
+.btn-signin:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+.spinner {
+	width: 1.2rem;
+	height: 1.2rem;
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	border-top-color: white;
+	border-radius: 50%;
+	animation: spin 0.7s linear infinite;
+	display: inline-block;
+}
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+.create-account {
+	text-align: center;
+	color: var(--text-secondary);
+}
+.create-account a {
+	color: var(--accent-1);
+	font-weight: 600;
+	text-decoration: none;
+}
+.footer-note {
+	text-align: center;
+	margin-top: 1.5rem;
+	font-size: 1rem;
+	color: var(--text-secondary);
+}
+@media (max-width: 768px) {
+	.nav-mini {
+		padding: 0.8rem 1rem;
+	}
+	.signin-card {
+		padding: 1.5rem;
+	}
+	.input-field {
+		padding: 0.8rem 1rem;
+	}
+}

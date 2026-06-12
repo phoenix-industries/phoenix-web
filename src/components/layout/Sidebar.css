@@ -171,11 +171,43 @@ nav {
 	display: block;
 }
 
+.profile-badge {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--surface);
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	border: 1px solid var(--border);
+	cursor: pointer;
+	text-decoration: none;
+	color: var(--text-primary);
+	font-weight: 600;
+}
+.profile-badge i {
+	font-size: 1.2rem;
+}
+.profile-badge:hover {
+	background: var(--accent-1);
+	color: white;
+}
 .logout-btn {
-	color: #e53e3e !important;
-	border-top: 1px solid var(--border);
-	margin-top: 1rem;
-	padding-top: 1rem;
+	background: transparent;
+	border: 1px solid var(--accent-1);
+	color: var(--accent-1);
+	padding: 0.3rem 0.9rem;
+	border-radius: 40px;
+	font-weight: 600;
+	font-size: 0.9rem;
+	cursor: pointer;
+	transition: 0.2s;
+	white-space: nowrap;
+}
+.logout-btn:hover {
+	background: var(--accent-1);
+	color: white;
+	box-shadow: 0 0 15px var(--glow);
 }
 
 @media (min-width: 1024px) {

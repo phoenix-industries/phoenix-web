@@ -1,10 +1,12 @@
+import { action, query, revalidate } from "@solidjs/router";
 import { useSession } from "@solidjs/start/http";
 import { request, type ServerResponse } from "~/lib/api/request";
 import * as env from "~/lib/utils/env";
 
-export const AUTH_ROUTE = "/auth/v1";
+export const AUTH_ROUTE = "/auth";
 
 export type AuthSessionData = {
+	user_id: string;
 	token_type: string;
 	access_token: string;
 	refresh_token: string;
@@ -80,21 +82,58 @@ export async function register(
 	});
 }
 
-export async function logout(token?: string): Promise<ServerResponse<null>> {
-	if (!token) {
-		const auth = await useAuthSession();
-		if (!auth.data) {
-			return { ok: false, error: "No auth session" };
-		}
-		token = auth.data.refresh_token;
-		if (!token) {
-			return { ok: false, error: "No refresh token" };
-		}
-	}
-	return await request<null>(`${AUTH_ROUTE}/refresh`, {
+export async function logout(token: string): Promise<ServerResponse<null>> {
+	return await request<null>(`${AUTH_ROUTE}/logout`, {
 		method: "POST",
 		body: JSON.stringify({
 			refresh_token: token,
 		}),
 	});
 }
+
+export const getSessionQuery = query(async () => {
+	"use server";
+	const auth = await useAuthSession();
+	if (!auth.data.refresh_token) {
+		return { ok: false, error: "No auth session" };
+	}
+	return { ok: true, data: { userID: auth.data.user_id } };
+}, "getSession");
+
+export const loginAction = action(async (form: FormData) => {
+	"use server";
+	const data: AuthLoginData = {
+		identifier: form.get("identifier") as string,
+		password: form.get("password") as string,
+	};
+	// TODO: validation
+	const response = await login(data);
+	console.log(response);
+	if (!response.ok) {
+		return response;
+	}
+	const auth = await useAuthSession();
+	await auth.update((data) => ({
+		...data,
+		token_type: response.data.token_type,
+		access_token: response.data.access_token,
+		refresh_token: response.data.refresh_token,
+		expires_at: response.data.expires_at,
+	}));
+	return { ok: true, data: null } as ServerResponse<null>;
+}, "login");
+
+export const logoutAction = action(async () => {
+	"use server";
+	const auth = await useAuthSession();
+	if (!auth.data.refresh_token) {
+		return { ok: false, error: "No auth session" };
+	}
+	const res = await logout(auth.data.refresh_token);
+	if (!res.ok) {
+		return res;
+	}
+	await auth.clear();
+	await revalidate(getSessionQuery.key);
+	return { ok: true, data: null };
+}, "logout");
