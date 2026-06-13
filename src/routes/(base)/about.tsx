@@ -1,4 +1,8 @@
 import LinkedInIcon from "~/assets/icons/linkedin.svg";
+import Logo from "~/assets/logo.svg";
+import TargetIcon from "lucide-solid/icons/target";
+import EyeIcon from "lucide-solid/icons/eye";
+import HeartIcon from "lucide-solid/icons/heart";
 import "./about.css";
 
 export default function AboutPage() {
@@ -15,7 +19,7 @@ export default function AboutPage() {
 				<div class="mission-grid">
 					<div class="mission-card">
 						<div class="mission-icon">
-							<i class="fas fa-bullseye"></i>
+							<TargetIcon size="48" class="mx-auto" />
 						</div>
 						<h3>Our Mission</h3>
 						<p>
@@ -25,7 +29,7 @@ export default function AboutPage() {
 					</div>
 					<div class="mission-card">
 						<div class="mission-icon">
-							<i class="fas fa-eye"></i>
+							<EyeIcon size="48" class="mx-auto" />
 						</div>
 						<h3>Our Vision</h3>
 						<p>
@@ -35,7 +39,7 @@ export default function AboutPage() {
 					</div>
 					<div class="mission-card">
 						<div class="mission-icon">
-							<i class="fas fa-heart"></i>
+							<HeartIcon size="48" class="mx-auto" />
 						</div>
 						<h3>Our Values</h3>
 						<p>
@@ -46,7 +50,7 @@ export default function AboutPage() {
 
 				<div class="story-section">
 					<div class="story-text">
-						<h2>The Phoenix Story</h2>
+						<h2 class="text-2xl font-bold">The Phoenix Story</h2>
 						<p>
 							The Phoenix is a legendary bird that symbolizes
 							rebirth, transformation, and hope. It rises from its
@@ -71,16 +75,14 @@ export default function AboutPage() {
 						</p>
 					</div>
 					<div class="story-logo-box">
-						<img
-							src="assets/images/photo_2026-02-17_19-01-20.jpg"
-							alt="Phoenix Logo"
-							class="magic-logo"
-						/>
+						<div class="magic-logo">
+							<Logo />
+						</div>
 					</div>
 				</div>
 
 				<div class="howitworks">
-					<h2 style="text-align:center;">How It Works</h2>
+					<h2 class="text-2xl text-center font-bold">How It Works</h2>
 					<div class="flow-steps">
 						<div class="flow-step">
 							<div class="step-number">1</div>
@@ -122,7 +124,7 @@ export default function AboutPage() {
 				</div>
 
 				<div class="gallery">
-					<h2 style="text-align:center;">
+					<h2 class="text-2xl text-center font-bold">
 						Moments of Giving & Exchange
 					</h2>
 					<div class="gallery-grid">
@@ -160,7 +162,7 @@ export default function AboutPage() {
 				</div>
 
 				<div class="team-section">
-					<h2 style="text-align:center;">Meet the Phoenix Team</h2>
+					<h2 class="text-2xl text-center font-bold">Meet the Phoenix Team</h2>
 					<div class="team-grid">
 						<div class="team-card">
 							<div class="team-avatar">L</div>
@@ -171,7 +173,7 @@ export default function AboutPage() {
 									href="https://www.linkedin.com/in/lamiaa-elsheikh-272b3831a"
 									target="_blank"
 								>
-									<i class="fab fa-linkedin"></i>
+									<LinkedInIcon />
 								</a>
 							</div>
 						</div>
@@ -184,7 +186,7 @@ export default function AboutPage() {
 									href="https://www.linkedin.com/in/abdallah-samir-022b8a271"
 									target="_blank"
 								>
-									<i class="fab fa-linkedin"></i>
+									<LinkedInIcon />
 								</a>
 							</div>
 						</div>
@@ -197,7 +199,7 @@ export default function AboutPage() {
 									href="https://www.linkedin.com/in/hana-el-zeiny-6974ab311"
 									target="_blank"
 								>
-									<i class="fab fa-linkedin"></i>
+									<LinkedInIcon />
 								</a>
 							</div>
 						</div>
@@ -210,7 +212,7 @@ export default function AboutPage() {
 									href="https://www.linkedin.com/in/nada-elkolaly-3075b424b"
 									target="_blank"
 								>
-									<i class="fab fa-linkedin"></i>
+									<LinkedInIcon />
 								</a>
 							</div>
 						</div>
@@ -223,7 +225,7 @@ export default function AboutPage() {
 									href="https://www.linkedin.com/in/mohamed-bahaa-9684b726a"
 									target="_blank"
 								>
-									<i class="fab fa-linkedin"></i>
+									<LinkedInIcon />
 								</a>
 							</div>
 						</div>
@@ -236,7 +238,7 @@ export default function AboutPage() {
 									href="https://www.linkedin.com/in/osamamragab"
 									target="_blank"
 								>
-									<i class="fab fa-linkedin"></i>
+									<LinkedInIcon />
 								</a>
 							</div>
 						</div>
@@ -249,7 +251,7 @@ export default function AboutPage() {
 									href="https://www.linkedin.com/in/marena-emad-b9a542272"
 									target="_blank"
 								>
-									<i class="fab fa-linkedin"></i>
+									<LinkedInIcon />
 								</a>
 							</div>
 						</div>
@@ -262,7 +264,7 @@ export default function AboutPage() {
 									href="https://www.linkedin.com/in/ahmed-elhamaky-49440b312"
 									target="_blank"
 								>
-									<i class="fab fa-linkedin"></i>
+									<LinkedInIcon />
 								</a>
 							</div>
 						</div>
@@ -275,7 +277,7 @@ export default function AboutPage() {
 									href="https://www.linkedin.com/in/zyadmohamed"
 									target="_blank"
 								>
-									<i class="fab fa-linkedin"></i>
+									<LinkedInIcon />
 								</a>
 							</div>
 						</div>

@@ -79,7 +79,7 @@ export function Sidebar(props: SidebarProps) {
 			<nav class="sticky top-0 z-99 w-full shadow-md backdrop-blur-xl drop-shadow-lg">
 				<A href="/">
 					<div class="logo-area">
-						<div class="">
+						<div class="size-10">
 							<Logo />
 						</div>
 						<div class="logo-text">
