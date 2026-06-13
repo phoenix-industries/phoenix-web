@@ -17,12 +17,13 @@ export function ProductCardImage(props: PostCardImageProps) {
 	if (props.id && !props.src) {
 		props.src = `/thumbnails/${props.id}`;
 	}
+	console.log(props.src)
 	return (
 		<Show
 			when={props.src && !error()}
 			fallback={
 				<PackageIcon
-					class={`text-primary p-5 size-full object-contain ${props.class ?? ""}`}
+					class={`text-primary p-5 max-w-48 size-full object-contain ${props.class ?? ""}`}
 				/>
 			}
 		>
@@ -44,7 +45,7 @@ export function ProductCard(props: { product: Product }) {
 		<div class="product-card" data-id={props.product.id}>
 			<div class="product-img">
 				<ProductCardImage
-					id={props.product.image}
+					id={props.product.image_id}
 					alt={props.product.name}
 				/>
 			</div>

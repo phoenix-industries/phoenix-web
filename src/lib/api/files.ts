@@ -1,8 +1,8 @@
 import * as env from "~/lib/utils/env";
 import type {} from "./request.ts";
 
-const FILES_ROUTE = "api/v1/files";
+const FILES_ROUTE = "files/v1";
 
-export function getFileURL(fileId: string) {
-	return `${env.vars.SERVER_URL}/${FILES_ROUTE}/${fileId}`;
+export function getFileDownloadURL(fileID: string): string {
+	return `${env.vars.SERVER_URL}/${FILES_ROUTE}/download/${fileID}`;
 }

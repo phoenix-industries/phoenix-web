@@ -17,7 +17,7 @@ export type Product = {
 	type: string;
 	category: ProductCategory;
 	condition: string;
-	image?: string | null;
+	image_id?: string | null;
 	user?: Pick<User, "id" | "name"> | null;
 };
 
