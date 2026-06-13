@@ -151,19 +151,6 @@
 	gap: 1.5rem;
 	margin: 1rem 0;
 }
-.trade-btn {
-	background: var(--gradient);
-	border: none;
-	color: white;
-	padding: 0.4rem 1.2rem;
-	border-radius: 40px;
-	font-weight: 700;
-	cursor: pointer;
-	transition: var(--transition);
-}
-.trade-btn:hover {
-	transform: scale(1.02);
-}
 .dual-section {
 	display: flex;
 	flex-direction: row;
@@ -287,7 +274,7 @@
 }
 @media (min-width: 1024px) {
 	.product-grid {
-		grid-template-columns: repeat(4, 1fr);
+		grid-template-columns: repeat(3, 1fr);
 		gap: 2rem;
 	}
 	.testimonial-grid {

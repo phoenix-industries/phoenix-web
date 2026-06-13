@@ -1,7 +1,7 @@
-import { createAsync } from "@solidjs/router";
+import { A, createAsync } from "@solidjs/router";
 import "./index.css";
 import { getProductsQuery, Product } from "~/lib/api/products";
-import { For, Show } from "solid-js";
+import { For, Show, Suspense } from "solid-js";
 import { SpinnerInfinity } from "~/components/utils/Spinner";
 import { ProductCard } from "~/components/product/ProductCard";
 import TagsIcon from "lucide-solid/icons/tags";
@@ -9,6 +9,7 @@ import RecycleIcon from "lucide-solid/icons/recycle";
 import ShieldIcon from "lucide-solid/icons/shield";
 import MapPinIcon from "lucide-solid/icons/map-pin";
 import HandHeartIcon from "lucide-solid/icons/hand-heart";
+import ChevronRightIcon from "lucide-solid/icons/chevron-right";
 import HeartHandshakeIcon from "lucide-solid/icons/heart-handshake";
 import MessageSquareMoreIcon from "lucide-solid/icons/message-square-more";
 import GooglePlayIcon from "~/assets/icons/google-play.svg";
@@ -37,69 +38,22 @@ function HeroSection() {
 	);
 }
 
-function SearchBar() {
-	return (
-		<>
-			<div class="search-bar">
-				<input
-					type="text"
-					id="searchInput"
-					placeholder="Search for products..."
-				/>
-				<button id="searchBtn">Search</button>
-			</div>
-
-			<div class="filter-bar" id="categories">
-				<div class="filter-group">
-					<label>
-						<i class="fas fa-tag"></i> Category
-					</label>
-					<select id="categorySelect">
-						<option value="all">All</option>
-						<option value="electronics">Electronics</option>
-						<option value="fashion">Fashion</option>
-						<option value="furniture">Furniture</option>
-						<option value="sports">Sports</option>
-						<option value="books">Books</option>
-						<option value="toys">Toys</option>
-						<option value="other">Other</option>
-					</select>
-				</div>
-				<div class="filter-group">
-					<label>
-						<i class="fas fa-check-circle"></i> Condition
-					</label>
-					<select id="conditionSelect">
-						<option value="all">All</option>
-						<option value="new">New</option>
-						<option value="like-new">Like New</option>
-						<option value="good">Good</option>
-						<option value="fair">Fair</option>
-					</select>
-				</div>
-				<div class="filter-group">
-					<label>
-						<i class="fas fa-dollar-sign"></i> Price
-					</label>
-					<select id="priceSelect">
-						<option value="all">All</option>
-						<option value="under50">Under $50</option>
-						<option value="50-200">$50 - $200</option>
-						<option value="200-500">$200 - $500</option>
-						<option value="500plus">$500+</option>
-					</select>
-				</div>
-			</div>
-		</>
-	);
-}
-
 function MarketSection(props: { products: Product[] }) {
 	return (
 		<section>
-			<h2 class="section-title">
-				Featured <span>products</span>
-			</h2>
+			<div class="flex justify-between items-center mb-5">
+				<h2 class="section-title">
+					Featured <span>products</span>
+				</h2>
+				<A
+					href="/market"
+					class="flex items-center text-primary font-bold"
+				>
+					<p>View all</p>
+					<ChevronRightIcon size="20" />
+				</A>
+			</div>
+
 			<div class="product-grid">
 				<For each={props.products}>
 					{(p) => <ProductCard product={p} />}
@@ -292,22 +246,30 @@ function FeaturesSection() {
 }
 
 export default function HomePage() {
-	const products = createAsync(() => getProductsQuery(), {
-		deferStream: true,
-	});
+	const products = createAsync(
+		async () => {
+			const res = await getProductsQuery();
+			return res.ok ? res.data : [];
+		},
+		{
+			deferStream: true,
+		},
+	);
 	return (
 		<main class="container">
 			<HeroSection />
-			<SearchBar />
-			<Show when={products()} fallback={<SpinnerInfinity />}>
-				<Show when={products()?.ok} fallback={<p>No products found</p>}>
-					<MarketSection
-						products={
-							products()?.ok ? (products()?.data ?? []) : []
-						}
-					/>
+			<Suspense fallback={<SpinnerInfinity />}>
+				<Show
+					when={products() && products()!.length > 0}
+					fallback={
+						<p class="mt-5 text-lg text-center text-muted-foreground">
+							No products found
+						</p>
+					}
+				>
+					<MarketSection products={products()!} />
 				</Show>
-			</Show>
+			</Suspense>
 			<FeaturesSection />
 		</main>
 	);
