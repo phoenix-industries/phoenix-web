@@ -6,8 +6,9 @@ import {
 	type ParentProps,
 } from "solid-js";
 import { isServer } from "solid-js/web";
-import { getSessionQuery, logoutAction } from "~/lib/api/auth";
 import { A, createAsync, useAction } from "@solidjs/router";
+import { toast } from "solid-sonner";
+import { getSessionQuery, logoutAction } from "~/lib/api/auth";
 import { useAppState } from "~/context";
 import XIcon from "lucide-solid/icons/x";
 import SunIcon from "lucide-solid/icons/sun";
@@ -16,8 +17,8 @@ import MenuIcon from "lucide-solid/icons/menu";
 import DoorOpenIcon from "lucide-solid/icons/door-open";
 import SquareArrowRightExitIcon from "lucide-solid/icons/square-arrow-right-exit";
 import UserIcon from "lucide-solid/icons/user";
+import Logo from "~/assets/logo.svg";
 import "./Sidebar.css";
-import { toast } from "solid-sonner";
 
 type Link = {
 	name: string;
@@ -77,12 +78,9 @@ export function Sidebar(props: SidebarProps) {
 		<div>
 			<nav class="sticky top-0 z-99 bg-white/50 w-full shadow-md backdrop-blur-xl drop-shadow-lg">
 				<div class="logo-area">
-					{/*
-					<img
-						src="assets/images/photo_2026-02-17_19-01-20.jpg"
-						alt="Phoenix"
-					/>
-					*/}
+					<div class="">
+						<Logo />
+					</div>
 					<div class="logo-text">
 						<h2>Phoenix</h2>
 						<span>donate & trade</span>
