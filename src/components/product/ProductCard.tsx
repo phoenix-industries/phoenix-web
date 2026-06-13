@@ -48,7 +48,7 @@ export function ProductCard(props: { product: Product }) {
 					alt={props.product.name}
 				/>
 			</div>
-			<div class="product-badges">
+			<div class="flex gap-3 items-center">
 				<span class="badge">{props.product.category.name}</span>
 				<span class="badge">{props.product.condition}</span>
 			</div>

@@ -74,7 +74,7 @@
 .product-title {
 	font-size: 1rem;
 	font-weight: 700;
-	margin-top: 0.3rem;
+	margin-top: 0.8rem;
 }
 .product-city {
 	font-size: 0.8rem;
@@ -83,7 +83,7 @@
 }
 .product-tags {
 	display: flex;
-	gap: 0.4rem;
+	gap: 1rem;
 	flex-wrap: wrap;
 	margin: 0.5rem 0;
 }
@@ -105,4 +105,18 @@
 	font-weight: 700;
 	color: var(--accent-2);
 	font-size: 1rem;
+}
+
+.trade-btn {
+	background: var(--gradient);
+	border: none;
+	color: white;
+	padding: 0.4rem 1.2rem;
+	border-radius: 40px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: var(--transition);
+}
+.trade-btn:hover {
+	transform: scale(1.02);
 }
