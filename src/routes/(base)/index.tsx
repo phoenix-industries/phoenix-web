@@ -27,10 +27,10 @@ function HeroSection() {
 				matters.
 			</p>
 			<div class="hero-buttons">
-				<a href="sign.html" class="btn-glow">
+				<a href="/login" class="btn-glow">
 					Start Trading
 				</a>
-				<a href="about.html" class="btn-outline-glow">
+				<a href="/about" class="btn-outline-glow">
 					Learn More
 				</a>
 			</div>
@@ -213,7 +213,7 @@ function FeaturesSection() {
 				</div>
 			</section>
 
-			<section class="app-download">
+			<section id="app-download" class="app-download">
 				<h2 class="text-2xl font-bold">
 					Take Phoenix with you anywhere
 				</h2>

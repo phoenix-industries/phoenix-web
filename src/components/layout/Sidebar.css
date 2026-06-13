@@ -105,6 +105,7 @@ nav {
 	width: 280px;
 	height: 100vh;
 	border-right: 1px solid var(--border);
+	background-color: var(--surface);
 	padding: 2rem 1rem;
 	transition: left 0.3s ease;
 	z-index: 200;

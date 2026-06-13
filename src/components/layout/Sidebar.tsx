@@ -4,6 +4,7 @@ import {
 	onCleanup,
 	Show,
 	type ParentProps,
+	For,
 } from "solid-js";
 import { isServer } from "solid-js/web";
 import { A, createAsync, useAction } from "@solidjs/router";
@@ -29,11 +30,10 @@ type Link = {
 // TODO
 const links: Link[] = [
 	{ name: "Market", href: "/market" },
-	{ name: "Donate", href: "/donate" },
-	{ name: "Sell", href: "/sell" },
-	{ name: "Categories", href: "/categories" },
+	{ name: "Donate", href: "/products/new?type=donate" },
+	{ name: "Sell", href: "/products/new?type=sell" },
 	{ name: "About", href: "/about" },
-	{ name: "App", href: "/mobile-app" },
+	{ name: "App", href: "#mobile-app", class: "app-link" },
 ];
 
 export type SidebarProps = ParentProps & {
@@ -77,28 +77,29 @@ export function Sidebar(props: SidebarProps) {
 	return (
 		<div>
 			<nav class="sticky top-0 z-99 w-full shadow-md backdrop-blur-xl drop-shadow-lg">
-				<div class="logo-area">
-					<div class="">
-						<Logo />
+				<A href="/">
+					<div class="logo-area">
+						<div class="">
+							<Logo />
+						</div>
+						<div class="logo-text">
+							<h2>Phoenix</h2>
+							<span>donate & trade</span>
+						</div>
 					</div>
-					<div class="logo-text">
-						<h2>Phoenix</h2>
-						<span>donate & trade</span>
-					</div>
-				</div>
+				</A>
 				<Show when={props.showLinks}>
 					<a href="#app-download" class="app-link-mobile">
 						App
 					</a>
 					<div class="nav-links">
-						<a href="#market">Market</a>
-						<a href="#donate">Donate</a>
-						<a href="#sell">Sell</a>
-						<a href="#categories">Categories</a>
-						<a href="about.html">About</a>
-						<a href="#app-download" class="app-link">
-							App
-						</a>
+						<For each={links}>
+							{(l) => (
+								<a href={l.href} class={l.class}>
+									{l.name}
+								</a>
+							)}
+						</For>
 					</div>
 				</Show>
 				<div class="nav-right">
@@ -115,7 +116,7 @@ export function Sidebar(props: SidebarProps) {
 							when={session()?.ok}
 							fallback={
 								<a href="/login" class="sign-in-btn">
-									Sign In
+									Login
 								</a>
 							}
 						>
@@ -144,65 +145,50 @@ export function Sidebar(props: SidebarProps) {
 				</div>
 			</nav>
 
-			<Show when={props.children}>
-				<div class="sidebar" classList={{ open: sidebarOpen() }}>
-					<div
-						class="close-btn"
-						onClick={() => setSidebarOpen(false)}
-					>
-						<XIcon />
-					</div>
-					<ul>
-						<li>
-							<a href="#market">Market</a>
-						</li>
-						<li>
-							<a href="#donate">Donate</a>
-						</li>
-						<li>
-							<a href="#sell">Sell</a>
-						</li>
-						<li>
-							<a href="#categories">Categories</a>
-						</li>
-						<li>
-							<a href="about.html">About</a>
-						</li>
-						<li>
-							<a href="#app-download">App</a>
-						</li>
-						<li>
-							<button
-								id="sidebarThemeToggle"
-								onClick={() => state.setDark(!state.isDark)}
-							>
-								<Show
-									when={state.isDark}
-									fallback={<MoonIcon />}
-								>
-									<SunIcon />
-								</Show>
-								Dark Mode
-							</button>
-						</li>
-						<li>
-							<a href="sign.html">
-								<DoorOpenIcon /> Sign In
-							</a>
-						</li>
-						<li>
-							<button id="logoutSidebarBtn" class="logout-btn">
-								<SquareArrowRightExitIcon /> Logout
-							</button>
-						</li>
-					</ul>
+			<div class="sidebar" classList={{ open: sidebarOpen() }}>
+				<div class="close-btn" onClick={() => setSidebarOpen(false)}>
+					<XIcon />
 				</div>
-				<div
-					class="overlay"
-					onClick={() => setSidebarOpen(false)}
-					classList={{ active: sidebarOpen() }}
-				></div>
-			</Show>
+				<ul>
+					<For each={links}>
+						{(l) => (
+							<li>
+								<a href={l.href} class={l.class}>
+									{l.name}
+								</a>
+							</li>
+						)}
+					</For>
+					<li>
+						<button
+							id="sidebarThemeToggle"
+							onClick={() => state.setDark(!state.isDark)}
+						>
+							<Show when={state.isDark} fallback={<MoonIcon />}>
+								<SunIcon />
+							</Show>
+							Dark Mode
+						</button>
+					</li>
+					<li>
+						<A href="/login">
+							<DoorOpenIcon /> Login
+						</A>
+					</li>
+					<li>
+						<button onClick={() => handleLogout()}>
+							<SquareArrowRightExitIcon /> Logout
+						</button>
+					</li>
+				</ul>
+			</div>
+			<div
+				class="overlay"
+				onClick={() => setSidebarOpen(false)}
+				classList={{ active: sidebarOpen() }}
+			>
+				asdasdasd
+			</div>
 			{props.children}
 		</div>
 	);
