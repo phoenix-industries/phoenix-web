@@ -1,0 +1,30 @@
+export const governorates = [
+	"Cairo",
+	"Giza",
+	"Alexandria",
+	"Dakahlia",
+	"Red Sea",
+	"Beheira",
+	"Fayoum",
+	"Gharbia",
+	"Ismailia",
+	"Menofia",
+	"Minya",
+	"Qaliubiya",
+	"North Sinai",
+	"Port Said",
+	"Sharqia",
+	"South Sinai",
+	"Suez",
+	"Luxor",
+	"Matruh",
+	"Qena",
+	"Sohag",
+	"Aswan",
+	"Assiut",
+	"Beni Suef",
+	"Kafr el-Sheikh",
+];
+
+export const speicalChars = "!@#$%^&*";
+export const speicalCharsRegex = new RegExp(`[${speicalChars}]`);
