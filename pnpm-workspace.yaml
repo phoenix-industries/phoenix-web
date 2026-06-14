@@ -1,5 +1,9 @@
 packages: []
 
+allowBuilds:
+  "@parcel/watcher": true
+  esbuild: true
+
 dedupePeers: true
 
 engineStrict: true
@@ -7,10 +11,6 @@ engineStrict: true
 ignoreWorkspaceRootCheck: true
 
 mimimumReleaseAgeStrict: true
-
-allowBuilds:
-  "@parcel/watcher": true
-  esbuild: true
 
 minimumReleaseAgeExclude:
   - h3@2.0.1
@@ -22,9 +22,9 @@ minimumReleaseAgeExclude:
 overrides:
   esbuild@>=0.17.0 <0.28.1: ^0.28.1
   esbuild@>=0.27.3 <0.28.1: ^0.28.1
-  h3@>=2.0.0 <=2.0.1-rc.14: ^2.0.1
-  h3@>=2.0.0-0 <2.0.1-rc.15: ^2.0.1-rc.15
-  h3@>=2.0.0-beta.0 <=2.0.1-rc.16: ^2.0.1
-  h3@>=2.0.0-beta.4 <2.0.1-rc.18: ^2.0.1-rc.18
-  h3@>=2.0.1-alpha.0 <=2.0.1-rc.16: ^2.0.1
+  h3@>=2.0.0 <=2.0.1-rc.14: '>=2.0.1-rc.15'
+  h3@>=2.0.0-0 <2.0.1-rc.15: '>=2.0.1-rc.15'
+  h3@>=2.0.0-beta.0 <=2.0.1-rc.16: '>=2.0.1-rc.17'
+  h3@>=2.0.0-beta.4 <2.0.1-rc.18: '>=2.0.1-rc.18'
+  h3@>=2.0.1-alpha.0 <=2.0.1-rc.16: '>=2.0.1-rc.17'
   srvx@<0.11.13: ^0.11.13
