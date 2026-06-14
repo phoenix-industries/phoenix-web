@@ -3,23 +3,24 @@
 import dotenv from "dotenv";
 
 export const MODE = process.env.NODE_ENV ?? "development";
-export const DEV = MODE === "development";
-export const PROD = MODE === "production";
+export const DEV = MODE !== "production";
 
 console.log(`env: mode=${MODE.toUpperCase()}`);
 
-dotenv.config({
-	path: [
-		".env",
-		".env.local",
-		`.env.${PROD ? "prod" : "dev"}`,
-		`.env.${PROD ? "prod" : "dev"}.local`,
-	],
-	encoding: "utf8",
-	override: true,
-	debug: DEV,
-	quiet: PROD,
-});
+if (process.env.NITRO_PRESET !== "cloudflare-module") {
+	dotenv.config({
+		path: [
+			".env",
+			".env.local",
+			`.env.${DEV? "dev" : "prod"}`,
+			`.env.${DEV ? "dev" : "prod"}.local`,
+		],
+		encoding: "utf8",
+		override: true,
+		debug: DEV,
+		quiet: !DEV,
+	});
+}
 
 const envVarKeys = [
 	"TRUSTED_ORIGINS",

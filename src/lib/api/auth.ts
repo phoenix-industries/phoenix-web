@@ -22,7 +22,7 @@ export async function useAuthSession() {
 		cookie: {
 			maxAge: 30 * 24 * 60 * 60, // 30 days
 			httpOnly: true,
-			secure: env.PROD,
+			secure: !env.DEV,
 			sameSite: "lax",
 			path: "/",
 		},

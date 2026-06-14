@@ -2,7 +2,6 @@
 
 import * as crypto from "crypto";
 import * as env from "~/lib/utils/env";
-import { logger } from "~/lib/utils/logger";
 
 const TOKEN_LENGTH = 64;
 const HMAC_ENCODING = "hex";
@@ -40,7 +39,7 @@ export function verifyToken(token: string, sessionId: string): boolean {
 			Buffer.from(hmac),
 		);
 	} catch (err: unknown) {
-		logger.error(`utils/csrf.verifyToken: ${err}`);
+		console.error(`utils/csrf.verifyToken: ${err}`);
 		return false;
 	}
 }

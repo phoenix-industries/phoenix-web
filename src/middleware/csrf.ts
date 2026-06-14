@@ -15,7 +15,7 @@ export function onRequest(event: FetchEvent): Response | void {
 			);
 			response.headers.set(
 				"Set-Cookie",
-				`${csrf.COOKIE_NAME}=${token}; Path=/; SameSite=Lax; ${env.PROD ? "Secure;" : ""} HttpOnly=false`,
+				`${csrf.COOKIE_NAME}=${token}; Path=/; SameSite=Lax; ${!env.DEV ? "Secure;" : ""} HttpOnly=false`,
 			);
 			response.headers.set(csrf.HEADER_NAME, token);
 		}
