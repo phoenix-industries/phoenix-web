@@ -27,6 +27,8 @@ export default defineConfig({
 		solidStart({
 			middleware: "./src/middleware/index.ts",
 		}),
-		nitro(),
+		nitro({
+			preset: process.env.NITRO_PRESET,
+		}),
 	],
 });

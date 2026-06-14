@@ -6,7 +6,11 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"start": "vite start",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"deploy": "NITRO_PRESET=cloudflare-module pnpm run build && wrangler deploy"
+	},
+	"engines": {
+		"node": ">=22"
 	},
 	"dependencies": {
 		"@solid-primitives/i18n": "^2.2.1",
@@ -24,14 +28,13 @@
 		"solid-sonner": "^0.3.1",
 		"tailwindcss": "^4.3.0"
 	},
-	"engines": {
-		"node": ">=22"
-	},
 	"devDependencies": {
+		"@cloudflare/vite-plugin": "^1.40.2",
 		"@solidjs/vite-plugin-nitro-2": "^0.1.0",
 		"@tailwindcss/vite": "^4.3.0",
 		"@types/node": "^25.9.2",
 		"vite": "^7.3.5",
-		"vite-plugin-solid-svg": "^0.8.1"
+		"vite-plugin-solid-svg": "^0.8.1",
+		"wrangler": "^4.100.0"
 	}
 }

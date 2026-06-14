@@ -1,0 +1,18 @@
+"$schema" = "./node_modules/wrangler/config-schema.json"
+name = "phoenix"
+main = "./.output/server/index.mjs"
+compatibility_date = "2026-06-14"
+compatibility_flags = ["nodejs_compat", "nodejs_compat_populate_process_env"]
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
+invocation_logs = true
+
+[observability.traces]
+enabled = true
+
+[vars]
+NITRO_PRESET = "cloudflare-module"
