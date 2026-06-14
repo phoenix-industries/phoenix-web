@@ -1,4 +1,12 @@
 import { createEffect, createSignal, on, For, Show } from "solid-js";
+import { A, useNavigate, useSubmission } from "@solidjs/router";
+import { toast } from "solid-sonner";
+import { registerAction } from "~/lib/api/auth";
+import {
+	governorates,
+	speicalChars,
+	speicalCharsRegex,
+} from "~/lib/utils/constants";
 import UserIcon from "lucide-solid/icons/user";
 import LockIcon from "lucide-solid/icons/lock";
 import MapPinIcon from "lucide-solid/icons/map-pin";
@@ -6,39 +14,6 @@ import EyeIcon from "lucide-solid/icons/eye";
 import EyeOffIcon from "lucide-solid/icons/eye-off";
 import CircleDotIcon from "lucide-solid/icons/circle-dot";
 import "./register.css";
-import { useNavigate, useSubmission } from "@solidjs/router";
-import { registerAction } from "~/lib/api/auth";
-import { toast } from "solid-sonner";
-
-const governorates = [
-	"Cairo",
-	"Giza",
-	"Alexandria",
-	"Dakahlia",
-	"Red Sea",
-	"Beheira",
-	"Fayoum",
-	"Gharbia",
-	"Ismailia",
-	"Menofia",
-	"Minya",
-	"Qaliubiya",
-	"North Sinai",
-	"Port Said",
-	"Sharqia",
-	"South Sinai",
-	"Suez",
-	"Luxor",
-	"Matruh",
-	"Qena",
-	"Sohag",
-	"Aswan",
-	"Assiut",
-	"Beni Suef",
-	"Kafr el-Sheikh",
-];
-const speicalChars = "!@#$%^&*";
-const speicalCharsRegex = new RegExp(`[${speicalChars}]`);
 
 export default function RegisterPage() {
 	const navigate = useNavigate();
@@ -308,7 +283,7 @@ export default function RegisterPage() {
 					</button>
 
 					<p class="login-link">
-						Already have an account? <a href="/login">Login</a>
+						Already have an account? <A href="/login">Login</A>
 					</p>
 				</div>
 			</form>

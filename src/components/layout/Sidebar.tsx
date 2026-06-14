@@ -95,9 +95,9 @@ export function Sidebar(props: SidebarProps) {
 					<div class="nav-links">
 						<For each={links}>
 							{(l) => (
-								<a href={l.href} class={l.class}>
+								<A href={l.href} class={l.class}>
 									{l.name}
-								</a>
+								</A>
 							)}
 						</For>
 					</div>
@@ -115,9 +115,9 @@ export function Sidebar(props: SidebarProps) {
 						<Show
 							when={session()?.ok}
 							fallback={
-								<a href="/login" class="sign-in-btn">
+								<A href="/login" class="sign-in-btn">
 									Login
-								</a>
+								</A>
 							}
 						>
 							<A href="/profile" class="block">
@@ -153,9 +153,9 @@ export function Sidebar(props: SidebarProps) {
 					<For each={links}>
 						{(l) => (
 							<li>
-								<a href={l.href} class={l.class}>
+								<A href={l.href} class={l.class}>
 									{l.name}
-								</a>
+								</A>
 							</li>
 						)}
 					</For>

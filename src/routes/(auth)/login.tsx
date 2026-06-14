@@ -1,10 +1,10 @@
 import { createEffect, createSignal, on, Show } from "solid-js";
-import { useNavigate, useSubmission } from "@solidjs/router";
+import { A, useNavigate, useSubmission } from "@solidjs/router";
+import { toast } from "solid-sonner";
 import { loginAction } from "~/lib/api/auth";
 import EyeIcon from "lucide-solid/icons/eye";
 import EyeOffIcon from "lucide-solid/icons/eye-off";
 import "./login.css";
-import { toast } from "solid-sonner";
 
 export default function LoginPage() {
 	const navigate = useNavigate();
@@ -77,7 +77,7 @@ export default function LoginPage() {
 							<input type="checkbox" /> Remember me
 						</label>
 						<div class="forgot">
-							<a href="forgot-password.html">Forgot Password?</a>
+							<A href="/forgot-password">Forgot Password?</A>
 						</div>
 					</div>
 
@@ -92,7 +92,7 @@ export default function LoginPage() {
 
 					<div class="create-account mt-4">
 						Don't have an account?{" "}
-						<a href="create-account.html">Create an Account</a>
+						<A href="/register">Create an Account</A>
 					</div>
 					<div class="footer-note">
 						Phoenix Exchange System © 2026

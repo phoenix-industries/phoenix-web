@@ -27,12 +27,12 @@ function HeroSection() {
 				matters.
 			</p>
 			<div class="hero-buttons">
-				<a href="/login" class="btn-glow">
+				<A href="/login" class="btn-glow">
 					Start Trading
-				</a>
-				<a href="/about" class="btn-outline-glow">
+				</A>
+				<A href="/about" class="btn-outline-glow">
 					Learn More
-				</a>
+				</A>
 			</div>
 		</section>
 	);
@@ -248,7 +248,7 @@ function FeaturesSection() {
 export default function HomePage() {
 	const products = createAsync(
 		async () => {
-			const res = await getProductsQuery();
+			const res = await getProductsQuery({ limit: 9 });
 			return res.ok ? res.data : [];
 		},
 		{
