@@ -12,7 +12,7 @@ export type ServerResponse<T> =
 	  };
 
 export type RequestOptions = RequestInit & {
-	params?: Record<string, string>;
+	params?: Record<string, string | number | boolean>;
 };
 
 export async function request<T>(
@@ -22,15 +22,14 @@ export async function request<T>(
 	"use server";
 	const { params, ...init } = options ?? {};
 	const url = new URL(route, env.vars.SERVER_URL);
-	if (params) {
-		url.search = new URLSearchParams(params).toString();
+	for (const key in params) {
+		url.searchParams.append(key, String(params[key]));
 	}
 	const auth = await useAuthSession();
 	const res = await fetch(url, {
 		...init,
 		headers: {
 			Authorization: `${auth.data.token_type} ${auth.data.access_token}`,
-			"Content-Type": "application/json",
 			...init?.headers,
 		},
 	});
