@@ -1,5 +1,4 @@
 import { A, createAsync } from "@solidjs/router";
-import "./index.css";
 import { getProductsQuery, Product } from "~/lib/api/products";
 import { For, Show, Suspense } from "solid-js";
 import { SpinnerInfinity } from "~/components/utils/Spinner";
@@ -14,6 +13,7 @@ import HeartHandshakeIcon from "lucide-solid/icons/heart-handshake";
 import MessageSquareMoreIcon from "lucide-solid/icons/message-square-more";
 import GooglePlayIcon from "~/assets/icons/google-play.svg";
 import AppStoreIcon from "~/assets/icons/app-store.svg";
+import "./index.css";
 
 function HeroSection() {
 	return (

@@ -17,7 +17,6 @@ export function ProductCardImage(props: PostCardImageProps) {
 	if (props.id && !props.src) {
 		props.src = `/thumbnails/${props.id}`;
 	}
-	console.log(props.src)
 	return (
 		<Show
 			when={props.src && !error()}
@@ -38,7 +37,6 @@ export function ProductCardImage(props: PostCardImageProps) {
 		</Show>
 	);
 }
-
 
 export function ProductCard(props: { product: Product }) {
 	return (
@@ -68,7 +66,7 @@ export function ProductCard(props: { product: Product }) {
 						: money.format(props.product.price)}
 				</span>
 				<button class="trade-btn">
-					{props.product.type === "sale" ? "Buy Now" : "Get Item"}
+					{props.product.donated ? "Get Item" : "Buy Now"}
 				</button>
 			</div>
 		</div>

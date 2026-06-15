@@ -37,7 +37,6 @@ export function ProductForm(props: ProductFormProps) {
 		if (!props.onSubmit) return;
 		ev.preventDefault();
 		const form = new FormData(ev.target as HTMLFormElement);
-		console.log(form);
 		props.onSubmit(form);
 	}
 

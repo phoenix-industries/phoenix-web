@@ -15,7 +15,6 @@ export async function uploadFile(file: File): Promise<string> {
 		body: form,
 	});
 	if (!res.ok) {
-		console.log(res);
 		throw new Error("Failed to upload file");
 	}
 	return res.data.id;
