@@ -1,0 +1,266 @@
+.profile-badge {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--surface);
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	border: 2px solid var(--accent-1);
+	cursor: pointer;
+	text-decoration: none;
+	color: var(--text-primary);
+	font-weight: 700;
+	font-size: 1rem;
+	transition: 0.2s;
+	overflow: hidden;
+}
+.profile-badge:hover {
+	background: var(--accent-1);
+	color: white;
+}
+.profile-badge img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.profile-header {
+	display: flex;
+	align-items: center;
+	gap: 1.5rem;
+	margin: 2rem 0;
+	flex-wrap: wrap;
+	background: var(--surface);
+	border-radius: 40px;
+	padding: 1.8rem 2rem;
+	border: 1px solid var(--border);
+	box-shadow: var(--shadow);
+}
+.avatar-section {
+	position: relative;
+	flex-shrink: 0;
+}
+.profile-avatar {
+	width: 120px;
+	height: 120px;
+	border-radius: 50%;
+	border: 3px solid var(--accent-1);
+	overflow: hidden;
+}
+.profile-avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.profile-info h1 {
+	font-size: 2rem;
+	font-weight: 700;
+}
+.username {
+	color: var(--text-secondary);
+	margin: 0.3rem 0;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+	font-size: 0.95rem;
+}
+.contact-info {
+	margin-top: 0.8rem;
+	padding-top: 0.5rem;
+	border-top: 1px solid var(--border);
+}
+.info-item {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--text-secondary);
+	margin: 0.4rem 0;
+	font-size: 0.9rem;
+}
+.info-item i {
+	width: 20px;
+	color: var(--accent-1);
+	font-size: 0.85rem;
+}
+.profile-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	margin-top: 1rem;
+}
+.edit-profile-btn {
+	background: var(--gradient);
+	color: white;
+	border: none;
+	padding: 0.5rem 1.2rem;
+	border-radius: 40px;
+	font-weight: 500;
+	font-size: 0.85rem;
+	cursor: pointer;
+	transition: all 0.2s;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+}
+.edit-profile-btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px var(--glow);
+}
+.incomplete-banner {
+	background: rgba(255, 138, 76, 0.08);
+	border: 1px solid rgba(255, 138, 76, 0.3);
+	border-radius: 12px;
+	padding: 0.6rem 1rem;
+	margin-top: 0.8rem;
+	font-size: 0.82rem;
+	color: var(--accent-2);
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+.stats-row {
+	display: flex;
+	gap: 1rem;
+	margin: 2rem 0;
+	flex-wrap: wrap;
+}
+.stat-card {
+	background: var(--surface);
+	border-radius: 24px;
+	padding: 1.2rem 1.5rem;
+	flex: 1 1 160px;
+	text-align: center;
+	border: 1px solid var(--border);
+	box-shadow: var(--shadow);
+}
+.stat-value {
+	font-size: 2rem;
+	font-weight: 700;
+	color: var(--accent-2);
+}
+.stat-label {
+	color: var(--text-secondary);
+	font-size: 0.8rem;
+}
+.listings-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1.5rem;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+.listings-header h2 {
+	font-size: 1.8rem;
+	font-weight: 600;
+}
+.tabs-container {
+	display: flex;
+	gap: 0.2rem;
+	border-bottom: 2px solid var(--border);
+}
+.tab-btn {
+	background: none;
+	border: none;
+	padding: 0.6rem 1.5rem;
+	font-size: 1rem;
+	font-weight: 500;
+	color: var(--text-secondary);
+	cursor: pointer;
+	position: relative;
+	transition: 0.2s;
+}
+.tab-btn.active {
+	color: var(--accent-1);
+	font-weight: 600;
+}
+.tab-btn.active::after {
+	content: "";
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: var(--accent-1);
+	border-radius: 2px 2px 0 0;
+}
+.tab-btn:hover {
+	color: var(--accent-1);
+}
+.add-item-btn {
+	background: var(--gradient);
+	color: white;
+	border: none;
+	padding: 0.6rem 1.5rem;
+	border-radius: 40px;
+	font-weight: 600;
+	cursor: pointer;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+}
+.product-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1.5rem;
+	margin: 1.5rem 0;
+}
+
+.empty-state {
+	text-align: center;
+	padding: 3rem 2rem;
+	background: var(--surface);
+	border-radius: 30px;
+	border: 1px dashed var(--border);
+	cursor: pointer;
+	transition: 0.2s;
+}
+.empty-state:hover {
+	border-color: var(--accent-1);
+}
+.empty-state i {
+	font-size: 3.5rem;
+	color: var(--accent-1);
+	margin-bottom: 1rem;
+	opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+	body {
+		padding-bottom: 70px;
+	}
+	.profile-header {
+		flex-direction: column;
+		text-align: center;
+		padding: 1.2rem;
+	}
+	.profile-avatar {
+		width: 90px;
+		height: 90px;
+		margin: 0 auto;
+	}
+	.profile-actions {
+		justify-content: center;
+	}
+	.product-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.listings-header {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.tabs-container {
+		overflow-x: auto;
+		width: 100%;
+	}
+}
+@media (max-width: 480px) {
+	.product-grid {
+		grid-template-columns: 1fr;
+	}
+}

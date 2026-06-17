@@ -47,6 +47,7 @@ export type ProductCreateData = Omit<
 
 export type ProductSearchParams = Partial<{
 	query: string;
+	user: string;
 	category: string;
 	condition: string;
 	price: string;
