@@ -5,6 +5,8 @@ import type { User } from "./users";
 
 export const PRODUCTS_ROUTE = `api/v1/products`;
 
+export const SHIPPING_COST = 50 * 100;
+
 export type ProductCategory = {
 	id: string;
 	name: string;
@@ -22,7 +24,16 @@ export type Product = {
 	maximum_age: number;
 	condition: string;
 	image_id?: string | null;
-	user?: Pick<User, "id" | "name"> | null;
+	user?: Pick<
+		User,
+		"id" | "name" | "picture_id" | "city" | "governorate" | "created_at"
+	> | null;
+};
+
+export type ProductSingle = Omit<Product, "user" | "category"> & {
+	user_id: string;
+	category: string;
+	category_id: string;
 };
 
 export type ProductCreateData = Omit<
@@ -38,7 +49,7 @@ export type ProductSearchParams = Partial<{
 	query: string;
 	category: string;
 	condition: string;
-	price: `${string}-${string}`;
+	price: string;
 	limit: number;
 	offset: number;
 }>;
@@ -58,6 +69,14 @@ export const getProductsQuery = query(
 			params: search,
 		}),
 	"getProducts",
+);
+
+export const getProductQuery = query(
+	(id: string) =>
+		request<ProductSingle>(`${PRODUCTS_ROUTE}/${id}`, {
+			method: "GET",
+		}),
+	"getProduct",
 );
 
 export const getProductCategoriesQuery = query(
@@ -109,3 +128,38 @@ export const createProductAction = action(async (form: FormData) => {
 		body: JSON.stringify(data),
 	});
 }, "createProduct");
+
+export const buyProductAction = action(
+	async (
+		productID: string,
+		quantity: number,
+		method: "shipping" | "pickup",
+		form: FormData,
+	) => {
+		"use server";
+		const data = {
+			products: [
+				{
+					id: productID,
+					quantity: quantity,
+				},
+			],
+			shipping_info:
+				method === "shipping"
+					? {
+							full_name: form.get("full_name") as string,
+							phone: form.get("phone") as string,
+							city: form.get("city") as string,
+							address: form.get("address") as string,
+						}
+					: null,
+		};
+		console.log("buy", data);
+
+		return await request<Product>(`${PRODUCTS_ROUTE}/buy`, {
+			method: "POST",
+			body: JSON.stringify(data),
+		});
+	},
+	"buyProduct",
+);
