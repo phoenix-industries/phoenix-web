@@ -1,0 +1,147 @@
+.checkout-grid {
+	display: grid;
+	grid-template-columns: 1fr 380px;
+	gap: 2rem;
+	margin: 2rem 0;
+	@media (max-width: 900px) {
+		grid-template-columns: 1fr;
+	}
+}
+.payment-section,
+.summary-section {
+	background: var(--surface);
+	border-radius: 24px;
+	border: 1px solid var(--border);
+	padding: 1.8rem;
+	box-shadow: var(--shadow);
+}
+.section-title {
+	font-size: 1.3rem;
+	font-weight: 600;
+	margin-bottom: 1.5rem;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+.product-summary-item {
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+	padding-bottom: 1.5rem;
+	border-bottom: 1px solid var(--border);
+	margin-bottom: 1.5rem;
+}
+.product-summary-img {
+	width: 70px;
+	height: 70px;
+	border-radius: 12px;
+	overflow: hidden;
+	background: var(--bg);
+	border: 1px solid var(--border);
+}
+.product-summary-img img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.product-summary-details h4 {
+	font-size: 1rem;
+	font-weight: 600;
+}
+.product-summary-details p {
+	color: var(--text-secondary);
+	font-size: 0.9rem;
+}
+.price-row {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 0.8rem;
+	color: var(--text-secondary);
+}
+.total-row {
+	display: flex;
+	justify-content: space-between;
+	font-weight: 700;
+	font-size: 1.2rem;
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 2px solid var(--border);
+	color: var(--accent-2);
+}
+.delivery-options {
+	display: flex;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+	@media (max-width: 768px) {
+		flex-direction: column;
+	}
+}
+.delivery-option {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.8rem;
+	border: 2px solid var(--border);
+	border-radius: 40px;
+	cursor: pointer;
+	background: var(--bg);
+	transition: 0.2s;
+}
+.delivery-option.selected {
+	border-color: var(--accent-1);
+	background: rgba(255, 138, 76, 0.08);
+}
+.delivery-option i {
+	font-size: 1.2rem;
+	color: var(--accent-1);
+}
+.shipping-fields {
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--border);
+	display: none;
+}
+.shipping-fields.show {
+	display: block;
+}
+.form-group {
+	margin-bottom: 1rem;
+}
+.form-group label {
+	display: block;
+	margin-bottom: 0.3rem;
+	font-weight: 500;
+	font-size: 0.9rem;
+	color: var(--accent-1);
+}
+.form-group input {
+	width: 100%;
+	padding: 0.7rem 1rem;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 40px;
+	color: var(--text-primary);
+}
+.btn-block {
+	background: var(--gradient);
+	color: white;
+	border: none;
+	width: 100%;
+	padding: 1rem;
+	border-radius: 60px;
+	font-weight: 700;
+	font-size: 1.1rem;
+	cursor: pointer;
+	box-shadow: 0 4px 14px var(--glow);
+	margin-top: 1rem;
+	transition: 0.2s;
+}
+.btn-block:hover:not(:disabled) {
+	transform: scale(1.01);
+}
+.btn-block:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
