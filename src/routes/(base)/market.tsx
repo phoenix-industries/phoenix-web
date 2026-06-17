@@ -4,7 +4,7 @@ import { getProductsQuery, type ProductSearchParams } from "~/lib/api/products";
 import { ProductSearch } from "~/components/product/ProductSearch";
 import { ProductCard } from "~/components/product/ProductCard";
 import "./market.css";
-import { SpinnerInfinityOverlay } from "~/components/utils/Spinner";
+import { SpinnerInfinity } from "~/components/utils/Spinner";
 
 export default function MarketPage() {
 	const [search, setSearch] = createSignal<ProductSearchParams>({});
@@ -14,7 +14,10 @@ export default function MarketPage() {
 			const res = await getProductsQuery(search());
 			return res.ok ? res.data : [];
 		},
-		{ deferStream: true },
+		{
+			initialValue: [],
+			deferStream: true
+		},
 	);
 
 	function handleChange(params: ProductSearchParams) {
@@ -34,9 +37,9 @@ export default function MarketPage() {
 				<p>Discover items donated or sold by the community.</p>
 			</div>
 			<ProductSearch onChange={handleChange} />
-			<Suspense fallback={<SpinnerInfinityOverlay />}>
-				<Show when={!loading()} fallback={<SpinnerInfinityOverlay />}>
-					<div classList={{ "product-grid": !!products()}}>
+			<Suspense fallback={<SpinnerInfinity />}>
+				<Show when={!loading()} fallback={<SpinnerInfinity />}>
+					<div classList={{ "product-grid": products().length > 0}}>
 						<For
 							each={products()}
 							fallback={
