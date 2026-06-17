@@ -98,3 +98,26 @@
 .trade-btn:hover {
 	transform: scale(1.02);
 }
+
+.action-icon {
+	background: transparent;
+	border: 1px solid var(--border);
+	border-radius: 30px;
+	padding: 0.3rem 0.7rem;
+	font-size: 0.7rem;
+	cursor: pointer;
+	transition: 0.2s;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	color: var(--text-secondary);
+}
+.action-icon:hover {
+	background: var(--accent-1);
+	color: white;
+	border-color: var(--accent-1);
+}
+.delete-icon:hover {
+	background: #e74c3c;
+	border-color: #e74c3c;
+}
