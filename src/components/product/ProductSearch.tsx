@@ -35,12 +35,12 @@ export function ProductSearch(props: ProductSearchProps) {
 	const setQueryDebounced = debounce(setQuery, 250);
 	const [category, setCategory] = createSignal("");
 	const [condition, setCondition] = createSignal("");
-	const [price, setPrice] = createSignal<`${string}-${string}` | "">("");
+	const [price, setPrice] = createSignal("");
 	const params = createMemo<ProductSearchParams>(() => ({
 		query: query(),
 		category: category(),
 		condition: condition(),
-		price: price() || undefined,
+		price: price(),
 	}));
 
 	createEffect(on(params, () => props.onChange?.(params())));
