@@ -25,6 +25,3 @@ export const governorates = [
 	"Beni Suef",
 	"Kafr el-Sheikh",
 ];
-
-export const speicalChars = "!@#$%^&*";
-export const speicalCharsRegex = new RegExp(`[${speicalChars}]`);
