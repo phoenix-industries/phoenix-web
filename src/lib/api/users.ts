@@ -1,4 +1,4 @@
-import { query } from "@solidjs/router";
+import { action, query } from "@solidjs/router";
 import { request } from "./request";
 
 export const USERS_ROUTE = `api/v1/users`;
@@ -9,12 +9,12 @@ export type User = {
 	picture_id: string;
 	city: string;
 	governorate: string;
-	created_at: string;
-	updated_at: string;
 	email: string;
 	phone: string;
 	address: string;
-	birthday: string;
+	birthdate: string;
+	created_at: string;
+	updated_at: string;
 };
 
 export const getUserQuery = query(
@@ -24,3 +24,16 @@ export const getUserQuery = query(
 		}),
 	"getUser",
 );
+
+export const updateUserAction = action(async (id: string, form: FormData) => {
+	"use server";
+	const data: Partial<User> = {};
+	for (const [key, value] of form.entries()) {
+		if (!value || typeof value !== "string") continue;
+		data[key] = value;
+	}
+	return await request<null>(`${USERS_ROUTE}/${id}`, {
+		method: "PATCH",
+		body: JSON.stringify(data),
+	});
+});
