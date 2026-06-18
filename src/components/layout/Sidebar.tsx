@@ -8,8 +8,8 @@ import {
 } from "solid-js";
 import { A, createAsync, useAction } from "@solidjs/router";
 import { toast } from "solid-sonner";
-import { getSessionQuery, logoutAction } from "~/lib/api/auth";
 import { useAppState } from "~/context";
+import { getSessionQuery, logoutAction } from "~/lib/api/auth";
 import XIcon from "lucide-solid/icons/x";
 import SunIcon from "lucide-solid/icons/sun";
 import MoonIcon from "lucide-solid/icons/moon";
@@ -184,9 +184,7 @@ export function Sidebar(props: SidebarProps) {
 				class="overlay"
 				onClick={() => setSidebarOpen(false)}
 				classList={{ active: sidebarOpen() }}
-			>
-				asdasdasd
-			</div>
+			></div>
 			{props.children}
 		</div>
 	);
