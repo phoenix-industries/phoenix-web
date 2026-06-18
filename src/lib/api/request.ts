@@ -1,5 +1,7 @@
 import * as env from "~/lib/utils/env";
-import { AUTH_ROUTE, refresh, useAuthSession } from "./auth";
+import { useSession } from "@solidjs/start/http";
+
+export const AUTH_ROUTE = "/auth";
 
 export type ServerResponse<T> =
 	| {
@@ -15,12 +17,58 @@ export type RequestOptions = RequestInit & {
 	params?: Record<string, string | number | boolean>;
 };
 
+export type AuthSessionData = {
+	user_id: string;
+	token_type: string;
+	access_token: string;
+	refresh_token: string;
+	expires_at: number;
+};
+
 const NO_REFRESH_ROUTES = new Set<string>([
 	`${AUTH_ROUTE}/refresh`,
 	`${AUTH_ROUTE}/register`,
 	`${AUTH_ROUTE}/login`,
 	`${AUTH_ROUTE}/logout`,
 ]);
+
+export async function useAuthSession() {
+	"use server";
+	return await useSession<AuthSessionData>({
+		name: "auth",
+		maxAge: 30 * 24 * 60 * 60, // 30 days
+		password: env.vars.SESSION_SECRET,
+		cookie: {
+			maxAge: 30 * 24 * 60 * 60, // 30 days
+			httpOnly: true,
+			secure: !env.DEV,
+			sameSite: "lax",
+			path: "/",
+		},
+	});
+}
+
+export async function refresh(
+	token?: string,
+): Promise<ServerResponse<AuthSessionData>> {
+	"use server";
+	if (!token) {
+		const auth = await useAuthSession();
+		if (!auth.data) {
+			return { ok: false, error: "No auth session" };
+		}
+		token = auth.data.refresh_token;
+		if (!token) {
+			return { ok: false, error: "No refresh token" };
+		}
+	}
+	return await request<AuthSessionData>(`${AUTH_ROUTE}/refresh`, {
+		method: "POST",
+		body: JSON.stringify({
+			refresh_token: token,
+		}),
+	});
+}
 
 export async function request<T>(
 	route: string,
