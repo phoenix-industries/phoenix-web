@@ -5,23 +5,20 @@ import tailwindcss from "@tailwindcss/vite";
 import solidSVG from "vite-plugin-solid-svg";
 
 export default defineConfig({
+	base: process.env.BASE_URL || "/",
+	envPrefix: "PUBLIC_",
 	build: {
-		target: "esnext",
-	},
-	esbuild: {
-		target: "esnext",
+		sourcemap: true,
 	},
 	server: {
 		port: Number(process.env.APP_PORT || 3000),
 	},
-	envPrefix: "PUBLIC_",
 	plugins: [
 		tailwindcss(),
 		solidSVG({
 			defaultAsComponent: true,
 			svgo: {
 				enabled: true,
-				svgoConfig: {},
 			},
 		}),
 		solidStart({
@@ -29,6 +26,8 @@ export default defineConfig({
 		}),
 		nitro({
 			preset: process.env.NITRO_PRESET,
+			baseURL:
+				process.env.NITRO_APP_BASE_URL || process.env.BASE_URL || "/",
 		}),
 	],
 });
