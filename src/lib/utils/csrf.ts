@@ -1,5 +1,3 @@
-"use server";
-
 import * as crypto from "crypto";
 import * as env from "~/lib/utils/env";
 

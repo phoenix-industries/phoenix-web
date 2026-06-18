@@ -1,5 +1,3 @@
-"use server";
-
 import dotenv from "dotenv";
 
 export const MODE = process.env.NODE_ENV ?? "development";
