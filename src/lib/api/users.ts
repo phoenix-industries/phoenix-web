@@ -17,13 +17,12 @@ export type User = {
 	updated_at: string;
 };
 
-export const getUserQuery = query(
-	(id: string) =>
-		request<User>(`${USERS_ROUTE}/${id}`, {
-			method: "GET",
-		}),
-	"getUser",
-);
+export const getUserQuery = query(async (id: string) => {
+	"use server";
+	return await request<User>(`${USERS_ROUTE}/${id}`, {
+		method: "GET",
+	});
+}, "getUser");
 
 export const updateUserAction = action(async (id: string, form: FormData) => {
 	"use server";

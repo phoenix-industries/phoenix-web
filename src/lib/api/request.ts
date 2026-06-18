@@ -42,7 +42,7 @@ export async function request<T>(
 						return { ok: false, error: data.error };
 					}
 					await auth.update(data.data);
-					return request<T>(route, init);
+					return await request<T>(route, init);
 				}
 			}
 			break;
@@ -55,7 +55,7 @@ export async function request<T>(
 		return { ok: false, error: "No content-type header" };
 	}
 	if (contentType.startsWith("application/json")) {
-		return res.json();
+		return await res.json();
 	}
 	if (contentType.startsWith("text/plain")) {
 		return { ok: false, error: await res.text() };

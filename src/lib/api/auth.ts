@@ -32,6 +32,7 @@ export async function useAuthSession() {
 export async function refresh(
 	token?: string,
 ): Promise<ServerResponse<AuthSessionData>> {
+	"use server";
 	if (!token) {
 		const auth = await useAuthSession();
 		if (!auth.data) {
@@ -58,6 +59,7 @@ export type AuthLoginData = {
 export async function login(
 	data: AuthLoginData,
 ): Promise<ServerResponse<AuthSessionData>> {
+	"use server";
 	return await request<AuthSessionData>(`${AUTH_ROUTE}/login`, {
 		method: "POST",
 		body: JSON.stringify(data),
@@ -79,6 +81,7 @@ export type AuthRegisterData = {
 export async function register(
 	data: AuthRegisterData,
 ): Promise<ServerResponse<AuthSessionData>> {
+	"use server";
 	return await request<AuthSessionData>(`${AUTH_ROUTE}/register`, {
 		method: "POST",
 		body: JSON.stringify(data),
@@ -86,6 +89,7 @@ export async function register(
 }
 
 export async function logout(token: string): Promise<ServerResponse<null>> {
+	"use server";
 	return await request<null>(`${AUTH_ROUTE}/logout`, {
 		method: "POST",
 		body: JSON.stringify({

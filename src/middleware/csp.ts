@@ -8,7 +8,7 @@ export function onRequest(event: FetchEvent): void {
 
 	const csp = `
 		default-src 'self';
-		script-src 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' 'strict-dynamic' https:;
+		script-src 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' 'strict-dynamic';
 		style-src 'self' 'unsafe-inline';
 		connect-src 'self' data:
 			https://cdn.cmnewz.com

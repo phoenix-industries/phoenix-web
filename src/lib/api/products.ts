@@ -63,34 +63,32 @@ export const productConditions = [
 	"refurbished",
 ] as const;
 
-export const getProductsQuery = query(
-	(search?: ProductSearchParams) =>
-		request<Product[]>(PRODUCTS_ROUTE, {
-			method: "GET",
-			params: search,
-		}),
-	"getProducts",
-);
+export const getProductsQuery = query(async (search?: ProductSearchParams) => {
+	"use server";
+	return await request<Product[]>(PRODUCTS_ROUTE, {
+		method: "GET",
+		params: search,
+	});
+}, "getProducts");
 
-export const getProductQuery = query(
-	(id: string) =>
-		request<ProductSingle>(`${PRODUCTS_ROUTE}/${id}`, {
-			method: "GET",
-		}),
-	"getProduct",
-);
+export const getProductQuery = query(async (id: string) => {
+	"use server";
+	return await request<ProductSingle>(`${PRODUCTS_ROUTE}/${id}`, {
+		method: "GET",
+	});
+}, "getProduct");
 
-export const getProductCategoriesQuery = query(
-	() =>
-		request<ProductCategory[]>(`${PRODUCTS_ROUTE}/categories`, {
-			method: "GET",
-		}),
-	"getProductCategories",
-);
+export const getProductCategoriesQuery = query(async () => {
+	"use server";
+	return await request<ProductCategory[]>(`${PRODUCTS_ROUTE}/categories`, {
+		method: "GET",
+	});
+}, "getProductCategories");
 
 export async function createProductCategory(
 	name: string,
 ): Promise<ServerResponse<ProductCategory>> {
+	"use server";
 	return await request<ProductCategory>(`${PRODUCTS_ROUTE}/categories`, {
 		method: "POST",
 		body: JSON.stringify({

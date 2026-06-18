@@ -16,7 +16,7 @@ export default function MarketPage() {
 		},
 		{
 			initialValue: [],
-			deferStream: true
+			deferStream: true,
 		},
 	);
 
@@ -39,7 +39,7 @@ export default function MarketPage() {
 			<ProductSearch onChange={handleChange} />
 			<Suspense fallback={<SpinnerInfinity />}>
 				<Show when={!loading()} fallback={<SpinnerInfinity />}>
-					<div classList={{ "product-grid": products().length > 0}}>
+					<div classList={{ "product-grid": products().length > 0 }}>
 						<For
 							each={products()}
 							fallback={
@@ -48,7 +48,11 @@ export default function MarketPage() {
 								</p>
 							}
 						>
-							{(p) => <ProductCard product={p} />}
+							{(p) => (
+								<Show when={p}>
+									<ProductCard product={p} />
+								</Show>
+							)}
 						</For>
 					</div>
 				</Show>
