@@ -7,22 +7,25 @@ export const speicalChars = "!@#$%^&*";
 export const speicalCharsRegex = new RegExp(`[${speicalChars}]`);
 
 type PasswordInputProps = {
+	fieldName?: string;
+	fieldLabel?: string;
+	confirmFieldName?: string;
 	showConfirm?: boolean;
 	showRequirements?: boolean;
 };
 
 export function PasswordInput(props: PasswordInputProps) {
 	const [showPassword, setShowPassword] = createSignal(false);
-	const [showConfirmPassword, setShowConfirmPassword] = createSignal(false);
+	const [showConfirmPassword, setShowConfirmPassword] = createSignal();
 	const [password, setPassword] = createSignal("");
 	const [confirmPassword, setConfirmPassword] = createSignal("");
 	return (
-		<div>
+		<div class="w-full">
 			<div class="input-group">
-				<label>Password</label>
+				<label>{props.fieldLabel ?? "Password"}</label>
 				<div class="password-wrapper">
 					<input
-						name="password"
+						name={props.fieldName ?? "password"}
 						type={showPassword() ? "text" : "password"}
 						class="input-field"
 						placeholder="Create a strong password"
@@ -112,36 +115,38 @@ export function PasswordInput(props: PasswordInputProps) {
 					</div>
 				</Show>
 			</div>
-			<div class="input-group">
-				<label>Confirm Password</label>
-				<div class="password-wrapper">
-					<input
-						name="password_confirm"
-						type={showConfirmPassword() ? "text" : "password"}
-						class="input-field"
-						placeholder="Confirm your password"
-						classList={{
-							"border-4 border-red-500!":
-								confirmPassword() !== password(),
-						}}
-						onInput={(e) => setConfirmPassword(e.target.value)}
-					/>
-					<button
-						type="button"
-						class="toggle-password"
-						onClick={() =>
-							setShowConfirmPassword(!showConfirmPassword())
-						}
-					>
-						<Show
-							when={showConfirmPassword()}
-							fallback={<EyeOffIcon />}
+			<Show when={props.showConfirm}>
+				<div class="input-group">
+					<label>Confirm Password</label>
+					<div class="password-wrapper">
+						<input
+							name="password_confirm"
+							type={showConfirmPassword() ? "text" : "password"}
+							class="input-field"
+							placeholder="Confirm your password"
+							classList={{
+								"border-4 border-red-500!":
+									confirmPassword() !== password(),
+							}}
+							onInput={(e) => setConfirmPassword(e.target.value)}
+						/>
+						<button
+							type="button"
+							class="toggle-password"
+							onClick={() =>
+								setShowConfirmPassword(!showConfirmPassword())
+							}
 						>
-							<EyeIcon />
-						</Show>
-					</button>
+							<Show
+								when={showConfirmPassword()}
+								fallback={<EyeOffIcon />}
+							>
+								<EyeIcon />
+							</Show>
+						</button>
+					</div>
 				</div>
-			</div>
+			</Show>
 		</div>
 	);
 }

@@ -15,6 +15,13 @@ export type RequestOptions = RequestInit & {
 	params?: Record<string, string | number | boolean>;
 };
 
+const NO_REFRESH_ROUTES = new Set<string>([
+	`${AUTH_ROUTE}/refresh`,
+	`${AUTH_ROUTE}/register`,
+	`${AUTH_ROUTE}/login`,
+	`${AUTH_ROUTE}/logout`,
+]);
+
 export async function request<T>(
 	route: string,
 	options?: RequestOptions,
@@ -36,7 +43,7 @@ export async function request<T>(
 	switch (res.status) {
 		case 401:
 			{
-				if (!route.startsWith(AUTH_ROUTE)) {
+				if (!NO_REFRESH_ROUTES.has(route)) {
 					const data = await refresh();
 					if (!data.ok) {
 						return { ok: false, error: data.error };

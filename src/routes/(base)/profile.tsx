@@ -1,13 +1,15 @@
 import { createSignal, For, Show, Suspense } from "solid-js";
 import { A, createAsync, useAction, useNavigate } from "@solidjs/router";
-import { ProductCard } from "~/components/product/ProductCard";
+import { toast } from "solid-sonner";
+import { ensureSessionQuery } from "~/lib/api/auth";
 import { getUserQuery } from "~/lib/api/users";
 import {
 	deleteProductAction,
 	getProductsQuery,
 	type Product,
 } from "~/lib/api/products";
-import UserAvatar from "~/components/user/UserAvatar";
+import { UserAvatar } from "~/components/user/UserAvatar";
+import { ProductCard } from "~/components/product/ProductCard";
 import { SpinnerInfinity } from "~/components/utils/Spinner";
 import MapPinIcon from "lucide-solid/icons/map-pin";
 import MailIcon from "lucide-solid/icons/mail";
@@ -15,7 +17,6 @@ import EditIcon from "lucide-solid/icons/edit";
 import PhoneIcon from "lucide-solid/icons/phone";
 import PlusCircleIcon from "lucide-solid/icons/plus-circle";
 import "./profile.css";
-import { toast } from "solid-sonner";
 
 type Tab = "sells" | "donations";
 
@@ -117,6 +118,10 @@ function ListingsSection(props: { products: Product[] }) {
 }
 
 export default function ProfilePage() {
+	const ensureSession = createAsync(() => ensureSessionQuery(), {
+		deferStream: true,
+	});
+
 	const navigate = useNavigate();
 	const data = createAsync(
 		async () => {

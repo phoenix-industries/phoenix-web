@@ -5,8 +5,10 @@ import {
 	useParams,
 	useSubmission,
 } from "@solidjs/router";
+import { Title } from "@solidjs/meta";
 import { toast } from "solid-sonner";
 import * as money from "~/lib/utils/money";
+import { ensureSessionQuery } from "~/lib/api/auth";
 import { getUserQuery } from "~/lib/api/users";
 import {
 	buyProductAction,
@@ -19,7 +21,6 @@ import StoreIcon from "lucide-solid/icons/store";
 import TruckIcon from "lucide-solid/icons/truck";
 import ShoppingBagIcon from "lucide-solid/icons/shopping-bag";
 import "./[id].css";
-import { Title } from "@solidjs/meta";
 
 export default function ProductCheckoutPage() {
 	const params = useParams();
@@ -32,6 +33,7 @@ export default function ProductCheckoutPage() {
 	const submission = useSubmission(buyProductAction);
 	const data = createAsync(
 		async () => {
+			await ensureSessionQuery();
 			const p = await getProductQuery(params.id as string);
 			if (!p.ok) return null;
 			const me = await getUserQuery("me");

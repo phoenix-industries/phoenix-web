@@ -1,4 +1,4 @@
-import { action, query, revalidate } from "@solidjs/router";
+import { action, query, redirect, revalidate } from "@solidjs/router";
 import { useSession } from "@solidjs/start/http";
 import { request, type ServerResponse } from "~/lib/api/request";
 import * as env from "~/lib/utils/env";
@@ -107,6 +107,15 @@ export const getSessionQuery = query(async () => {
 	return { ok: true, data: { userID: auth.data.user_id } };
 }, "getSession");
 
+export const ensureSessionQuery = query(async () => {
+	"use server";
+	const auth = await useAuthSession();
+	if (!auth.data.refresh_token) {
+		throw redirect("/login", { status: 302, statusText: "Found" });
+	}
+	return { ok: true, data: { userID: auth.data.user_id } };
+}, "ensureSession");
+
 export const loginAction = action(async (form: FormData) => {
 	"use server";
 	const data: AuthLoginData = {
@@ -178,3 +187,28 @@ export const logoutAction = action(async () => {
 	await revalidate(getSessionQuery.key);
 	return { ok: true, data: null };
 }, "logout");
+
+export const resetPasswordAction = action(async (form: FormData) => {
+	"use server";
+	const data = {
+		password: form.get("password") as string,
+		new_password: form.get("new_password") as string,
+	};
+	const res = await request<AuthSessionData>(`${AUTH_ROUTE}/password`, {
+		method: "PUT",
+		body: JSON.stringify(data),
+	});
+	if (!res.ok) {
+		return res;
+	}
+	const auth = await useAuthSession();
+	await auth.update((data) => ({
+		...data,
+		token_type: res.data.token_type,
+		access_token: res.data.access_token,
+		refresh_token: res.data.refresh_token,
+		expires_at: res.data.expires_at,
+	}));
+	await revalidate(getSessionQuery.key);
+	return { ok: true, data: null } as ServerResponse<null>;
+}, "resetPassword");

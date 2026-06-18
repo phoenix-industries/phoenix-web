@@ -1,5 +1,6 @@
 import { createSignal, Show, Switch, Match, Suspense } from "solid-js";
 import { createAsync } from "@solidjs/router";
+import { ensureSessionQuery } from "~/lib/api/auth";
 import { getUserQuery } from "~/lib/api/users";
 import { SpinnerInfinity } from "~/components/utils/Spinner";
 import { SettingsProfile } from "~/components/settings/SettingsProfile";
@@ -9,10 +10,9 @@ import "./settings.css";
 import { SettingsAccount } from "~/components/settings/SettingsAccount";
 
 export default function SettingsPage() {
-	const [activeSection, setActiveSection] = createSignal("profile");
-
 	const user = createAsync(
 		async () => {
+			await ensureSessionQuery();
 			const user = await getUserQuery("me");
 			if (!user.ok) return null;
 			return user.data;
@@ -22,6 +22,7 @@ export default function SettingsPage() {
 			deferStream: true,
 		},
 	);
+	const [activeSection, setActiveSection] = createSignal("profile");
 
 	return (
 		<main class="container">

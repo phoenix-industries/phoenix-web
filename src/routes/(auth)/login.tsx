@@ -14,7 +14,7 @@ export default function LoginPage() {
 	createEffect(
 		on(
 			() => submission.result,
-			async (result) => {
+			(result) => {
 				if (submission.pending || !result) return;
 				if (!result.ok) {
 					toast.error(result.error);

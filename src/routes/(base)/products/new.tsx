@@ -1,9 +1,18 @@
-import { useAction, useNavigate, useSearchParams } from "@solidjs/router";
+import {
+	createAsync,
+	useAction,
+	useNavigate,
+	useSearchParams,
+} from "@solidjs/router";
 import { toast } from "solid-sonner";
+import { ensureSessionQuery } from "~/lib/api/auth";
 import { createProductAction } from "~/lib/api/products";
 import { ProductForm } from "~/components/product/ProductForm";
 
 export default function NewProductPage() {
+	const ensureSession = createAsync(() => ensureSessionQuery(), {
+		deferStream: true,
+	});
 	const navigate = useNavigate();
 	const [params] = useSearchParams();
 	const createProduct = useAction(createProductAction);
