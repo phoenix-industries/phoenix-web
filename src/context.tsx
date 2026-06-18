@@ -6,6 +6,7 @@ import {
 	createContext,
 	useContext,
 	startTransition,
+	on,
 } from "solid-js";
 import { Meta } from "@solidjs/meta";
 import * as i18n from "@solid-primitives/i18n";
@@ -65,18 +66,27 @@ export function AppContextProvider(props: ParentProps) {
 		},
 	};
 
-	createEffect(() => {
-		document.documentElement.lang = settings.locale;
-		document.documentElement.dir = state.dir;
-		datetime.locale(settings.locale);
-	});
-	createEffect(() => {
-		if (settings.dark) {
-			document.documentElement.setAttribute("data-theme", "dark");
-		} else {
-			document.documentElement.setAttribute("data-theme", "light");
-		}
-	});
+	createEffect(
+		on(
+			() => settings.locale,
+			(locale) => {
+				datetime.locale(locale);
+				document.documentElement.lang = locale;
+				document.documentElement.dir = state.dir;
+			},
+		),
+	);
+	createEffect(
+		on(
+			() => settings.dark,
+			(dark) => {
+				document.documentElement.setAttribute(
+					"data-theme",
+					dark ? "dark" : "light",
+				);
+			},
+		),
+	);
 
 	return (
 		<Suspense>
