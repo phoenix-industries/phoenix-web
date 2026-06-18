@@ -17,7 +17,6 @@ import MenuIcon from "lucide-solid/icons/menu";
 import DoorOpenIcon from "lucide-solid/icons/door-open";
 import SquareArrowRightExitIcon from "lucide-solid/icons/square-arrow-right-exit";
 import UserIcon from "lucide-solid/icons/user";
-import Logo from "~/assets/logo.svg";
 import "./Sidebar.css";
 
 type Link = {
@@ -79,7 +78,7 @@ export function Sidebar(props: SidebarProps) {
 				<A href="/">
 					<div class="logo-area">
 						<div class="size-10">
-							<Logo />
+							<img src="/assets/images/logo.png" />
 						</div>
 						<div class="logo-text">
 							<h2>Phoenix</h2>
