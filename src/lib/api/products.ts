@@ -1,4 +1,4 @@
-import { action, query } from "@solidjs/router";
+import { action, query, revalidate } from "@solidjs/router";
 import { request, type ServerResponse } from "./request";
 import { uploadFile } from "./files";
 import type { User } from "./users";
@@ -162,3 +162,17 @@ export const buyProductAction = action(
 	},
 	"buyProduct",
 );
+
+export const deleteProductAction = action(async (id: string) => {
+	"use server";
+	const res = await request<Product>(`${PRODUCTS_ROUTE}/${id}`, {
+		method: "DELETE",
+	});
+	try {
+		await revalidate(getProductsQuery.key);
+	} catch (err: unknown) {
+		// log but ignore
+		console.error(err);
+	}
+	return res;
+}, "deleteProduct");

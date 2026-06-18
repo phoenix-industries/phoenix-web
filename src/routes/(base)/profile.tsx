@@ -1,56 +1,35 @@
-import {
-	createSignal,
-	createResource,
-	Switch,
-	Match,
-	For,
-	Show,
-	onCleanup,
-	onMount,
-	Suspense,
-	createEffect,
-} from "solid-js";
-import { A, createAsync, useNavigate } from "@solidjs/router";
+import { createSignal, For, Show, Suspense } from "solid-js";
+import { A, createAsync, useAction, useNavigate } from "@solidjs/router";
 import { ProductCard } from "~/components/product/ProductCard";
 import { getUserQuery } from "~/lib/api/users";
-import { getProductsQuery, type Product } from "~/lib/api/products";
+import {
+	deleteProductAction,
+	getProductsQuery,
+	type Product,
+} from "~/lib/api/products";
 import UserAvatar from "~/components/user/UserAvatar";
 import { SpinnerInfinity } from "~/components/utils/Spinner";
-import BoxIcon from "lucide-solid/icons/box";
 import MapPinIcon from "lucide-solid/icons/map-pin";
 import MailIcon from "lucide-solid/icons/mail";
 import EditIcon from "lucide-solid/icons/edit";
 import PhoneIcon from "lucide-solid/icons/phone";
 import PlusCircleIcon from "lucide-solid/icons/plus-circle";
 import "./profile.css";
-
-interface UserStats {
-	activeListings: number;
-	successfulTrades: number;
-	averageRating: number;
-	responseTime: string;
-}
+import { toast } from "solid-sonner";
 
 type Tab = "sells" | "donations";
 
-// ---------- Sub-components ----------
-function StatCard(props: { value: string | number; label: string }) {
-	return (
-		<div class="stat-card">
-			<div class="stat-value">{props.value}</div>
-			<div class="stat-label">{props.label}</div>
-		</div>
-	);
-}
-
 function ListingsSection(props: { products: Product[] }) {
+	const navigate = useNavigate();
+	const deleteProduct = useAction(deleteProductAction);
+	const [deletePending, setDeletePending] = createSignal(false);
 	const [currentTab, setCurrentTab] = createSignal<Tab>("sells");
 	const items = () => {
 		switch (currentTab()) {
 			case "sells":
-				return props.products.filter((p) => !p.donated);
+				return props.products?.filter((p) => !p.donated);
 			case "donations":
-				return props.products.filter((p) => p.donated);
+				return props.products?.filter((p) => p.donated);
 			default:
 				return props.products;
 		}
@@ -62,19 +41,25 @@ function ListingsSection(props: { products: Product[] }) {
 	};
 
 	async function handleDelete(productId: string) {
-		if (!confirm("Delete this item permanently?")) return;
-		try {
-			//await deleteProduct(productId);
-			//props.onRefresh();
-		} catch (err: unknown) {
-			alert("Failed to delete product: " + (err as Error).message);
+		if (deletePending()) {
+			toast.warning("working on it...");
+			return;
 		}
-	}
-
-	function handleEdit(p: Product) {
-		window.location.href = !p.donated
-			? `/sell?id=${p.id}`
-			: `/donate?id=${p.id}`;
+		if (!confirm("Delete this item permanently?")) {
+			return;
+		}
+		setDeletePending(true);
+		try {
+			const res = await deleteProduct(productId);
+			if (!res.ok) {
+				toast.error(`Failed to delete product: ${res.error}`);
+				return;
+			}
+			toast.success("Product deleted successfully!");
+		} catch (err: unknown) {
+			toast.error(`Failed to delete product: ${(err as Error).message}`);
+		}
+		setDeletePending(false);
 	}
 
 	return (
@@ -98,11 +83,11 @@ function ListingsSection(props: { products: Product[] }) {
 				</A>
 			</div>
 			<Show
-				when={items().length > 0}
+				when={items()?.length > 0}
 				fallback={
 					<div
 						class="empty-state"
-						onClick={() => (window.location.href = "/sell")}
+						onClick={() => navigate("/products/new")}
 					>
 						<i class="fas fa-box-open" />
 						<h3>{emptyMessages[currentTab()]}</h3>
@@ -118,7 +103,9 @@ function ListingsSection(props: { products: Product[] }) {
 							<ProductCard
 								product={p}
 								controls={true}
-								onEdit={() => handleEdit(p)}
+								onEdit={() =>
+									navigate(`/products/${p.id}/edit`)
+								}
 								onDelete={() => handleDelete(p.id)}
 							/>
 						)}
