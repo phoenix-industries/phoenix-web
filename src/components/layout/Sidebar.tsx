@@ -6,7 +6,6 @@ import {
 	type ParentProps,
 	For,
 } from "solid-js";
-import { isServer } from "solid-js/web";
 import { A, createAsync, useAction } from "@solidjs/router";
 import { toast } from "solid-sonner";
 import { getSessionQuery, logoutAction } from "~/lib/api/auth";
@@ -64,12 +63,12 @@ export function Sidebar(props: SidebarProps) {
 	}
 
 	onMount(() => {
-		if (!isServer && typeof window !== "undefined") {
+		if (typeof window !== "undefined") {
 			window.addEventListener("keydown", handleKeyDown);
 		}
 	});
 	onCleanup(() => {
-		if (!isServer && typeof window !== "undefined") {
+		if (typeof window !== "undefined") {
 			window.removeEventListener("keydown", handleKeyDown);
 		}
 	});

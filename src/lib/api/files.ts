@@ -7,7 +7,8 @@ export type FileUploadResponse = {
 	id: string;
 };
 
-export async function uploadFile(file: File | Blob): Promise<string> {
+export async function uploadFile(file: File): Promise<string> {
+	"use server";
 	const form = new FormData();
 	form.append("file", file);
 	const res = await request<FileUploadResponse>(`${FILES_ROUTE}/upload`, {
@@ -21,5 +22,6 @@ export async function uploadFile(file: File | Blob): Promise<string> {
 }
 
 export function getFileDownloadURL(fileID: string): string {
+	"use server";
 	return `${env.vars.SERVER_URL}/${FILES_ROUTE}/download/${fileID}`;
 }

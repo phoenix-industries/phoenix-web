@@ -155,8 +155,6 @@ export const buyProductAction = action(
 						}
 					: null,
 		};
-		console.log("buy", data);
-
 		return await request<Product>(`${PRODUCTS_ROUTE}/buy`, {
 			method: "POST",
 			body: JSON.stringify(data),
