@@ -10,12 +10,11 @@ export type PostCardImageProps = {
 
 export function ProductThumbnail(props: PostCardImageProps) {
 	const [error, setError] = createSignal(false);
-	if (props.id && !props.src) {
-		props.src = `/thumbnails/${props.id}`;
-	}
+	const src = () =>
+		props.src || (props.id ? `/thumbnails/${props.id}` : undefined);
 	return (
 		<Show
-			when={props.src && !error()}
+			when={src() && !error()}
 			fallback={
 				<PackageIcon
 					class={`text-primary p-5 max-w-48 size-full object-contain ${props.class ?? ""}`}
@@ -23,7 +22,7 @@ export function ProductThumbnail(props: PostCardImageProps) {
 			}
 		>
 			<img
-				src={props.src ?? undefined}
+				src={src()}
 				alt={props.alt}
 				class={`size-full object-contain ${props.class}`}
 				onError={() => setError(true)}

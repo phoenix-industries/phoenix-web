@@ -1,21 +1,20 @@
 import { createSignal, Show } from "solid-js";
 import UserIcon from "lucide-solid/icons/user";
 
-export type PostCardImageProps = {
+export type UserAvatarProps = {
 	id?: string | null;
 	src?: string | null;
 	alt?: string;
 	class?: string;
 };
 
-export function UserAvatar(props: PostCardImageProps) {
+export function UserAvatar(props: UserAvatarProps) {
 	const [error, setError] = createSignal(false);
-	if (props.id && !props.src) {
-		props.src = `/thumbnails/${props.id}`;
-	}
+	const src = () =>
+		props.src || (props.id ? `/thumbnails/${props.id}` : undefined);
 	return (
 		<Show
-			when={props.src && !error()}
+			when={src() && !error()}
 			fallback={
 				<UserIcon
 					class={`p-5 max-w-48 size-full object-contain ${props.class ?? ""}`}
@@ -23,7 +22,7 @@ export function UserAvatar(props: PostCardImageProps) {
 			}
 		>
 			<img
-				src={props.src ?? undefined}
+				src={src()}
 				alt={props.alt}
 				class={`size-full object-contain ${props.class}`}
 				onError={() => setError(true)}
