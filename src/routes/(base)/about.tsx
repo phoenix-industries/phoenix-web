@@ -130,31 +130,31 @@ export default function AboutPage() {
 					<div class="gallery-grid">
 						<div class="gallery-item">
 							<img
-								src="assets/images/Donations01.jpg"
+								src="/assets/images/Donations01.jpg"
 								alt="Donation"
 							/>
 						</div>
 						<div class="gallery-item">
 							<img
-								src="assets/images/Donations02.jpg"
+								src="/assets/images/Donations02.jpg"
 								alt="Donation"
 							/>
 						</div>
 						<div class="gallery-item">
 							<img
-								src="assets/images/Donations03.jpg"
+								src="/assets/images/Donations03.jpg"
 								alt="Donation"
 							/>
 						</div>
 						<div class="gallery-item">
 							<img
-								src="assets/images/Donations04.jpg"
+								src="/assets/images/Donations04.jpg"
 								alt="Donation"
 							/>
 						</div>
 						<div class="gallery-item">
 							<img
-								src="assets/images/Donations05.jpg"
+								src="/assets/images/Donations05.jpg"
 								alt="Donation"
 							/>
 						</div>
