@@ -1,6 +1,6 @@
 import { createSignal, Show } from "solid-js";
 import { toast } from "solid-sonner";
-import { SpinnerCircle, SpinnerInfinity } from "~/components/utils/Spinner";
+import { SpinnerInfinity } from "~/components/utils/Spinner";
 import "./forgot-password.css";
 
 export default function ForgotPasswordPage() {

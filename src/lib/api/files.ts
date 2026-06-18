@@ -7,7 +7,7 @@ export type FileUploadResponse = {
 	id: string;
 };
 
-export async function uploadFile(file: File): Promise<string> {
+export async function uploadFile(file: File | Blob): Promise<string> {
 	const form = new FormData();
 	form.append("file", file);
 	const res = await request<FileUploadResponse>(`${FILES_ROUTE}/upload`, {
