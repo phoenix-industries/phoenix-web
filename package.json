@@ -7,8 +7,8 @@
 		"build": "vite build",
 		"start": "vite start",
 		"preview": "vite preview",
-		"wrangler:dev": "NITRO_PRESET=cloudflare-module pnpm run build && wrangler dev --assets .output/public --env-file .env.dev",
-		"wrangler:deploy": "NITRO_PRESET=cloudflare-module pnpm run build && wrangler deploy --assets .output/public --env-file .env.prod"
+		"wrangler:dev": "NITRO_PRESET=cloudflare_module pnpm run build && wrangler dev --assets .output/public --env-file .env.dev",
+		"wrangler:deploy": "NITRO_PRESET=cloudflare_module pnpm run build && wrangler deploy --assets .output/public --env-file .env.prod"
 	},
 	"engines": {
 		"node": ">=22"

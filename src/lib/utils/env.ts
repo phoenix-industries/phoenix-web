@@ -7,12 +7,12 @@ export const DEV = MODE !== "production";
 
 console.log(`env: mode=${MODE.toUpperCase()}`);
 
-if (process.env.NITRO_PRESET !== "cloudflare-module") {
+if (!process.env.NITRO_PRESET?.startsWith("cloudflare")) {
 	dotenv.config({
 		path: [
 			".env",
 			".env.local",
-			`.env.${DEV? "dev" : "prod"}`,
+			`.env.${DEV ? "dev" : "prod"}`,
 			`.env.${DEV ? "dev" : "prod"}.local`,
 		],
 		encoding: "utf8",

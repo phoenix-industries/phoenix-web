@@ -15,4 +15,4 @@ invocation_logs = true
 enabled = true
 
 [vars]
-NITRO_PRESET = "cloudflare-module"
+NITRO_PRESET = "cloudflare_module"
