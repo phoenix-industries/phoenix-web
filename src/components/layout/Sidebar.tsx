@@ -11,8 +11,7 @@ import { toast } from "solid-sonner";
 import { useAppState } from "~/context";
 import { getSessionQuery, logoutAction } from "~/lib/api/auth";
 import XIcon from "lucide-solid/icons/x";
-import SunIcon from "lucide-solid/icons/sun";
-import MoonIcon from "lucide-solid/icons/moon";
+import SunMoonIcon from "lucide-solid/icons/sun-moon";
 import MenuIcon from "lucide-solid/icons/menu";
 import DoorOpenIcon from "lucide-solid/icons/door-open";
 import SquareArrowRightExitIcon from "lucide-solid/icons/square-arrow-right-exit";
@@ -102,12 +101,11 @@ export function Sidebar(props: SidebarProps) {
 				</Show>
 				<div class="nav-right">
 					<button
+						type="button"
 						class="theme-toggle"
 						onClick={() => state.setDark(!state.isDark)}
 					>
-						<Show when={state.isDark} fallback={<MoonIcon />}>
-							<SunIcon />
-						</Show>
+						<SunMoonIcon />
 					</button>
 					<Show when={props.showLogin}>
 						<Show
@@ -159,13 +157,11 @@ export function Sidebar(props: SidebarProps) {
 					</For>
 					<li>
 						<button
-							id="sidebarThemeToggle"
+							type="button"
 							onClick={() => state.setDark(!state.isDark)}
 						>
-							<Show when={state.isDark} fallback={<MoonIcon />}>
-								<SunIcon />
-							</Show>
-							Dark Mode
+							<SunMoonIcon />
+							<span>Dark Mode</span>
 						</button>
 					</li>
 					<li>
