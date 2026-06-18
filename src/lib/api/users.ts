@@ -30,10 +30,17 @@ export const updateUserAction = action(async (id: string, form: FormData) => {
 	const data: Partial<User> = {};
 	for (const [key, value] of form.entries()) {
 		if (!value || typeof value !== "string") continue;
-		data[key] = value;
+		data[key as keyof User] = value;
 	}
 	return await request<null>(`${USERS_ROUTE}/${id}`, {
 		method: "PATCH",
 		body: JSON.stringify(data),
+	});
+});
+
+export const deleteUserAction = action(async (id: string) => {
+	"use server";
+	return await request<null>(`${USERS_ROUTE}/${id}`, {
+		method: "DELETE",
 	});
 });
