@@ -1,7 +1,7 @@
 import { action, query } from "@solidjs/router";
 import { request } from "./request";
 
-export const USERS_ROUTE = `api/v1/users`;
+export const USERS_ROUTE = `/api/v1/users`;
 
 export type User = {
 	id: string;

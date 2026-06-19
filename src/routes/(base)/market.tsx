@@ -12,7 +12,7 @@ export default function MarketPage() {
 	const products = createAsync(
 		async () => {
 			const res = await getProductsQuery(search());
-			return res.ok ? res.data : [];
+			return res.ok ? (res.data ?? []) : [];
 		},
 		{
 			initialValue: [],

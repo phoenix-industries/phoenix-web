@@ -31,10 +31,11 @@
 	flex-wrap: nowrap;
 	overflow-x: auto;
 	gap: 1.2rem;
+	width: fit;
+	margin: 1rem auto;
 	background: var(--surface);
 	padding: 0.8rem 1rem;
 	border-radius: 60px;
-	margin: 1rem 0 2rem;
 	border: 1px solid var(--border);
 	align-items: center;
 	justify-content: center;

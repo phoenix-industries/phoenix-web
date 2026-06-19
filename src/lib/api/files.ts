@@ -1,7 +1,7 @@
 import { request } from "./request";
 import * as env from "~/lib/utils/env";
 
-const FILES_ROUTE = "files/v1";
+const FILES_ROUTE = "/files/v1";
 
 export type FileUploadResponse = {
 	id: string;

@@ -3,7 +3,7 @@ import { A, useNavigate, useSubmission } from "@solidjs/router";
 import { toast } from "solid-sonner";
 import { governorates } from "~/lib/utils/constants";
 import { registerAction } from "~/lib/api/auth";
-import {PasswordInput} from "~/components/utils/PasswordInput";
+import { PasswordInput } from "~/components/utils/PasswordInput";
 import UserIcon from "lucide-solid/icons/user";
 import LockIcon from "lucide-solid/icons/lock";
 import MapPinIcon from "lucide-solid/icons/map-pin";

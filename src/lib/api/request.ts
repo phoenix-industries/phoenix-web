@@ -70,16 +70,29 @@ export async function refresh(
 	});
 }
 
+export type URLOptions = {
+	baseURL?: string | URL;
+	params?: Record<string, string | number | boolean>;
+};
+
+export function generateURL(route: string, options?: URLOptions): URL {
+	const url = new URL(route, options?.baseURL);
+	for (const key in options?.params) {
+		url.searchParams.append(key, String(options?.params[key]));
+	}
+	return url;
+}
+
 export async function request<T>(
 	route: string,
 	options?: RequestOptions,
 ): Promise<ServerResponse<T>> {
 	"use server";
 	const { params, ...init } = options ?? {};
-	const url = new URL(route, env.vars.SERVER_URL);
-	for (const key in params) {
-		url.searchParams.append(key, String(params[key]));
-	}
+	const url = generateURL(route, {
+		baseURL: env.vars.SERVER_URL,
+		params: params,
+	});
 	const auth = await useAuthSession();
 	const res = await fetch(url, {
 		...init,

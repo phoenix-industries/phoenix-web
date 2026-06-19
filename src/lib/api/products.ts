@@ -3,7 +3,7 @@ import { request, type ServerResponse } from "./request";
 import { uploadFile } from "./files";
 import type { User } from "./users";
 
-export const PRODUCTS_ROUTE = `api/v1/products`;
+export const PRODUCTS_ROUTE = `/api/v1/products`;
 
 export const SHIPPING_COST = 50 * 100;
 
